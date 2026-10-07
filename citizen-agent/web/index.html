@@ -12,16 +12,6 @@
 </head>
 <body>
 
-  <!-- Top Announcement Bar (Trust & DPDP Compliance) -->
-  <aside class="top-announcement" aria-label="Official assistance notification">
-    <div class="announcement-left">
-      <span class="announcement-badge">CIVIC ASSISTANCE</span>
-      <span id="t-announcement-text">Citizen-Service Agent (CivicAgent) • Digital public assistance platform</span>
-    </div>
-    <div class="announcement-right">
-      <span>🛡️ DPDP 2023 Compliant • 100% Consent Gated • Zero Intermediary Bribes</span>
-    </div>
-  </aside>
 
   <!-- Global Header & Navigation (Section 5) -->
   <header class="site-header">
@@ -46,10 +36,18 @@
         <a class="nav-link" onclick="showView('services')" id="nav-services">Services</a>
         <a class="nav-link" onclick="showView('applications')" id="nav-applications">My Applications</a>
         <a class="nav-link" onclick="showView('help')" id="nav-help">Help</a>
+        <a class="nav-link" onclick="showView('terms')" id="nav-terms">Terms</a>
       </nav>
 
       <!-- Right Header Actions -->
       <div class="header-actions">
+        <!-- 24x7 Toll-Free Citizen Helpline Pill -->
+        <a href="tel:18001802026" class="btn-helpline-pill" title="24x7 Toll-Free Citizen Helpline: 1800-180-2026">
+          <span class="helpline-pulse-dot"></span>
+          <span class="helpline-phone-icon">📞</span>
+          <span class="helpline-text">24x7 Help: <strong>1800-180-2026</strong></span>
+        </a>
+
         <!-- Notification Bell & Drawer (Section 31) -->
         <div class="notification-wrapper">
           <button class="btn-icon" onclick="toggleNotifications()" title="Notifications" aria-label="View notifications">
@@ -62,7 +60,7 @@
 
           <div class="notification-drawer" id="notifDrawer" style="display:none;">
             <div class="notif-header">
-              <span>Notifications (सूचनाएं)</span>
+              <span>Notifications</span>
               <button class="btn-text-link" onclick="markAllNotifsRead()">Mark all as read</button>
             </div>
             <div class="notif-filter-tabs">
@@ -76,7 +74,7 @@
                 <div class="notif-dot"></div>
                 <div>
                   <strong>🎉 Application Approved</strong>
-                  <p>Your Income Certificate (INC-BR-2026-894210) has been approved by SDO Patna.</p>
+                  <p>Your application (CST-MH-2026-441209) has been approved by Revenue Department.</p>
                   <span class="notif-time">2 minutes ago</span>
                 </div>
               </div>
@@ -102,25 +100,42 @@
 
         <!-- Language Selection Cluster (Section 35) -->
         <div class="lang-selector-cluster" aria-label="Select language">
-          <button class="btn-lang-pill" id="currentLangBtn" onclick="openLanguageModal()" title="Change Language / भाषा बदलें">
-            <span class="globe-icon">🌐</span>
-            <span id="currentLangBtnText">English (EN)</span>
-          </button>
-          <button class="btn-more-lang-pill" onclick="openLanguageModal()" title="More Languages / अन्य भाषाएं">
-            <span id="moreLangBtnText" data-i18n="more_languages">More Languages</span>
-            <span style="font-size:11px;">▼</span>
-          </button>
+          <span class="globe-icon" style="font-size:16px;">🌐</span>
+          <select id="langSelect" onchange="changeLanguage(this.value)" class="btn-lang-pill" style="cursor:pointer; border:none; background:transparent; font-size:13px; font-weight:600; color:var(--slate-800);">
+            <option value="en" selected>English (EN)</option>
+            <option value="hi">हिंदी (HI)</option>
+            <option value="bn">বাংলা (BN)</option>
+            <option value="ta">தமிழ் (TA)</option>
+            <option value="te">తెలుగు (TE)</option>
+            <option value="mr">मराठी (MR)</option>
+            <option value="gu">ગુજરાતી (GU)</option>
+            <option value="kn">ಕನ್ನಡ (KN)</option>
+            <option value="ml">മലയാളം (ML)</option>
+            <option value="pa">ਪੰਜਾਬੀ (PA)</option>
+            <option value="or">ଓଡ଼ିଆ (OR)</option>
+          </select>
         </div>
-        <select id="langSelect" onchange="changeLanguage(this.value)" style="display:none;" aria-hidden="true">
-          <option value="en">English (EN)</option>
-          <option value="hi">हिंदी (HI)</option>
-        </select>
 
-        <!-- User Profile Button (Section 32) -->
-        <button class="btn-profile-chip" onclick="showView('profile')" title="View My Profile">
-          <span class="avatar-circle">RK</span>
-          <span class="profile-name" id="userNameLabel">Rahul Kumar</span>
-        </button>
+        <!-- User Profile Dropdown (Section 32) -->
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper" style="position:relative; display:inline-block;">
+          <button class="btn-profile-chip" onclick="toggleProfileDropdown()" title="View Profile / Sign Out" id="headerProfileChip">
+            <span class="avatar-circle" id="headerAvatarCircle">?</span>
+            <span class="profile-name" id="userNameLabel">Guest</span>
+            <span style="font-size:10px; margin-left:4px; opacity:0.6;">▾</span>
+          </button>
+          <div id="profileDropdownMenu" style="display:none; position:absolute; right:0; top:calc(100% + 6px); background:#fff; border:1px solid #e2e8f0; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.12); min-width:160px; z-index:9999; overflow:hidden;">
+            <div style="padding:12px 16px; border-bottom:1px solid #f1f5f9;">
+              <div style="font-size:11px; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em;">Signed in as</div>
+              <div style="font-weight:700; font-size:14px; color:#1e293b; margin-top:2px;" id="dropdownUserName">Guest</div>
+            </div>
+            <button onclick="showView('profile'); closeProfileDropdown();" style="display:flex; align-items:center; gap:8px; width:100%; padding:10px 16px; border:none; background:transparent; cursor:pointer; font-size:13px; color:#334155; transition:background 0.15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+              👤 My Profile
+            </button>
+            <button id="btnLogout" onclick="doLogout()" style="display:flex; align-items:center; gap:8px; width:100%; padding:10px 16px; border:none; background:transparent; cursor:pointer; font-size:13px; color:#ef4444; font-weight:600; transition:background 0.15s; border-top:1px solid #fee2e2;" onmouseover="this.style.background='#fff5f5'" onmouseout="this.style.background='transparent'">
+              🚪 Logout
+            </button>
+          </div>
+        </div>
 
         <!-- Primary CTA: Start a Service (Section 5) -->
         <button class="btn btn-primary btn-header-cta" onclick="startSpecificService('income_certificate')">
@@ -432,18 +447,18 @@
           <div class="state-dropdown-container">
             <label for="stateCatalogSelect" class="state-dropdown-label">Active State:</label>
             <select id="stateCatalogSelect" class="state-selector-dropdown" onchange="onStateFilterChange(this.value)">
-              <option value="all">🇮🇳 All States & UTs</option>
-              <option value="Bihar" selected>Bihar</option>
+              <option value="all" selected>🇮🇳 All States & UTs</option>
               <option value="Uttar Pradesh">Uttar Pradesh</option>
-              <option value="Jharkhand">Jharkhand</option>
+              <option value="Bihar">Bihar</option>
               <option value="Delhi">Delhi NCR</option>
               <option value="Maharashtra">Maharashtra</option>
-              <option value="Madhya Pradesh">Madhya Pradesh</option>
+              <option value="Karnataka">Karnataka</option>
               <option value="Rajasthan">Rajasthan</option>
               <option value="West Bengal">West Bengal</option>
-              <option value="Karnataka">Karnataka</option>
-              <option value="Tamil Nadu">Tamil Nadu</option>
+              <option value="Madhya Pradesh">Madhya Pradesh</option>
               <option value="Gujarat">Gujarat</option>
+              <option value="Jharkhand">Jharkhand</option>
+              <option value="Tamil Nadu">Tamil Nadu</option>
               <option value="Punjab">Punjab</option>
               <option value="Haryana">Haryana</option>
               <option value="Odisha">Odisha</option>
@@ -454,7 +469,7 @@
 
         <div class="state-active-indicator" id="stateActiveIndicator">
           <span class="active-dot"></span>
-          <span id="stateActiveNoticeText">Currently showing services for <strong>Bihar</strong> • Integrated with Bihar RTPS Right to Public Services Portal</span>
+          <span id="stateActiveNoticeText">Currently showing certified services for <strong>All States & UTs</strong> • Select any state to adapt forms and documents</span>
         </div>
       </div>
 
@@ -485,7 +500,7 @@
             ← Back to Services
           </button>
           <div class="wizard-location-chip" id="wizardLocationIndicator">
-            📍 Bihar · Patna
+            📍 Select Jurisdiction
           </div>
           <button class="btn-text-link" onclick="saveAndExitWizard()">
             💾 Save & Exit
@@ -529,7 +544,11 @@
             </div>
             <div class="step-node" id="node-6" onclick="jumpToStepIfAllowed(6)">
               <div class="node-circle">6</div>
-              <span class="node-label">Confirm</span>
+              <span class="node-label">Payment</span>
+            </div>
+            <div class="step-node" id="node-7" onclick="jumpToStepIfAllowed(7)">
+              <div class="node-circle">7</div>
+              <span class="node-label">Submit</span>
             </div>
           </div>
         </div>
@@ -558,9 +577,9 @@
             <span class="service-category-badge">OFFICIAL APPLICATION TRACKER</span>
             <h2 id="trackServiceHeading">Income Certificate</h2>
             <div class="track-meta-pills">
-              <span>Application ID: <strong id="trackAppIdDisplay">INC-BR-2026-894210</strong></span>
-              <span>• Jurisdiction: <strong>Patna Sadar, Bihar</strong></span>
-              <span>• Submitted: <strong>07 October 2026</strong></span>
+              <span>Application ID: <strong id="trackAppIdDisplay">INC-UP-2026-894210</strong></span>
+              <span>• Jurisdiction: <strong id="trackJurisdictionDisplay">Lucknow Sadar, Uttar Pradesh</strong></span>
+              <span>• Submitted: <strong id="trackSubmittedDateDisplay">07 October 2026</strong></span>
             </div>
           </div>
           <div class="summary-badge-col">
@@ -572,19 +591,21 @@
 
         <!-- Application Search Bar -->
         <div class="track-search-card">
-          <label for="trackSearchInput" class="form-label" style="margin-bottom:0;">Track another application by ID:</label>
-          <div class="track-search-inputs">
-            <input 
-              type="text" 
-              id="trackSearchInput" 
-              class="form-control" 
-              placeholder="Enter Application ID (e.g. INC-BR-2026-894210)"
-              onkeydown="if(event.key==='Enter') searchTrackingId()">
-            <button class="btn btn-primary" onclick="searchTrackingId()">Track Status</button>
+          <div class="track-search-group">
+            <label for="trackSearchInput" class="track-search-label">Track another application by ID:</label>
+            <div class="track-search-inputs">
+              <input 
+                type="text" 
+                id="trackSearchInput" 
+                class="form-control" 
+                placeholder="Enter Application ID (e.g. INC-BR-2026-894210)"
+                onkeydown="if(event.key==='Enter') searchTrackingId()">
+              <button class="btn btn-primary" onclick="searchTrackingId()">Track Status</button>
+            </div>
           </div>
-          <!-- Live Generated Quick Track Chips -->
+          <!-- Live Generated Quick Track: Single ID -->
           <div class="recent-track-chips-bar" id="recentTrackChips">
-            <span class="recent-track-label">Live Generated IDs:</span>
+            <span class="recent-track-label">Live Generated ID:</span>
           </div>
         </div>
 
@@ -612,7 +633,7 @@
         <div class="timeline-container-card">
           <div class="timeline-header-row">
             <h3>Application Progress Timeline</h3>
-            <span class="timeline-auto-notice">Real-time status updates from RTPS Bihar Portal</span>
+            <span class="timeline-auto-notice" id="timelinePortalNotice">Real-time status updates from Official State Portal</span>
           </div>
 
           <div class="timeline-track-list" id="trackTimelineList"></div>
@@ -622,16 +643,16 @@
             <div class="ready-badge-icon">🎉</div>
             <div class="ready-text">
               <h3>Your service is complete! Certificate Generated.</h3>
-              <p>Your official Income Certificate has been digitally signed and sealed by the Sub-Divisional Officer (SDO), Patna Sadar.</p>
+              <p id="certSignedDescDisplay">Your official certificate has been digitally signed and sealed by the competent authority.</p>
               <div class="ready-cert-meta">
-                <span>Certificate No: <strong id="certNumberLabel">INC-BR-2026-894210</strong></span>
-                <span>• Issue Date: <strong>07 October 2026</strong></span>
+                <span>Certificate No: <strong id="certNumberLabel">APP-ID</strong></span>
+                <span>• Issue Date: <strong id="certIssueDateLabel">07 October 2026</strong></span>
                 <span>• Validity: <strong>1 Year</strong></span>
               </div>
             </div>
             <div class="ready-actions">
               <button class="btn btn-success" onclick="viewDemoCertificate()">👁️ View Certificate</button>
-              <button class="btn btn-primary" onclick="downloadDemoCertificate()">📥 Download PDF (DEMO)</button>
+              <button class="btn btn-primary" onclick="downloadDemoCertificate()">📥 Download PDF</button>
             </div>
           </div>
         </div>
@@ -717,6 +738,7 @@
                   <th>Submitted Date & Time</th>
                   <th>Jurisdiction</th>
                   <th>Progress</th>
+                  <th>Payment</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -744,9 +766,9 @@
         <div class="profile-layout-grid">
           <!-- Profile Sidebar -->
           <div class="profile-sidebar-card">
-            <div class="profile-avatar-large">RK</div>
-            <h3 id="p-displayName">Rahul Kumar</h3>
-            <p class="profile-meta-line">Citizen • Patna, Bihar</p>
+            <div class="profile-avatar-large" id="profileAvatarLarge">?</div>
+            <h3 id="p-displayName">Guest</h3>
+            <p class="profile-meta-line" id="p-meta-location">Citizen • Verified Resident</p>
             <div class="profile-badge-pill">✓ Verified Citizen ID</div>
 
             <nav class="profile-nav-list">
@@ -781,7 +803,7 @@
               <div class="form-grid-2">
                 <div class="form-group">
                   <label class="form-label">Full Name</label>
-                  <input type="text" class="form-control" id="prof-fullName" value="Rahul Kumar">
+                  <input type="text" class="form-control" id="prof-fullName" value="">
                 </div>
                 <div class="form-group">
                   <label class="form-label">Mobile Number</label>
@@ -801,11 +823,11 @@
               <div class="form-grid-2">
                 <div class="form-group">
                   <label class="form-label">State of Residence</label>
-                  <input type="text" class="form-control" value="Bihar" readonly>
+                  <input type="text" class="form-control" id="prof-state" value="Uttar Pradesh" readonly>
                 </div>
                 <div class="form-group">
                   <label class="form-label">District</label>
-                  <input type="text" class="form-control" value="Patna" readonly>
+                  <input type="text" class="form-control" id="prof-district" value="Lucknow" readonly>
                 </div>
               </div>
               <div style="margin-top:20px; display:flex; justify-content:flex-end;">
@@ -1022,7 +1044,7 @@
               </button>
               <div class="faq-answer">
                 <p>
-                  None! Our platform assistance fee is strictly ₹0. Any statutory government fee (e.g. ₹0 for Bihar Income Certificate or ₹200 for Driving Licence) is paid directly to the government department with complete line-item transparency.
+                  None! Our platform assistance fee is strictly ₹0. Any statutory government fee (e.g. ₹0 for Income Certificate or ₹200 for Driving Licence) is paid directly to the government department with complete line-item transparency.
                 </p>
               </div>
             </div>
@@ -1046,11 +1068,40 @@
               </button>
               <div class="faq-answer">
                 <p>
-                  No. We are an independent civic-tech platform designed to assist citizens in preparing and tracking their applications. All final applications are submitted to the official designated state authorities (e.g. RTPS Bihar).
+                  No. We are an independent civic-tech platform designed to assist citizens in preparing and tracking their applications. All final applications are submitted to the official designated state authorities (such as e-District and RTPS portals).
                 </p>
               </div>
             </div>
 
+          </div>
+        </div>
+
+        <!-- 24x7 Citizen Support Helpline Card -->
+        <div class="helpline-247-card">
+          <div class="helpline-badge-row">
+            <span class="helpline-status-dot"></span>
+            <span class="helpline-badge">24x7 TOLL-FREE CITIZEN GUIDANCE HELPLINE</span>
+            <span class="helpline-availability">Active 24 Hours • 7 Days a Week • Toll-Free Guidance</span>
+          </div>
+          <div class="helpline-main-row">
+            <div class="helpline-phone-box">
+              <span class="helpline-icon">📞</span>
+              <div>
+                <a href="tel:18001802026" class="helpline-number">1800-180-2026</a>
+                <span class="helpline-sub">Free telephone assistance from anywhere in India for applications, document checks, and queries</span>
+              </div>
+            </div>
+            <div class="helpline-actions">
+              <a href="tel:18001802026" class="btn btn-primary helpline-call-btn">
+                📞 Call 1800-180-2026
+              </a>
+              <button class="btn btn-secondary" onclick="copyHelpline('1800-180-2026', this)">
+                📋 Copy Number
+              </button>
+            </div>
+          </div>
+          <div class="helpline-languages-bar">
+            <span>🗣️ <strong>Vernacular Assistance:</strong> Hindi, English, Maithili, Bhojpuri, Magahi, Bengali & regional dialects.</span>
           </div>
         </div>
 
@@ -1144,7 +1195,180 @@
       </div>
     </section>
 
+    <!-- ====================================================================
+         VIEW 10: TERMS & CONDITIONS (Statutory & Citizen Rights)
+         ==================================================================== -->
+    <section id="view-terms" class="view-section">
+      <div class="terms-shell">
+        <div class="page-header-box flex-between">
+          <div>
+            <span class="section-kicker">GOVERNANCE & STATUTORY POLICY</span>
+            <h2>Terms and Conditions</h2>
+            <p>Official Terms of Service, citizen rights, ₹0 platform fee guarantee, and 24x7 guidance policies.</p>
+          </div>
+          <div class="terms-meta-actions">
+            <span class="terms-version-badge">Version 2.4 • Active Oct 2026</span>
+            <button class="btn btn-secondary" onclick="window.print()">🖨️ Print Terms</button>
+          </div>
+        </div>
+
+        <!-- 24x7 Helpline Callout inside Terms -->
+        <div class="terms-helpline-banner">
+          <div class="helpline-banner-left">
+            <span class="helpline-icon-pulse">📞</span>
+            <div>
+              <strong>Questions or need assistance with your application?</strong>
+              <p>Our dedicated Citizen Guidance Helpline is active 24 hours a day, 7 days a week, 365 days a year.</p>
+            </div>
+          </div>
+          <a href="tel:18001802026" class="btn btn-primary terms-call-btn">
+            Call 1800-180-2026 (Toll-Free)
+          </a>
+        </div>
+
+        <div class="terms-content-card">
+          <div class="terms-section-block">
+            <h3>1. Scope of Digital Assistance Platform</h3>
+            <p>
+              Citizen-Service Agent ("CivicAgent") is an automated digital public assistance platform designed to facilitate citizen interactions with state and central government public service guarantee portals across India (including e-District, RTPS, and Aaple Sarkar systems). The platform assists citizens with discovering eligible schemes, validating prerequisite documents using OCR, generating pre-filled applications, and tracking processing timelines.
+            </p>
+          </div>
+
+          <div class="terms-section-block">
+            <h3>2. Strictly ₹0 Platform Fee & Complete Fee Transparency</h3>
+            <p>
+              The platform strictly levies <strong>₹0 in assistance or platform fees</strong>. Any statutory fee charged is mandated exclusively by the relevant government department (e.g. ₹0 for Income Certificate, or statutory fees for commercial licenses). The platform strictly forbids unofficial middleman payments, facilitation bribes, or informal processing fees.
+            </p>
+          </div>
+
+          <div class="terms-section-block highlight">
+            <h3>3. 24x7 Round-The-Clock Citizen Guidance Helpline</h3>
+            <p>
+              To ensure all citizens, regardless of digital literacy, can access government entitlements, the platform operates a continuous <strong>24x7 Toll-Free Citizen Helpline: 1800-180-2026</strong>.
+            </p>
+            <ul>
+              <li><strong>Helpline Number:</strong> <code>1800-180-2026</code> (Toll-free across all telecom networks in India).</li>
+              <li><strong>Operating Hours:</strong> 24 Hours a Day, 7 Days a Week, 365 Days a Year.</li>
+              <li><strong>Vernacular Support:</strong> Guidance available in Hindi, English, Punjabi, Marathi, Bengali, Tamil, Telugu, and Kannada.</li>
+              <li><strong>Assistance Scope:</strong> Guidance on required certificates, document formats, application status queries, and grievance lodging.</li>
+            </ul>
+          </div>
+
+          <div class="terms-section-block">
+            <h3>4. Citizen Obligations & Authenticity of Information</h3>
+            <p>
+              Citizens represent and warrant that all personal data, identity numbers, and supporting documents provided during the application process are accurate, lawful, and authentic. Submission of forged, altered, or fraudulent identity proofs is strictly prohibited and subject to prosecution under the Bharatiya Nyaya Sanhita (BNS) and the Information Technology Act, 2000.
+            </p>
+          </div>
+
+          <div class="terms-section-block">
+            <h3>5. Data Protection, Privacy & DPDP Act 2023 Compliance</h3>
+            <p>
+              All personal information is processed strictly under the provisions of the <strong>Digital Personal Data Protection Act, 2023 (DPDP 2023)</strong>:
+            </p>
+            <ul>
+              <li><strong>Explicit Consent Gating:</strong> No data or document is shared without affirmative, purpose-limited citizen consent.</li>
+              <li><strong>Aadhaar Masking:</strong> Aadhaar numbers are masked by default (showing only the last 4 digits) to protect citizen privacy.</li>
+              <li><strong>Cryptographic Hash Integrity:</strong> Every document verification event is recorded in a tamper-evident SHA-256 audit log.</li>
+              <li><strong>Right to Erasure:</strong> Citizens retain the legal right to request deletion of temporary OCR files and uploaded previews.</li>
+            </ul>
+          </div>
+
+          <div class="terms-section-block">
+            <h3>6. Sovereign Government Authority & Department Decisions</h3>
+            <p>
+              The platform functions as an automated digital facilitation interface. The ultimate statutory authority to approve, query, or reject any application rests entirely with designated government officers (such as the Sub-Divisional Officer, Circle Officer, or District Magistrate). The platform does not alter statutory rules or bypass departmental verification.
+            </p>
+          </div>
+
+          <div class="terms-section-block">
+            <h3>7. Audit Trail & Service Reliability</h3>
+            <p>
+              All application steps, payment verifications, and status changes are permanently logged with immutable timestamps. While the platform guarantees 99.9% uptime, processing delays attributable to state departmental servers or field inquiries are subject to official government turnaround times.
+            </p>
+          </div>
+
+          <div class="terms-section-block">
+            <h3>8. Grievance Redressal & Contact Information</h3>
+            <p>
+              For grievances, appeals, or legal inquiries, citizens may contact our designated Grievance Cell:
+            </p>
+            <div class="grievance-contact-grid">
+              <div><strong>📞 24x7 Citizen Helpline:</strong> <a href="tel:18001802026">1800-180-2026</a></div>
+              <div><strong>✉️ Grievance Email:</strong> <a href="mailto:grievance@civicagent.gov.in">grievance@civicagent.gov.in</a></div>
+              <div><strong>🏛️ Nodal Office:</strong> Directorate of Digital Public Assistance Services, New Delhi - 110001</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
+
+  <!-- ====================================================================
+       SITE FOOTER (With 24x7 Helpline & Governance Links)
+       ==================================================================== -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand-col">
+        <div class="footer-logo">
+          <span class="logo-icon-sm">🏛️</span>
+          <h3>Citizen-Service Agent</h3>
+        </div>
+        <p class="footer-tagline">Digital Public Assistance Platform • Government Services, Made Simple.</p>
+        <div class="footer-helpline-box">
+          <span class="helpline-live-dot"></span>
+          <div>
+            <div class="helpline-title">24x7 Citizen Guidance Helpline</div>
+            <a href="tel:18001802026" class="helpline-phone-link">📞 1800-180-2026 (Toll-Free)</a>
+            <div class="helpline-subtext">Round-the-clock telephone guidance in Hindi, English & regional dialects</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-links-col">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a onclick="showView('home')">Home</a></li>
+          <li><a onclick="showView('services')">All Services</a></li>
+          <li><a onclick="showView('applications')">My Applications</a></li>
+          <li><a onclick="showView('track')">Track Status</a></li>
+          <li><a onclick="showView('help')">Help Center</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links-col">
+        <h4>Trust & Governance</h4>
+        <ul>
+          <li><a onclick="showView('terms')">Terms & Conditions</a></li>
+          <li><a onclick="showView('privacy')">Privacy Policy (DPDP 2023)</a></li>
+          <li><a onclick="showView('help')">24x7 Citizen Support</a></li>
+          <li><a onclick="showView('admin')">Auditor Cockpit</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-cert-col">
+        <h4>Guaranteed Standards</h4>
+        <div class="footer-badges-list">
+          <div class="footer-badge-item">🛡️ DPDP Act 2023 Compliant</div>
+          <div class="footer-badge-item">⚡ 100% Consent Gated</div>
+          <div class="footer-badge-item">🚫 Zero Intermediary Fees</div>
+          <div class="footer-badge-item">🔒 SHA-256 Tamper-Evident Logs</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom-bar">
+      <div>© 2026 Citizen-Service Agent (CivicAgent). Designed for Transparent Citizen Governance.</div>
+      <div class="footer-bottom-links">
+        <a onclick="showView('terms')">Terms & Conditions</a>
+        <span>•</span>
+        <a onclick="showView('privacy')">Privacy Policy</a>
+        <span>•</span>
+        <a href="tel:18001802026">24x7 Helpline: 1800-180-2026</a>
+      </div>
+    </div>
+  </footer>
 
   <!-- ====================================================================
        MOBILE BOTTOM NAVIGATION (Section 36)
@@ -1209,8 +1433,8 @@
       <div class="modal-header-row">
         <div>
           <span class="modal-category-tag" id="mdCategory">CERTIFICATES</span>
-          <h3 id="mdTitle">Income Certificate (आय प्रमाण पत्र)</h3>
-          <p id="mdDept" class="modal-dept-line">Department of Revenue & Land Reforms, Government of Bihar</p>
+          <h3 id="mdTitle">Income Certificate</h3>
+          <p id="mdDept" class="modal-dept-line">Department of Revenue & Citizen Services</p>
         </div>
         <button class="modal-close-btn" onclick="closeServiceDetailsModal()">✕</button>
       </div>
@@ -1225,7 +1449,7 @@
           </div>
           <div class="meta-box">
             <span class="meta-box-label">Government Fee</span>
-            <strong id="mdGovFee" style="color:var(--secondary);">₹0</strong>
+            <strong id="mdGovFee" style="color:var(--secondary);">₹1</strong>
           </div>
           <div class="meta-box">
             <span class="meta-box-label">Platform Fee</span>
@@ -1350,7 +1574,7 @@
           </svg>
         </div>
         <div class="consent-gate-heading-group">
-          <div class="consent-gate-label">CONSENT REQUIRED • आपकी सहमति चाहिए</div>
+          <div class="consent-gate-label">CONSENT REQUIRED</div>
           <h2 id="consentGateTitle" class="consent-gate-title">Before we submit your application</h2>
           <p class="consent-gate-sub">You are about to authorise us to transmit your verified documents to a government department on your behalf. Please review carefully.</p>
         </div>
@@ -1362,7 +1586,7 @@
       <div class="consent-gate-body">
         <div class="consent-destination-row">
           <span class="consent-dest-label">Submitting to:</span>
-          <span class="consent-dest-value">🏛️ Department of Revenue, Government of Bihar (RTPS Portal)</span>
+          <span class="consent-dest-value" id="consentDestDisplay">🏛️ Department of Revenue & Citizen Services, Government Authority</span>
         </div>
 
         <div class="consent-data-review-card">
@@ -1378,7 +1602,7 @@
             </div>
             <div class="consent-data-row">
               <span class="cdr-label">Address</span>
-              <span class="cdr-value" id="c-address">Patna Sadar, Patna, Bihar</span>
+              <span class="cdr-value" id="c-address">Civil Lines Road, Lucknow, Uttar Pradesh</span>
             </div>
             <div class="consent-data-row">
               <span class="cdr-label">Annual Family Income</span>
@@ -1405,7 +1629,7 @@
         <label class="consent-explicit-checkbox" id="consentCheckLabel">
           <input type="checkbox" id="modalFinalConsentCheck" onchange="toggleConsentButton(this.checked)">
           <span class="consent-check-box-ui"></span>
-          <span class="consent-explicit-text">I, <strong id="c-name-inline">Rahul Kumar</strong>, confirm that the information above is accurate and complete, and I authorise this application to be submitted to the Government of Bihar on my behalf.</span>
+          <span class="consent-explicit-text">I, <strong id="c-name-inline">Rahul Kumar</strong>, confirm that the information above is accurate and complete, and I authorise this application to be submitted to the <strong id="c-gov-inline">Government Authority</strong> on my behalf.</span>
         </label>
 
         <!-- DPDP Notice -->
@@ -1419,7 +1643,7 @@
         </button>
         <button class="btn btn-consent-submit" id="btnFinalSubmit" onclick="confirmAndExecuteSubmission()" disabled>
           ✓ I Confirm — Submit Application
-          <span class="consent-btn-sub">जमा करें (Submit to Government)</span>
+          <span class="consent-btn-sub">Submit to Government Portal</span>
         </button>
       </div>
 
@@ -1438,40 +1662,40 @@
         <!-- Official Header -->
         <div class="cert-header">
           <div class="cert-emblem">🏛️</div>
-          <h2>GOVERNMENT OF BIHAR</h2>
-          <h3>DEPARTMENT OF REVENUE & LAND REFORMS</h3>
-          <p>Office of the Sub-Divisional Officer (SDO), Patna Sadar</p>
-          <div class="cert-title-badge">INCOME CERTIFICATE (आय प्रमाण पत्र)</div>
+          <h2 id="certGovNameDisplay">GOVERNMENT OF INDIA</h2>
+          <h3 id="certDeptNameDisplay">DEPARTMENT OF REVENUE & CITIZEN SERVICES</h3>
+          <p id="certOfficeDisplay">Office of the Sub-Divisional Officer (SDO)</p>
+          <div class="cert-title-badge" id="certTitleBadgeDisplay">INCOME CERTIFICATE</div>
         </div>
 
         <!-- Certificate Body -->
         <div class="cert-content">
           <div class="cert-meta-row">
-            <span><strong>Certificate No:</strong> <code id="certNoDisplay">INC-BR-2026-894210</code></span>
-            <span><strong>Date of Issue:</strong> 07 October 2026</span>
+            <span><strong>Certificate No:</strong> <code id="certNoDisplay">INC-UP-2026-894210</code></span>
+            <span><strong>Date of Issue:</strong> <span id="certIssueDateDisplay">07 October 2026</span></span>
           </div>
 
-          <p class="cert-paragraph">
-            This is to certify that <strong>Rahul Kumar</strong>, son of <strong>Suresh Prasad</strong>, resident of <strong>Kankarbagh Main Road, Patna Sadar, District Patna, Bihar - 800020</strong>, has a verified total annual family income of:
+          <p class="cert-paragraph" id="certMainBodyParagraph">
+            This is to certify that <strong id="certApplicantNameDisplay">Rahul Kumar</strong>, son of <strong id="certFatherNameDisplay">Suresh Prasad</strong>, resident of <strong id="certAddressDisplay">Civil Lines Road, Lucknow Sadar, District Lucknow, Uttar Pradesh - 226001</strong>, has a verified total annual family income of:
           </p>
 
-          <div class="cert-income-highlight">
+          <div class="cert-income-highlight" id="certIncomeHighlightDisplay">
             ₹1,20,000 (Rupees One Lakh Twenty Thousand Only)
           </div>
 
-          <p class="cert-paragraph">
+          <p class="cert-paragraph" id="certPurposeParaDisplay">
             This certificate is digitally issued on the basis of verified statutory documents for educational scholarships and official purposes.
           </p>
 
           <div class="cert-footer-row">
             <div class="cert-qr-box">
-              <div class="qr-placeholder">QR CODE</div>
-              <span>Digital Verification ID: BR-RTPS-2026-894210</span>
+              <div class="qr-placeholder" id="certQrBadgeText">QR VERIFIED</div>
+              <span id="certVerificationIdDisplay">Digital Verification ID: VERIFY-DOC-2026-000000</span>
             </div>
             <div class="cert-sign-box">
               <div class="digital-sign-seal">✓ DIGITALLY SIGNED</div>
-              <strong>Sub-Divisional Officer (SDO)</strong>
-              <span>Patna Sadar, District Magistrate Office</span>
+              <strong id="certSignOfficerTitle">Competent Issuing Officer</strong>
+              <span id="certSignOfficeDisplay">District Authority Office</span>
             </div>
           </div>
         </div>
@@ -1516,7 +1740,7 @@
       <div class="lang-modal-top-bar">
         <div class="lang-modal-top-title">
           <span>🔔</span>
-          <span data-i18n="modal_alert_title">Alert • Language Selection (भाषा चयन)</span>
+          <span data-i18n="modal_alert_title">Alert • Language Selection</span>
         </div>
         <button class="lang-modal-close-btn" onclick="closeLanguageModal()" aria-label="Close modal">✕</button>
       </div>
@@ -1533,18 +1757,12 @@
           </svg>
         </div>
 
-        <div class="lang-modal-title-hi" id="langModalTitleHi">
-          नागरिक सेवा सहायक में आपका स्वागत है
-        </div>
         <div class="lang-modal-title-en">
           Welcome to Citizen-Service Agent
         </div>
 
-        <div class="lang-modal-prompt-hi" id="langModalPromptHi">
-          कृपया अपनी पसंदीदा भाषा का चयन करें
-        </div>
         <div class="lang-modal-prompt-en">
-          Please select your preferred language.
+          Please select your preferred language to continue.
         </div>
 
         <!-- Quick Select Buttons (Vibrant Orange / Saffron Buttons like IRCTC) -->
@@ -1560,7 +1778,7 @@
         </div>
 
         <div class="lang-modal-divider">
-          <span data-i18n="more_languages">अथवा सभी क्षेत्रीय भाषाएं / Or Choose From All Languages</span>
+          <span data-i18n="more_languages">Or Choose From All Regional Languages</span>
         </div>
 
         <!-- Full Grid of 15 Languages -->
@@ -1690,11 +1908,286 @@
 
       <!-- Modal Footer -->
       <div class="lang-modal-footer">
-        <button class="btn btn-secondary" onclick="closeLanguageModal()" data-i18n="btn_close">Close / बंद करें</button>
+        <button class="btn btn-secondary" onclick="closeLanguageModal()" data-i18n="btn_close">Close</button>
       </div>
     </div>
   </div>
 
+
+  <!-- ============================================================
+       AUTH MODAL — Login / Register / Phone OTP Verification
+       ============================================================ -->
+  <div id="authModal" class="auth-modal-overlay" style="display:flex;" role="dialog" aria-modal="true" aria-label="Sign in to Citizen-Service Agent">
+    <div class="auth-modal-card">
+
+      <!-- Branding -->
+      <div class="auth-modal-brand">
+        <div class="auth-brand-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="auth-brand-title">Citizen-Service Agent</div>
+          <div class="auth-brand-sub">🛡️ Government Services Portal — DPDP 2023 Compliant</div>
+        </div>
+      </div>
+
+      <!-- Tab Switcher -->
+      <div class="auth-tabs" id="authTabs">
+        <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Sign In</button>
+        <button class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Create Account</button>
+      </div>
+
+      <!-- ── LOGIN PANEL ── -->
+      <div id="authPanelLogin" class="auth-panel active">
+        <div class="auth-field-group">
+          <label class="auth-label" for="loginUsername">Username</label>
+          <input class="auth-input" type="text" id="loginUsername" placeholder="Enter your username" autocomplete="username" />
+        </div>
+        <div class="auth-field-group">
+          <label class="auth-label" for="loginPassword">Password</label>
+          <div class="auth-pw-wrap">
+            <input class="auth-input" type="password" id="loginPassword" placeholder="Enter your password" autocomplete="current-password" onkeydown="if(event.key==='Enter') doLogin()" />
+            <button class="auth-pw-toggle" type="button" onclick="togglePwVis('loginPassword', this)" title="Show/Hide password">👁️</button>
+          </div>
+        </div>
+        <div id="loginError" class="auth-error" style="display:none;"></div>
+        <button class="auth-submit-btn" id="loginSubmitBtn" onclick="doLogin()">
+          <span id="loginBtnText">Sign In →</span>
+          <span id="loginBtnLoader" style="display:none;">⏳ Signing in…</span>
+        </button>
+        <p class="auth-switch-hint">Don't have an account? <a href="#" onclick="switchAuthTab('register'); return false;">Create one</a></p>
+      </div>
+
+      <!-- ── REGISTER PANEL ── -->
+      <div id="authPanelRegister" class="auth-panel" style="display:none;">
+        <div class="auth-field-group">
+          <label class="auth-label" for="regFullName">Full Name</label>
+          <input class="auth-input" type="text" id="regFullName" placeholder="e.g. Rahul Kumar" autocomplete="name" />
+        </div>
+        <div class="auth-field-group">
+          <label class="auth-label" for="regUsername">Username <span class="auth-required">*</span></label>
+          <input class="auth-input" type="text" id="regUsername" placeholder="Choose a unique username" autocomplete="username" />
+        </div>
+        <div class="auth-field-group">
+          <label class="auth-label" for="regPhone">Mobile Number <span class="auth-required">*</span></label>
+          <div class="auth-phone-wrap">
+            <span class="auth-phone-prefix">🇮🇳 +91</span>
+            <input class="auth-input auth-phone-input" type="tel" id="regPhone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric" />
+          </div>
+        </div>
+        <div class="auth-field-group">
+          <label class="auth-label" for="regPassword">Password <span class="auth-required">*</span></label>
+          <div class="auth-pw-wrap">
+            <input class="auth-input" type="password" id="regPassword" placeholder="Min 6 characters" autocomplete="new-password" oninput="checkPasswordStrength(this.value)" />
+            <button class="auth-pw-toggle" type="button" onclick="togglePwVis('regPassword', this)" title="Show/Hide password">👁️</button>
+          </div>
+          <div class="auth-pw-strength" id="pwStrengthBar">
+            <div class="auth-pw-strength-fill" id="pwStrengthFill"></div>
+          </div>
+          <span class="auth-pw-strength-label" id="pwStrengthLabel"></span>
+        </div>
+        <div class="auth-field-group">
+          <label class="auth-label" for="regConfirmPassword">Confirm Password <span class="auth-required">*</span></label>
+          <div class="auth-pw-wrap">
+            <input class="auth-input" type="password" id="regConfirmPassword" placeholder="Re-enter password" autocomplete="new-password" oninput="checkPasswordMatch()" />
+            <button class="auth-pw-toggle" type="button" onclick="togglePwVis('regConfirmPassword', this)" title="Show/Hide password">👁️</button>
+          </div>
+          <span class="auth-pw-match" id="pwMatchLabel"></span>
+        </div>
+        <div id="registerError" class="auth-error" style="display:none;"></div>
+        <button class="auth-submit-btn" id="registerSubmitBtn" onclick="doRegister()">
+          <span id="registerBtnText">Create Account →</span>
+          <span id="registerBtnLoader" style="display:none;">⏳ Creating…</span>
+        </button>
+        <p class="auth-switch-hint">Already have an account? <a href="#" onclick="switchAuthTab('login'); return false;">Sign in</a></p>
+      </div>
+
+      <!-- ── OTP VERIFICATION PANEL ── -->
+      <div id="authPanelOtp" class="auth-panel" style="display:none;">
+        <div class="auth-otp-header">
+          <div class="auth-otp-icon">📱</div>
+          <h3>Verify Your Phone</h3>
+          <p id="otpSentMsg">Enter the 6-digit OTP sent to your registered mobile number.</p>
+          <div class="auth-otp-demo-box" id="otpDemoBox" style="display:none;">
+            <span>🔔 Demo OTP: </span><strong id="otpDemoCode">------</strong>
+          </div>
+        </div>
+        <div class="auth-otp-inputs" id="otpInputs">
+          <input class="auth-otp-digit" type="text" maxlength="1" inputmode="numeric" id="otp0" oninput="otpNext(this,1)" onkeydown="otpBack(event,this,null)" />
+          <input class="auth-otp-digit" type="text" maxlength="1" inputmode="numeric" id="otp1" oninput="otpNext(this,2)" onkeydown="otpBack(event,this,0)" />
+          <input class="auth-otp-digit" type="text" maxlength="1" inputmode="numeric" id="otp2" oninput="otpNext(this,3)" onkeydown="otpBack(event,this,1)" />
+          <input class="auth-otp-digit" type="text" maxlength="1" inputmode="numeric" id="otp3" oninput="otpNext(this,4)" onkeydown="otpBack(event,this,2)" />
+          <input class="auth-otp-digit" type="text" maxlength="1" inputmode="numeric" id="otp4" oninput="otpNext(this,5)" onkeydown="otpBack(event,this,3)" />
+          <input class="auth-otp-digit" type="text" maxlength="1" inputmode="numeric" id="otp5" oninput="otpNext(this,null)" onkeydown="otpBack(event,this,4)" />
+        </div>
+        <div id="otpError" class="auth-error" style="display:none;"></div>
+        <button class="auth-submit-btn" id="otpVerifyBtn" onclick="doVerifyOtp()">
+          <span id="otpBtnText">Verify OTP ✓</span>
+          <span id="otpBtnLoader" style="display:none;">⏳ Verifying…</span>
+        </button>
+        <div class="auth-otp-resend">
+          <span id="otpCountdownText">Resend in <strong id="otpCountdown">60</strong>s</span>
+          <a href="#" id="otpResendLink" style="display:none;" onclick="doSendOtp(true); return false;">Resend OTP</a>
+        </div>
+        <p style="text-align:center; margin-top:8px;">
+          <a href="#" onclick="skipOtpForNow(); return false;" style="font-size:12px; color:var(--color-muted);">Skip for now →</a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+  <!-- /authModal -->
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+       FLOATING AI AGENT WIDGET (Bottom-Right AI Document Assistant & Voice Mic)
+       ══════════════════════════════════════════════════════════════════════════ -->
+  <div id="aiFloatingAgentRoot" class="ai-floating-agent-root" aria-label="AI Document Assistant">
+    
+    <!-- Floating Trigger Button -->
+    <button id="aiFloatingAgentBtn" class="ai-floating-agent-btn" onclick="toggleAiDocAgent()" title="Ask AI Document Assistant (Voice & Chat)" aria-expanded="false">
+      <div class="ai-fab-glow-ring"></div>
+      <div class="ai-fab-icon-wrap">
+        <svg class="ai-fab-spark-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.96 9.96 0 0 1-4.73-1.18L2 22l1.18-5.27A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2z"></path>
+          <path d="M8 12h.01M12 12h.01M16 12h.01"></path>
+        </svg>
+        <span class="ai-fab-mic-indicator" id="aiFabMicBadge">🎙️</span>
+      </div>
+      <div class="ai-fab-pill-text">
+        <span class="ai-fab-pill-title">Ask Citizen AI</span>
+        <span class="ai-fab-pill-sub">Find Docs & Voice Help</span>
+      </div>
+      <span class="ai-fab-online-dot"></span>
+    </button>
+
+    <!-- Floating AI Assistant Chat Window -->
+    <div id="aiDocAgentModal" class="ai-doc-agent-modal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="aiDocAgentTitle">
+      
+      <!-- Window Header -->
+      <div class="ai-agent-header">
+        <div class="ai-agent-identity">
+          <div class="ai-agent-avatar">
+            <span class="ai-avatar-icon">🤖</span>
+            <span class="ai-status-pulse"></span>
+          </div>
+          <div class="ai-agent-titles">
+            <div class="ai-agent-main-title">
+              <strong id="aiDocAgentTitle">Citizen AI Assistant</strong>
+              <span class="ai-version-chip">GPT Voice</span>
+            </div>
+            <span class="ai-agent-status-text" id="aiAgentStatusText">Online • Ready to find your documents</span>
+          </div>
+        </div>
+
+        <div class="ai-agent-header-actions">
+          <!-- Voice Output (TTS) Toggle Button -->
+          <button id="aiTtsToggleBtn" class="ai-head-btn" onclick="toggleAiTts()" title="Toggle Voice Speech Output (Read aloud)" aria-label="Toggle voice output">
+            <span id="aiTtsIcon">🔊</span>
+          </button>
+          
+          <!-- Clear Chat -->
+          <button class="ai-head-btn" onclick="clearAiChat()" title="Reset Conversation" aria-label="Reset conversation">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="1 4 1 10 7 10"></polyline>
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+            </svg>
+          </button>
+
+          <!-- Minimize / Close Button -->
+          <button class="ai-head-btn ai-close-btn" onclick="toggleAiDocAgent(false)" title="Close Assistant" aria-label="Close">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Voice Listening Banner (Visible when Mic is active) -->
+      <div id="aiVoiceListeningBar" class="ai-voice-listening-bar" style="display: none;">
+        <div class="ai-voice-wave">
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+        </div>
+        <div class="ai-voice-listening-label">
+          <strong id="aiVoiceListeningText">Listening... Speak now</strong>
+          <span class="ai-voice-sub">Speak in English, Hindi, or your language</span>
+        </div>
+        <button class="btn-voice-cancel" onclick="stopAiVoiceRecognition()" title="Stop Listening">✕ Stop</button>
+      </div>
+
+      <!-- Quick Document Chips Row -->
+      <div class="ai-quick-topics-row">
+        <span class="ai-quick-hint">Popular:</span>
+        <button class="ai-topic-chip" onclick="handleAiTopicClick('Income Certificate documents')">📄 Income Certificate</button>
+        <button class="ai-topic-chip" onclick="handleAiTopicClick('Caste Certificate required documents')">🏛️ Caste Certificate</button>
+        <button class="ai-topic-chip" onclick="handleAiTopicClick('Domicile Residence Certificate documents')">🏠 Domicile Proof</button>
+        <button class="ai-topic-chip" onclick="handleAiTopicClick('Post-Matric Scholarship documents')">🎓 Scholarship</button>
+        <button class="ai-topic-chip" onclick="handleAiTopicClick('Driving Licence required documents')">🚗 Driving Licence</button>
+        <button class="ai-topic-chip" onclick="handleAiTopicClick('Birth Certificate documents')">👶 Birth Certificate</button>
+        <button class="ai-topic-chip" onclick="handleAiTopicClick('Ration card application documents')">🌾 Ration Card</button>
+        <button class="ai-topic-chip" onclick="handleAiTopicClick('Old Age Pension documents')">🧓 Pension</button>
+      </div>
+
+      <!-- Chat Messages Scroll Container -->
+      <div id="aiDocChatBody" class="ai-doc-chat-body">
+        <!-- Default Welcome Bot Message -->
+        <div class="ai-msg-row ai-msg-bot">
+          <div class="ai-msg-avatar">🤖</div>
+          <div class="ai-msg-content">
+            <div class="ai-msg-bubble">
+              <p><strong>Namaste & Hello! 🙏</strong> I am your <strong>Citizen Document AI Assistant</strong>.</p>
+              <p>Tell me what service you want or ask what documents to prepare (e.g., <em>"What documents do I need for Income Certificate?"</em> or <em>"Documents for Caste Certificate in Bihar"</em>).</p>
+              <p>💡 <em>Tip: Tap the <strong>Microphone 🎙️</strong> below to speak just like ChatGPT voice mode!</em></p>
+            </div>
+            <span class="ai-msg-time">Just now</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Assistant Input & Mic Bar -->
+      <div class="ai-agent-footer">
+        <div class="ai-input-container">
+          <!-- Voice Mic Trigger Button (ChatGPT Style) -->
+          <button id="aiMicBtn" class="ai-mic-btn" onclick="toggleAiVoiceRecognition()" title="Tap to Speak (Voice Input)" aria-label="Microphone Voice Input">
+            <span class="ai-mic-icon">🎙️</span>
+            <span class="ai-mic-ripple"></span>
+          </button>
+
+          <!-- Text Input -->
+          <input 
+            type="text" 
+            id="aiAgentTextInput" 
+            class="ai-agent-input" 
+            placeholder="Type or tap mic to speak..."
+            autocomplete="off"
+            onkeydown="handleAiInputKey(event)"
+          />
+
+          <!-- Send Button -->
+          <button id="aiSendBtn" class="ai-send-btn" onclick="sendAiUserMessage()" title="Send Message" aria-label="Send">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+        <div class="ai-footer-note">
+          <span>🎙️ Voice Powered AI • Real-time Document Checklist & Form Launcher</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>

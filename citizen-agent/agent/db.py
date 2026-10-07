@@ -179,6 +179,61 @@ CREATE TABLE IF NOT EXISTS plan_steps (
     attempt INTEGER NOT NULL DEFAULT 0,
     updated_at TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS orders (
+    id TEXT PRIMARY KEY,
+    service_id TEXT NOT NULL,
+    service_title TEXT NOT NULL,
+    amount REAL NOT NULL,
+    currency TEXT NOT NULL DEFAULT 'INR',
+    customer_name TEXT,
+    customer_email TEXT,
+    customer_phone TEXT,
+    state TEXT,
+    district TEXT,
+    status TEXT NOT NULL CHECK (status IN ('PENDING', 'PAID', 'FAILED', 'EXPIRED')),
+    txn_ref_id TEXT UNIQUE,
+    payment_method TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    paid_at TEXT,
+    verification_source TEXT,
+    metadata_json TEXT
+);
+
+CREATE TABLE IF NOT EXISTS payment_transactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    order_id TEXT NOT NULL,
+    txn_ref_id TEXT UNIQUE NOT NULL,
+    amount REAL NOT NULL,
+    payer_vpa TEXT,
+    status TEXT NOT NULL,
+    raw_payload_json TEXT,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY(order_id) REFERENCES orders(id)
+);
+
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    phone TEXT NOT NULL UNIQUE,
+    phone_verified INTEGER NOT NULL DEFAULT 0,
+    full_name TEXT,
+    created_at TEXT NOT NULL,
+    last_login TEXT
+);
+
+CREATE TABLE IF NOT EXISTS otp_codes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    phone TEXT NOT NULL,
+    code TEXT NOT NULL,
+    purpose TEXT NOT NULL DEFAULT 'phone_verify',
+    attempts INTEGER NOT NULL DEFAULT 0,
+    used INTEGER NOT NULL DEFAULT 0,
+    expires_at TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
 """
 
 
@@ -535,3 +590,88 @@ def update_plan_step_status(step_id: int, status: str, updated_at: str) -> None:
             "UPDATE plan_steps SET status=?, updated_at=?, attempt=attempt+1 WHERE id=?",
             (status, updated_at, step_id)
         )
+
+
+# ── Payment & Order helpers ───────────────────────────────────────────────────
+
+def create_order(
+    order_id: str,
+    service_id: str,
+    service_title: str,
+    amount: float,
+    customer_name: str | None,
+    customer_email: str | None,
+    customer_phone: str | None,
+    state: str | None,
+    district: str | None,
+    created_at: str,
+    payment_method: str = "UPI_QR",
+    metadata_json: str | None = None,
+) -> None:
+    with transaction():
+        _get_conn().execute(
+            """INSERT INTO orders
+               (id, service_id, service_title, amount, currency, customer_name,
+                customer_email, customer_phone, state, district, status, payment_method,
+                created_at, updated_at, metadata_json)
+               VALUES (?, ?, ?, ?, 'INR', ?, ?, ?, ?, ?, 'PENDING', ?, ?, ?, ?)""",
+            (
+                order_id, service_id, service_title, amount, customer_name,
+                customer_email, customer_phone, state, district, payment_method,
+                created_at, created_at, metadata_json
+            )
+        )
+
+
+def get_order(order_id: str) -> Optional[sqlite3.Row]:
+    return fetchone("SELECT * FROM orders WHERE id=?", (order_id,))
+
+
+def get_order_by_txn_ref(txn_ref_id: str) -> Optional[sqlite3.Row]:
+    return fetchone("SELECT * FROM orders WHERE txn_ref_id=?", (txn_ref_id,))
+
+
+def update_order_payment_status(
+    order_id: str,
+    status: str,
+    txn_ref_id: str | None = None,
+    paid_at: str | None = None,
+    verification_source: str | None = None,
+    updated_at: str | None = None,
+) -> bool:
+    with transaction():
+        cur = _get_conn().execute(
+            """UPDATE orders
+               SET status=?,
+                   txn_ref_id=COALESCE(?, txn_ref_id),
+                   paid_at=COALESCE(?, paid_at),
+                   verification_source=COALESCE(?, verification_source),
+                   updated_at=?
+               WHERE id=?""",
+            (status, txn_ref_id, paid_at, verification_source, updated_at, order_id)
+        )
+        return cur.rowcount > 0
+
+
+def record_payment_transaction(
+    order_id: str,
+    txn_ref_id: str,
+    amount: float,
+    payer_vpa: str | None,
+    status: str,
+    raw_payload_json: str | None,
+    created_at: str,
+) -> int:
+    with transaction():
+        cur = _get_conn().execute(
+            """INSERT INTO payment_transactions
+               (order_id, txn_ref_id, amount, payer_vpa, status, raw_payload_json, created_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            (order_id, txn_ref_id, amount, payer_vpa, status, raw_payload_json, created_at)
+        )
+        return cur.lastrowid
+
+
+def list_recent_orders(limit: int = 20) -> list[sqlite3.Row]:
+    return fetchall("SELECT * FROM orders ORDER BY created_at DESC LIMIT ?", (limit,))
+

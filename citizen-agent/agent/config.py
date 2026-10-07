@@ -46,6 +46,10 @@ class Settings(BaseSettings):
     # ── Auth ─────────────────────────────────────────────────────────────────
     helper_token: str = Field(default="demo-helper-token-change-me", alias="HELPER_TOKEN")
 
+    # ── Payments ─────────────────────────────────────────────────────────────
+    payment_webhook_secret: str = Field(default="demo-webhook-secret-key-12345", alias="PAYMENT_WEBHOOK_SECRET")
+    payment_admin_key: str = Field(default="demo-admin-key-67890", alias="PAYMENT_ADMIN_KEY")
+
     # ── Dates ────────────────────────────────────────────────────────────────
     reference_date: str = Field(default="", alias="REFERENCE_DATE")
 

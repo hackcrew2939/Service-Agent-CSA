@@ -17,11 +17,13 @@ from agent import clock, db
 from agent.config import settings
 from agent.routes import (
     audit as audit_router,
+    auth as auth_router,
     cases as cases_router,
     chat as chat_router,
     consent as consent_router,
     documents as documents_router,
     escalations as escalations_router,
+    payments as payments_router,
     session as session_router,
     stt as stt_router,
 )
@@ -93,6 +95,7 @@ app.add_middleware(
 )
 
 # Include API Routers under /api
+app.include_router(auth_router.router, prefix="/api", tags=["Auth"])
 app.include_router(session_router.router, prefix="/api", tags=["Session"])
 app.include_router(chat_router.router, prefix="/api", tags=["Chat"])
 app.include_router(documents_router.router, prefix="/api", tags=["Documents"])
@@ -101,6 +104,7 @@ app.include_router(cases_router.router, prefix="/api", tags=["Cases"])
 app.include_router(audit_router.router, prefix="/api", tags=["Audit"])
 app.include_router(escalations_router.router, prefix="/api", tags=["Escalations"])
 app.include_router(stt_router.router, prefix="/api", tags=["STT"])
+app.include_router(payments_router.router, prefix="/api", tags=["Payments"])
 
 
 # Health check
