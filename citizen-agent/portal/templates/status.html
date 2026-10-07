@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Application Status – Government of Jharkhand (DEMO)</title>
+    <style>
+        :root {
+            --primary: #15803d;
+            --primary-dark: #166534;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --text-muted: #64748b;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+        }
+        .demo-banner {
+            background: #fef08a;
+            color: #854d0e;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 14px;
+            border-bottom: 2px solid #eab308;
+            letter-spacing: 0.5px;
+        }
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header-title h1 { margin: 0; font-size: 22px; }
+        .header-title p { margin: 4px 0 0 0; font-size: 13px; opacity: 0.9; }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 32px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+        h2 { margin-top: 0; color: var(--primary-dark); font-size: 20px; border-bottom: 2px solid #bbf7d0; padding-bottom: 10px; }
+        .search-box {
+            display: flex;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 15px;
+            outline: none;
+        }
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .timeline {
+            margin-top: 30px;
+            position: relative;
+            padding-left: 30px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #cbd5e1;
+        }
+        .timeline-step {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .timeline-step::before {
+            content: '';
+            position: absolute;
+            left: -26px;
+            top: 4px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #94a3b8;
+        }
+        .timeline-step.active::before {
+            background: var(--primary);
+            box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.2);
+        }
+        .timeline-step.rejected::before {
+            background: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+        }
+        .timeline-title { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
+        .timeline-time { font-size: 12px; color: var(--text-muted); }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+        .badge-approved { background: #dcfce7; color: #15803d; }
+        .badge-rejected { background: #fee2e2; color: #b91c1c; }
+        .badge-review { background: #fef9c3; color: #854d0e; }
+        .badge-submitted { background: #e0f2fe; color: #0369a1; }
+        .certificate-card {
+            background: #f0fdf4;
+            border: 2px dashed #86efac;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-banner">
+        ⚠️ DEMO PORTAL — NOT A REAL GOVERNMENT SITE — FOR TESTING ONLY
+    </div>
+    <header>
+        <div class="header-title">
+            <h1>Government of Jharkhand</h1>
+            <p>Department of Revenue and Land Reforms – Citizen e-Services</p>
+        </div>
+        <div class="nav-links">
+            <a href="/portal/apply">Apply Online</a>
+            <a href="/portal/status">Track Status</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Track Application Status (आवेदन की स्थिति जांचें)</h2>
+            <div class="search-box">
+                <input type="text" id="appIdInput" placeholder="Enter Application ID (e.g. 1a2b3c4d...)">
+                <button onclick="checkStatus()">Search</button>
+            </div>
+
+            <div id="statusContainer" style="display:none;">
+                <div id="badgeContainer"></div>
+                <div class="timeline" id="timelineContainer"></div>
+                <div id="certificateContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function checkStatus() {
+            const id = document.getElementById('appIdInput').value.trim();
+            if (!id) return;
+
+            const container = document.getElementById('statusContainer');
+            const badge = document.getElementById('badgeContainer');
+            const timeline = document.getElementById('timelineContainer');
+            const cert = document.getElementById('certificateContainer');
+
+            container.style.display = 'block';
+            badge.innerHTML = "<em>Loading status...</em>";
+            timeline.innerHTML = "";
+            cert.innerHTML = "";
+
+            try {
+                const res = await fetch(`/api/status/${encodeURIComponent(id)}`);
+                if (!res.ok) {
+                    badge.innerHTML = `<span class="status-badge badge-rejected">Application Not Found</span>`;
+                    return;
+                }
+                const data = await res.json();
+                
+                let badgeClass = 'badge-submitted';
+                if (data.status === 'Approved') badgeClass = 'badge-approved';
+                else if (data.status === 'Rejected') badgeClass = 'badge-rejected';
+                else if (data.status === 'Under Review') badgeClass = 'badge-review';
+
+                badge.innerHTML = `<span class="status-badge ${badgeClass}">Current Status: ${data.status}</span>`;
+
+                let timelineHtml = '';
+                const history = data.history || [data.status];
+                history.forEach(step => {
+                    let isRej = step === 'Rejected';
+                    timelineHtml += `
+                        <div class="timeline-step ${isRej ? 'rejected' : 'active'}">
+                            <div class="timeline-title">${step}</div>
+                            <div class="timeline-time">${data.created_at || ''}</div>
+                            ${isRej && data.rejection_reason ? `<div style="color:#b91c1c; font-size:13px; margin-top:4px;">Reason: ${data.rejection_reason}</div>` : ''}
+                        </div>
+                    `;
+                });
+                timeline.innerHTML = timelineHtml;
+
+                if (data.status === 'Approved') {
+                    cert.innerHTML = `
+                        <div class="certificate-card">
+                            <h3 style="margin:0 0 8px 0; color:#166534;">🎉 Income Certificate Issued</h3>
+                            <p style="margin:0 0 16px 0; font-size:14px; color:#15803d;">Your application has been approved by the Sub-Divisional Magistrate.</p>
+                            <button onclick="alert('DEMO: Income Certificate for ' + '${id}' + ' downloaded (DEMO Watermark)')">📥 Download Certificate (PDF)</button>
+                        </div>
+                    `;
+                }
+
+            } catch (err) {
+                badge.innerHTML = `<span class="status-badge badge-rejected">Error: ${err.message}</span>`;
+            }
+        }
+
+        // Auto-fill from query param if available
+        const urlParams = new URLSearchParams(window.location.search);
+        const qId = urlParams.get('app_id');
+        if (qId) {
+            document.getElementById('appIdInput').value = qId;
+            checkStatus();
+        }
+    </script>
+</body>
+</html>

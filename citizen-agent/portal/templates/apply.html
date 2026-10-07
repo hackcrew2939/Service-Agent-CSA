@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Government of Jharkhand – Citizen Services Portal (DEMO)</title>
+    <style>
+        :root {
+            --primary: #15803d;
+            --primary-dark: #166534;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --text-muted: #64748b;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+        }
+        .demo-banner {
+            background: #fef08a;
+            color: #854d0e;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 14px;
+            border-bottom: 2px solid #eab308;
+            letter-spacing: 0.5px;
+        }
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header-title h1 { margin: 0; font-size: 22px; }
+        .header-title p { margin: 4px 0 0 0; font-size: 13px; opacity: 0.9; }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 32px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+        h2 { margin-top: 0; color: var(--primary-dark); font-size: 20px; border-bottom: 2px solid #bbf7d0; padding-bottom: 10px; }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #334155;
+        }
+        input[type="text"], input[type="number"], input[type="date"], select, textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.15);
+        }
+        .row {
+            display: flex;
+            gap: 20px;
+        }
+        .col { flex: 1; }
+        .btn-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+        .btn-submit:hover { background: var(--primary-dark); }
+        .result-box {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 8px;
+            display: none;
+        }
+        .result-success { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+        .result-error { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+    </style>
+</head>
+<body>
+    <div class="demo-banner">
+        ⚠️ DEMO PORTAL — NOT A REAL GOVERNMENT SITE — FOR TESTING ONLY
+    </div>
+    <header>
+        <div class="header-title">
+            <h1>Government of Jharkhand</h1>
+            <p>Department of Revenue and Land Reforms – Citizen e-Services</p>
+        </div>
+        <div class="nav-links">
+            <a href="/portal/apply">Apply Online</a>
+            <a href="/portal/status">Track Status</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Application for Issuance of Income Certificate (आय प्रमाण पत्र)</h2>
+            <form id="applyForm">
+                <div class="row">
+                    <div class="col form-group">
+                        <label for="name">Applicant Full Name (आवेदक का नाम) *</label>
+                        <input type="text" id="name" required placeholder="e.g. Ramesh Kumar">
+                    </div>
+                    <div class="col form-group">
+                        <label for="father_name">Father's / Husband's Name (पिता/पति का नाम) *</label>
+                        <input type="text" id="father_name" required placeholder="e.g. Suresh Kumar">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col form-group">
+                        <label for="dob">Date of Birth (जन्म तिथि) *</label>
+                        <input type="date" id="dob" required>
+                    </div>
+                    <div class="col form-group">
+                        <label for="aadhaar">Aadhaar Number (आधार संख्या) *</label>
+                        <input type="text" id="aadhaar" required placeholder="12-digit number">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Residential Address (स्थायी पता) *</label>
+                    <textarea id="address" rows="2" required placeholder="Village/Town, Post, Block, District, PIN"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="annual_income">Total Annual Family Income (वार्षिक पारिवारिक आय - रु) *</label>
+                    <input type="number" id="annual_income" required placeholder="e.g. 120000">
+                </div>
+
+                <div class="form-group" style="margin-top: 24px;">
+                    <label>
+                        <input type="checkbox" required> I hereby declare that the information provided above is true and correct to the best of my knowledge.
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-submit">Submit Application (आवेदन जमा करें)</button>
+            </form>
+
+            <div id="resultBox" class="result-box"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('applyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const resultBox = document.getElementById('resultBox');
+            btn.disabled = true;
+            btn.innerText = "Submitting...";
+
+            const payload = {
+                name: document.getElementById('name').value,
+                father_name: document.getElementById('father_name').value,
+                dob: document.getElementById('dob').value,
+                address: document.getElementById('address').value,
+                aadhaar: document.getElementById('aadhaar').value,
+                annual_income: parseInt(document.getElementById('annual_income').value, 10),
+                document_refs: []
+            };
+
+            try {
+                const res = await fetch('/api/apply/income_certificate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                resultBox.style.display = 'block';
+                if (res.ok) {
+                    resultBox.className = 'result-box result-success';
+                    resultBox.innerHTML = `<strong>Application Submitted Successfully!</strong><br>Application Reference ID: <code>${data.application_id}</code><br><br><a href="/portal/status?app_id=${data.application_id}">Click here to Track Status</a>`;
+                } else {
+                    resultBox.className = 'result-box result-error';
+                    resultBox.innerHTML = `<strong>Submission Rejected:</strong> ${data.detail || 'Error submitting application'}`;
+                }
+            } catch (err) {
+                resultBox.style.display = 'block';
+                resultBox.className = 'result-box result-error';
+                resultBox.innerHTML = `<strong>Network Error:</strong> ${err.message}`;
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Submit Application (आवेदन जमा करें)";
+            }
+        });
+    </script>
+</body>
+</html>

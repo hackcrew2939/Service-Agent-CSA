@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload & Verify Documents – Citizen Agent</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/translations.js"></script>
+    <style>
+        .doc-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .doc-item-card {
+            background: white;
+            border-radius: var(--radius-md);
+            border: 1.5px solid var(--border);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s;
+        }
+        .doc-item-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: #cbd5e1;
+        }
+        .doc-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .badge-status {
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            letter-spacing: 0.3px;
+        }
+        .badge-status.ok { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+        .badge-status.reject { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+        .badge-status.warn { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+        .badge-status.pending { background: #f1f5f9; color: #64748b; }
+        .upload-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+        .upload-label-btn {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 9px 18px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            font-size: 13.5px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 6px rgba(2, 132, 199, 0.2);
+        }
+        .upload-label-btn:hover {
+            box-shadow: 0 4px 10px rgba(2, 132, 199, 0.35);
+        }
+    </style>
+</head>
+<body style="height: auto; min-height: 100vh; overflow-y: auto;">
+    <div class="demo-banner">
+        <div><span>🛡️ <strong>Statutory Document Validator</strong> • Deterministic Python Rule Engine</span></div>
+        <div><span class="demo-pill">P3: Rules Decide, LLM Extracts Only</span></div>
+    </div>
+
+    <header class="app-header">
+        <div class="app-brand">
+            <div class="brand-icon">📎</div>
+            <div class="brand-info">
+                <h1>Document Verification <span style="font-size:13px; font-weight:600; color:var(--primary);">(दस्तावेज सत्यापन)</span></h1>
+                <p>Rule-based cross-checking & auto-replan on faults</p>
+            </div>
+        </div>
+        <div class="nav-cluster">
+            <button class="nav-btn" onclick="openLanguageModal()" style="display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
+                <span>🌐</span>
+                <span id="currentLangBtnText">English</span>
+            </button>
+            <a href="/" class="nav-btn primary">💬 <span>Return to Chat</span></a>
+            <a href="/dashboard" class="nav-btn">📊 <span>Audit Dashboard</span></a>
+        </div>
+    </header>
+
+    <div style="max-width: 860px; margin: 28px auto; padding: 0 20px;">
+        <div style="background:#f0fdf4; border:1px solid #86efac; padding:16px 20px; border-radius:12px; margin-bottom:20px;">
+            <strong style="color:#166534; font-size:14.5px;">📋 Income Certificate Checklist (आय प्रमाण पत्र आवश्यकताएं):</strong>
+            <p style="font-size:13px; color:#15803d; margin-top:4px;">
+                Upload clear JPG/PNG images. Our deterministic validation engine will check statutory validity (e.g. Income Proof &lt; 90 days, 12-digit Aadhaar, matching names).
+            </p>
+        </div>
+
+        <div class="doc-grid">
+            <!-- Aadhaar Card -->
+            <div class="doc-item-card" id="card-aadhaar">
+                <div class="doc-header-row">
+                    <div>
+                        <strong style="font-size:15px;">1. Aadhaar Card (पहचान प्रमाण)</strong>
+                        <div style="font-size:12.5px; color:var(--text-muted);">Front face with 12-digit Aadhaar number (Does not expire)</div>
+                    </div>
+                    <span class="badge-status pending" id="badge-aadhaar">PENDING UPLOAD</span>
+                </div>
+                <div class="upload-actions">
+                    <label class="upload-label-btn">
+                        📁 Choose File <input type="file" style="display:none;" onchange="uploadDoc('aadhaar', this)">
+                    </label>
+                    <span id="attempt-aadhaar" style="font-size:12.5px; color:var(--text-muted); font-weight:600;">Attempt: 0/3</span>
+                    <span id="msg-aadhaar" style="font-size:13px; font-weight:500;"></span>
+                </div>
+            </div>
+
+            <!-- Ration Card -->
+            <div class="doc-item-card" id="card-ration_card">
+                <div class="doc-header-row">
+                    <div>
+                        <strong style="font-size:15px;">2. Ration Card / Residence Proof (निवास प्रमाण)</strong>
+                        <div style="font-size:12.5px; color:var(--text-muted);">Government ration card verifying family & residence</div>
+                    </div>
+                    <span class="badge-status pending" id="badge-ration_card">PENDING UPLOAD</span>
+                </div>
+                <div class="upload-actions">
+                    <label class="upload-label-btn">
+                        📁 Choose File <input type="file" style="display:none;" onchange="uploadDoc('ration_card', this)">
+                    </label>
+                    <span id="attempt-ration_card" style="font-size:12.5px; color:var(--text-muted); font-weight:600;">Attempt: 0/3</span>
+                    <span id="msg-ration_card" style="font-size:13px; font-weight:500;"></span>
+                </div>
+            </div>
+
+            <!-- Income Proof -->
+            <div class="doc-item-card" id="card-income_proof">
+                <div class="doc-header-row">
+                    <div>
+                        <strong style="font-size:15px;">3. Income Proof / Salary Slip / Affidavit (आय प्रमाण)</strong>
+                        <div style="font-size:12.5px; color:var(--text-muted);">Must be issued within last 90 days</div>
+                    </div>
+                    <span class="badge-status pending" id="badge-income_proof">PENDING UPLOAD</span>
+                </div>
+                <div class="upload-actions">
+                    <label class="upload-label-btn">
+                        📁 Choose File <input type="file" style="display:none;" onchange="uploadDoc('income_proof', this)">
+                    </label>
+                    <span id="attempt-income_proof" style="font-size:12.5px; color:var(--text-muted); font-weight:600;">Attempt: 0/3</span>
+                    <span id="msg-income_proof" style="font-size:13px; font-weight:500;"></span>
+                </div>
+            </div>
+
+            <!-- Photograph -->
+            <div class="doc-item-card" id="card-photo">
+                <div class="doc-header-row">
+                    <div>
+                        <strong style="font-size:15px;">4. Passport Photograph (पासपोर्ट फोटो)</strong>
+                        <div style="font-size:12.5px; color:var(--text-muted);">Recent portrait photo for identity verification</div>
+                    </div>
+                    <span class="badge-status pending" id="badge-photo">PENDING UPLOAD</span>
+                </div>
+                <div class="upload-actions">
+                    <label class="upload-label-btn">
+                        📁 Choose File <input type="file" style="display:none;" onchange="uploadDoc('photo', this)">
+                    </label>
+                    <span id="attempt-photo" style="font-size:12.5px; color:var(--text-muted); font-weight:600;">Attempt: 0/3</span>
+                    <span id="msg-photo" style="font-size:13px; font-weight:500;"></span>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: right; margin-top: 32px; margin-bottom: 40px;">
+            <a href="/" class="upload-label-btn" style="background:var(--gov-green-gradient); text-decoration:none; padding:12px 28px; font-size:15px;">
+                Continue to Chat & Consent Gate ➔
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        async function uploadDoc(slot, input) {
+            if (!input.files || input.files.length === 0) return;
+            const file = input.files[0];
+            const sessionId = getCookie('session_id') || 'temp';
+
+            const badge = document.getElementById(`badge-${slot}`);
+            const msg = document.getElementById(`msg-${slot}`);
+            badge.className = 'badge-status warn';
+            badge.innerText = 'EXTRACTING & VALIDATING...';
+            msg.innerText = 'Analyzing document rules...';
+
+            const formData = new FormData();
+            formData.append('slot', slot);
+            formData.append('file', file);
+
+            try {
+                const res = await fetch(`/api/documents/${sessionId}`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                const v = data.validation;
+
+                if (v.status === 'OK') {
+                    badge.className = 'badge-status ok';
+                    badge.innerText = '✓ VALID (OK)';
+                    msg.style.color = '#15803d';
+                    msg.innerText = v.reply || 'Statutory validation passed.';
+                } else if (v.status === 'REJECT') {
+                    badge.className = 'badge-status reject';
+                    badge.innerText = `✗ REJECTED (${v.reason_code})`;
+                    msg.style.color = '#b91c1c';
+                    msg.innerText = v.human_reason || 'Document rejected.';
+                } else if (v.status === 'ASK_USER') {
+                    badge.className = 'badge-status warn';
+                    badge.innerText = '⚠️ CONFIRMATION NEEDED';
+                    msg.style.color = '#b45309';
+                    msg.innerText = v.human_reason || 'Name variation detected. Confirm in chat.';
+                }
+
+                if (v.attempt) {
+                    document.getElementById(`attempt-${slot}`).innerText = `Attempt: ${v.attempt}/3`;
+                }
+
+            } catch (err) {
+                badge.className = 'badge-status reject';
+                badge.innerText = 'ERROR';
+                msg.innerText = err.message;
+            }
+        }
+    </script>
+    <!-- Language Selection Modal -->
+    <div id="languageSelectionModal" class="lang-modal-overlay" onclick="if(event.target===this) closeLanguageModal()" role="dialog" aria-modal="true">
+        <div class="lang-modal-window">
+            <div class="lang-modal-top-bar">
+                <div class="lang-modal-top-title">
+                    <span>🔔</span>
+                    <span data-i18n="modal_alert_title">Alert • Language Selection (भाषा चयन)</span>
+                </div>
+                <button class="lang-modal-close-btn" onclick="closeLanguageModal()">✕</button>
+            </div>
+            <div class="lang-modal-body">
+                <div class="lang-modal-emblem-wrapper">
+                    <span class="emblem-icon">🌐</span>
+                </div>
+                <div class="lang-modal-title-hi" data-i18n="modal_welcome_title">
+                    नागरिक सेवा सहायक में आपका स्वागत है
+                </div>
+                <div class="lang-modal-title-en">
+                    Welcome to Citizen-Service Agent
+                </div>
+                <div class="lang-modal-prompt-hi" data-i18n="modal_select_prompt">
+                    कृपया अपनी पसंदीदा भाषा का चयन करें
+                </div>
+                <div class="lang-modal-prompt-en">
+                    Please select your preferred language.
+                </div>
+                <div class="lang-modal-quick-row">
+                    <button class="quick-lang-btn hi" data-lang-code="hi" onclick="selectLanguageAndClose('hi')">
+                        <span>हिंदी</span>
+                        <span style="font-size:11.5px; opacity:0.9; font-weight:500;">(Hindi)</span>
+                    </button>
+                    <button class="quick-lang-btn en" data-lang-code="en" onclick="selectLanguageAndClose('en')">
+                        <span>English</span>
+                        <span style="font-size:11.5px; opacity:0.9; font-weight:500;">(English)</span>
+                    </button>
+                </div>
+                <div class="lang-modal-divider">
+                    <span data-i18n="more_languages">अथवा सभी क्षेत्रीय भाषाएं / Or Choose From All Languages</span>
+                </div>
+                <div class="lang-modal-grid">
+                    <div class="lang-grid-card" data-lang-code="en" onclick="selectLanguageAndClose('en')">
+                        <div class="lang-card-text"><span class="lang-card-native">English</span><span class="lang-card-sub">English</span></div>
+                        <span class="lang-active-check">✓</span>
+                    </div>
+                    <div class="lang-grid-card" data-lang-code="hi" onclick="selectLanguageAndClose('hi')">
+                        <div class="lang-card-text"><span class="lang-card-native">हिन्दी</span><span class="lang-card-sub">Hindi</span></div>
+                        <span class="lang-active-check">✓</span>
+                    </div>
+                    <div class="lang-grid-card" data-lang-code="bn" onclick="selectLanguageAndClose('bn')">
+                        <div class="lang-card-text"><span class="lang-card-native">বাংলা</span><span class="lang-card-sub">Bengali</span></div>
+                        <span class="lang-active-check">✓</span>
+                    </div>
+                    <div class="lang-grid-card" data-lang-code="mr" onclick="selectLanguageAndClose('mr')">
+                        <div class="lang-card-text"><span class="lang-card-native">मराठी</span><span class="lang-card-sub">Marathi</span></div>
+                        <span class="lang-active-check">✓</span>
+                    </div>
+                    <div class="lang-grid-card" data-lang-code="ta" onclick="selectLanguageAndClose('ta')">
+                        <div class="lang-card-text"><span class="lang-card-native">தமிழ்</span><span class="lang-card-sub">Tamil</span></div>
+                        <span class="lang-active-check">✓</span>
+                    </div>
+                    <div class="lang-grid-card" data-lang-code="te" onclick="selectLanguageAndClose('te')">
+                        <div class="lang-card-text"><span class="lang-card-native">తెలుగు</span><span class="lang-card-sub">Telugu</span></div>
+                        <span class="lang-active-check">✓</span>
+                    </div>
+                    <div class="lang-grid-card" data-lang-code="gu" onclick="selectLanguageAndClose('gu')">
+                        <div class="lang-card-text"><span class="lang-card-native">ગુજરાતી</span><span class="lang-card-sub">Gujarati</span></div>
+                        <span class="lang-active-check">✓</span>
+                    </div>
+                    <div class="lang-grid-card" data-lang-code="kn" onclick="selectLanguageAndClose('kn')">
+                        <div class="lang-card-text"><span class="lang-card-native">ಕನ್ನಡ</span><span class="lang-card-sub">Kannada</span></div>
+                        <span class="lang-active-check">✓</span>
+                    </div>
+                    <div class="lang-grid-card" data-lang-code="ml" onclick="selectLanguageAndClose('ml')">
+                        <div class="lang-card-text"><span class="lang-card-native">മലയാളം</span><span class="lang-card-sub">Malayalam</span></div>
+                        <span class="lang-active-check">✓</span>
+                    </div>
+                    <div class="lang-grid-card" data-lang-code="pa" onclick="selectLanguageAndClose('pa')">
+                        <div class="lang-card-text"><span class="lang-card-native">ਪੰਜਾਬੀ</span><span class="lang-card-sub">Punjabi</span></div>
+                        <span class="lang-active-check">✓</span>
+                    </div>
+                    <div class="lang-grid-card" data-lang-code="or" onclick="selectLanguageAndClose('or')">
+                        <div class="lang-card-text"><span class="lang-card-native">ଓଡ଼ିଆ</span><span class="lang-card-sub">Odia</span></div>
+                        <span class="lang-active-check">✓</span>
+                    </div>
+                    <div class="lang-grid-card" data-lang-code="mai" onclick="selectLanguageAndClose('mai')">
+                        <div class="lang-card-text"><span class="lang-card-native">मैथिली</span><span class="lang-card-sub">Maithili</span></div>
+                        <span class="lang-active-check">✓</span>
+                    </div>
+                    <div class="lang-grid-card" data-lang-code="bho" onclick="selectLanguageAndClose('bho')">
+                        <div class="lang-card-text"><span class="lang-card-native">भोजपुरी</span><span class="lang-card-sub">Bhojpuri</span></div>
+                        <span class="lang-active-check">✓</span>
+                    </div>
+                    <div class="lang-grid-card" data-lang-code="as" onclick="selectLanguageAndClose('as')">
+                        <div class="lang-card-text"><span class="lang-card-native">অসমীয়া</span><span class="lang-card-sub">Assamese</span></div>
+                        <span class="lang-active-check">✓</span>
+                    </div>
+                    <div class="lang-grid-card" data-lang-code="ur" onclick="selectLanguageAndClose('ur')">
+                        <div class="lang-card-text"><span class="lang-card-native">اردو</span><span class="lang-card-sub">Urdu</span></div>
+                        <span class="lang-active-check">✓</span>
+                    </div>
+                </div>
+            </div>
+            <div class="lang-modal-footer">
+                <button class="btn btn-secondary" onclick="closeLanguageModal()" data-i18n="btn_close">Close / बंद करें</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,222 @@
+[
+  {
+    "citizen_id": "C001",
+    "aadhaar": "1234 5678 9012",
+    "name": "Rik Kumar",
+    "father_name": "Ramesh Kumar",
+    "dob": "2003-05-14",
+    "address": "Ranchi, Jharkhand",
+    "ration_card_no": "JH-RC-100234",
+    "annual_income": 120000,
+    "phone": "9000000001"
+  },
+  {
+    "citizen_id": "C002",
+    "aadhaar": "2345 6789 0123",
+    "name": "Priya Devi",
+    "father_name": "Suresh Prasad",
+    "dob": "1995-08-22",
+    "address": "Jamshedpur, Jharkhand",
+    "ration_card_no": "JH-RC-200345",
+    "annual_income": 95000,
+    "phone": "9000000002"
+  },
+  {
+    "citizen_id": "C003",
+    "aadhaar": "3456 7890 1234",
+    "name": "Amit Singh",
+    "father_name": "Vijay Singh",
+    "dob": "1988-03-10",
+    "address": "Dhanbad, Jharkhand",
+    "ration_card_no": "JH-RC-300456",
+    "annual_income": 180000,
+    "phone": "9000000003"
+  },
+  {
+    "citizen_id": "C004",
+    "aadhaar": "4567 8901 2345",
+    "name": "Sunita Kumari",
+    "father_name": "Mohan Lal",
+    "dob": "1992-11-30",
+    "address": "Bokaro, Jharkhand",
+    "ration_card_no": "JH-RC-400567",
+    "annual_income": 75000,
+    "phone": "9000000004"
+  },
+  {
+    "citizen_id": "C005",
+    "aadhaar": "5678 9012 3456",
+    "name": "Rajesh Pandey",
+    "father_name": "Shiv Prasad Pandey",
+    "dob": "1980-06-15",
+    "address": "Hazaribagh, Jharkhand",
+    "ration_card_no": "JH-RC-500678",
+    "annual_income": 210000,
+    "phone": "9000000005"
+  },
+  {
+    "citizen_id": "C006",
+    "aadhaar": "6789 0123 4567",
+    "name": "Meena Mahato",
+    "father_name": "Budhram Mahato",
+    "dob": "2001-01-20",
+    "address": "Giridih, Jharkhand",
+    "ration_card_no": "JH-RC-600789",
+    "annual_income": 60000,
+    "phone": "9000000006"
+  },
+  {
+    "citizen_id": "C007",
+    "aadhaar": "7890 1234 5678",
+    "name": "Deepak Yadav",
+    "father_name": "Ramswaroop Yadav",
+    "dob": "1997-09-05",
+    "address": "Deoghar, Jharkhand",
+    "ration_card_no": "JH-RC-700890",
+    "annual_income": 145000,
+    "phone": "9000000007"
+  },
+  {
+    "citizen_id": "C008",
+    "aadhaar": "8901 2345 6789",
+    "name": "Anita Oraon",
+    "father_name": "Mangal Oraon",
+    "dob": "1985-12-18",
+    "address": "Lohardaga, Jharkhand",
+    "ration_card_no": "JH-RC-800901",
+    "annual_income": 55000,
+    "phone": "9000000008"
+  },
+  {
+    "citizen_id": "C009",
+    "aadhaar": "9012 3456 7890",
+    "name": "Suresh Mahli",
+    "father_name": "Ganesh Mahli",
+    "dob": "1975-04-25",
+    "address": "Simdega, Jharkhand",
+    "ration_card_no": "JH-RC-901012",
+    "annual_income": 88000,
+    "phone": "9000000009"
+  },
+  {
+    "citizen_id": "C010",
+    "aadhaar": "1111 2222 3333",
+    "name": "Kavita Soren",
+    "father_name": "Babulal Soren",
+    "dob": "1999-07-08",
+    "address": "Pakur, Jharkhand",
+    "ration_card_no": "JH-RC-101123",
+    "annual_income": 72000,
+    "phone": "9000000010"
+  },
+  {
+    "citizen_id": "C011",
+    "aadhaar": "2222 3333 4444",
+    "name": "Mohan Tudu",
+    "father_name": "Birsa Tudu",
+    "dob": "1993-02-14",
+    "address": "Dumka, Jharkhand",
+    "ration_card_no": "JH-RC-111234",
+    "annual_income": 130000,
+    "phone": "9000000011"
+  },
+  {
+    "citizen_id": "C012",
+    "aadhaar": "3333 4444 5555",
+    "name": "Savitri Devi",
+    "father_name": "Chandra Bhushan",
+    "dob": "1970-10-03",
+    "address": "Godda, Jharkhand",
+    "ration_card_no": "JH-RC-121345",
+    "annual_income": 48000,
+    "phone": "9000000012"
+  },
+  {
+    "citizen_id": "C013",
+    "aadhaar": "4444 5555 6666",
+    "name": "Nilesh Gupta",
+    "father_name": "Ramdayal Gupta",
+    "dob": "2000-05-29",
+    "address": "Sahibganj, Jharkhand",
+    "ration_card_no": "JH-RC-131456",
+    "annual_income": 195000,
+    "phone": "9000000013"
+  },
+  {
+    "citizen_id": "C014",
+    "aadhaar": "5555 6666 7777",
+    "name": "Radha Kumari",
+    "father_name": "Prahlad Singh",
+    "dob": "1983-08-11",
+    "address": "Garhwa, Jharkhand",
+    "ration_card_no": "JH-RC-141567",
+    "annual_income": 65000,
+    "phone": "9000000014"
+  },
+  {
+    "citizen_id": "C015",
+    "aadhaar": "6666 7777 8888",
+    "name": "Santosh Munda",
+    "father_name": "Jaipal Munda",
+    "dob": "1978-03-22",
+    "address": "Khunti, Jharkhand",
+    "ration_card_no": "JH-RC-151678",
+    "annual_income": 110000,
+    "phone": "9000000015"
+  },
+  {
+    "citizen_id": "C016",
+    "aadhaar": "7777 8888 9999",
+    "name": "Geeta Devi",
+    "father_name": "Lakhan Prasad",
+    "dob": "1996-11-07",
+    "address": "Ramgarh, Jharkhand",
+    "ration_card_no": "JH-RC-161789",
+    "annual_income": 82000,
+    "phone": "9000000016"
+  },
+  {
+    "citizen_id": "C017",
+    "aadhaar": "8888 9999 0000",
+    "name": "Vikram Tiwari",
+    "father_name": "Shambhu Tiwari",
+    "dob": "1990-06-30",
+    "address": "Latehar, Jharkhand",
+    "ration_card_no": "JH-RC-171890",
+    "annual_income": 155000,
+    "phone": "9000000017"
+  },
+  {
+    "citizen_id": "C018",
+    "aadhaar": "9999 0000 1111",
+    "name": "Poonam Kumari",
+    "father_name": "Shyam Sundar Das",
+    "dob": "2004-02-18",
+    "address": "Chatra, Jharkhand",
+    "ration_card_no": "JH-RC-181901",
+    "annual_income": 42000,
+    "phone": "9000000018"
+  },
+  {
+    "citizen_id": "C019",
+    "aadhaar": "1010 2020 3030",
+    "name": "Harish Choudhary",
+    "father_name": "Naresh Choudhary",
+    "dob": "1982-09-14",
+    "address": "West Singhbhum, Jharkhand",
+    "ration_card_no": "JH-RC-192012",
+    "annual_income": 235000,
+    "phone": "9000000019"
+  },
+  {
+    "citizen_id": "C020",
+    "aadhaar": "2020 3030 4040",
+    "name": "Usha Rani",
+    "father_name": "Kailash Nath",
+    "dob": "1987-04-01",
+    "address": "East Singhbhum, Jharkhand",
+    "ration_card_no": "JH-RC-202123",
+    "annual_income": 98000,
+    "phone": "9000000020"
+  }
+]

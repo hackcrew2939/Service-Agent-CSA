@@ -1,0 +1,51 @@
+{
+  "income_certificate": {
+    "display_name": {"en": "Income Certificate", "hi": "आय प्रमाण पत्र"},
+    "required_documents": ["aadhaar", "ration_card", "income_proof", "photo"],
+    "document_rules": {
+      "aadhaar":      {"max_age_days": null},
+      "ration_card":  {"max_age_days": null},
+      "income_proof": {"max_age_days": 365},
+      "photo":        {"max_age_days": null}
+    },
+    "portal_endpoint": "/api/apply/income_certificate",
+    "form_fields": ["name", "father_name", "dob", "address", "aadhaar", "annual_income"],
+    "income_limit": 300000,
+    "plan_template": [
+      {"seq": 1,  "type": "collect_document", "slot": "aadhaar"},
+      {"seq": 2,  "type": "collect_document", "slot": "ration_card"},
+      {"seq": 3,  "type": "collect_document", "slot": "income_proof"},
+      {"seq": 4,  "type": "collect_document", "slot": "photo"},
+      {"seq": 5,  "type": "validate_all"},
+      {"seq": 6,  "type": "data_review"},
+      {"seq": 7,  "type": "consent",          "action": "share_document"},
+      {"seq": 8,  "type": "consent",          "action": "submit_form"},
+      {"seq": 9,  "type": "submit_form"},
+      {"seq": 10, "type": "track_status"}
+    ]
+  },
+  "scholarship": {
+    "_comment": "[STRETCH] reuses the same engine with a different config",
+    "display_name": {"en": "Scholarship Application", "hi": "छात्रवृत्ति आवेदन"},
+    "required_documents": ["aadhaar", "income_proof", "photo"],
+    "document_rules": {
+      "aadhaar":      {"max_age_days": null},
+      "income_proof": {"max_age_days": 365},
+      "photo":        {"max_age_days": null}
+    },
+    "portal_endpoint": "/api/apply/scholarship",
+    "form_fields": ["name", "father_name", "dob", "address", "aadhaar", "annual_income"],
+    "income_limit": 200000,
+    "plan_template": [
+      {"seq": 1, "type": "collect_document", "slot": "aadhaar"},
+      {"seq": 2, "type": "collect_document", "slot": "income_proof"},
+      {"seq": 3, "type": "collect_document", "slot": "photo"},
+      {"seq": 4, "type": "validate_all"},
+      {"seq": 5, "type": "data_review"},
+      {"seq": 6, "type": "consent",         "action": "share_document"},
+      {"seq": 7, "type": "consent",         "action": "submit_form"},
+      {"seq": 8, "type": "submit_form"},
+      {"seq": 9, "type": "track_status"}
+    ]
+  }
+}

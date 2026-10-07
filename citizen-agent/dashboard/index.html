@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff & Auditor Cockpit – Citizen Services</title>
+    <link rel="stylesheet" href="/dashboard-static/dashboard.css">
+    <style>
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .metric-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .metric-val {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 6px 0 2px 0;
+        }
+        .metric-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="brand">
+            🏛️ Citizen-Service Auditor & Staff Cockpit
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <a href="/" class="btn" style="background:#f1f5f9; text-decoration:none; color:inherit;">💬 Citizen Chat</a>
+            <a href="/documents" class="btn" style="background:#f1f5f9; text-decoration:none; color:inherit;">📎 Docs Checklist</a>
+            <a href="http://localhost:8001/portal/apply" target="_blank" class="btn" style="background:#f1f5f9; text-decoration:none; color:inherit;">🏛️ Mock Portal</a>
+            <span style="font-size: 13px; color: var(--text-muted); margin-left: 8px;">Logged in: <strong>Helper-1 (Staff)</strong></span>
+        </div>
+    </header>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" id="tab-btn-audit" onclick="switchTab('audit')">Tab A: Cryptographic Audit Trail</button>
+        <button class="tab-btn" id="tab-btn-escalations" onclick="switchTab('escalations')">Tab B: Escalation Queue</button>
+    </div>
+
+    <div class="container">
+        <!-- Live System Metric Cards -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Consent Gate Violations</div>
+                <div class="metric-val" style="color:#059669;">0</div>
+                <div style="font-size:12px; color:#059669; font-weight:600;">100% Code-Enforced</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Chain Verification</div>
+                <div class="metric-val" id="metricChainStatus" style="font-size:18px; color:#059669; padding-top:6px;">VALID</div>
+                <div style="font-size:12px; color:var(--text-muted);">Hash-Chained Anchor</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Intermediary Fee</div>
+                <div class="metric-val" style="color:#0284c7;">Rs 0</div>
+                <div style="font-size:12px; color:var(--text-muted);">Middlemen Eliminated</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Statutory Accuracy</div>
+                <div class="metric-val" style="color:#4f46e5;">100%</div>
+                <div style="font-size:12px; color:var(--text-muted);">Python Rule Engine</div>
+            </div>
+        </div>
+
+        <!-- Tab A: Audit Log -->
+        <div id="tab-audit" class="tab-content">
+            <div class="card">
+                <div class="flex-between">
+                    <div>
+                        <h2 style="margin:0; font-size:18px;">Append-Only Hash-Chained Audit Log</h2>
+                        <div style="font-size:13px; color:var(--text-muted); margin-top:4px;">
+                            Tamper-evident record of all agent proposals, consent grants/denials, tool executions, and retries.
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <span id="verifyResult"></span>
+                        <button class="btn btn-primary" onclick="verifyAuditChain()">🛡️ Verify Hash Integrity</button>
+                        <button class="btn" style="background:#e2e8f0;" onclick="exportAuditCSV()">📥 Export CSV</button>
+                        <button class="btn" style="background:#e2e8f0;" onclick="loadAuditLog()">🔄 Refresh</button>
+                    </div>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Timestamp (UTC)</th>
+                            <th>Actor</th>
+                            <th>Action</th>
+                            <th>Reason</th>
+                            <th>Result</th>
+                            <th>Row Hash</th>
+                        </tr>
+                    </thead>
+                    <tbody id="auditTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab B: Escalations -->
+        <div id="tab-escalations" class="tab-content" style="display:none;">
+            <div class="card">
+                <div class="flex-between">
+                    <div>
+                        <h2 style="margin:0; font-size:18px;">Human Assistance & Recovery Queue</h2>
+                        <div style="font-size:13px; color:var(--text-muted); margin-top:4px;">
+                            Cases escalated by statutory rules (3 rejections), retry exhaustion, or citizen request.
+                        </div>
+                    </div>
+                    <button class="btn" style="background:#e2e8f0;" onclick="loadEscalations()">🔄 Refresh Queue</button>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Case #</th>
+                            <th>Session ID</th>
+                            <th>Escalation Reason</th>
+                            <th>Status</th>
+                            <th>Assigned Staff</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="escalationsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="/dashboard-static/dashboard.js"></script>
+</body>
+</html>

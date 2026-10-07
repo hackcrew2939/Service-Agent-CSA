@@ -1,0 +1,35 @@
+# ── Core ──────────────────────────────────────────────────────────────────────
+fastapi==0.115.12
+uvicorn[standard]==0.34.2
+python-multipart==0.0.20
+httpx==0.28.1
+pydantic==2.11.3
+pydantic-settings==2.9.1
+python-dotenv==1.1.0
+aiofiles==24.1.0
+jinja2==3.1.6
+
+# ── Database ──────────────────────────────────────────────────────────────────
+# plain sqlite3 is in stdlib; no extra ORM needed
+
+# ── LLM ──────────────────────────────────────────────────────────────────────
+anthropic==0.52.0
+
+# ── Synthetic data & document generation ─────────────────────────────────────
+Faker==37.1.0
+Pillow==11.2.1
+
+# ── Testing ───────────────────────────────────────────────────────────────────
+pytest==8.3.5
+pytest-asyncio==0.26.0
+anyio==4.9.0
+
+# ── Voice / audio (optional – fallback to browser if absent) ──────────────────
+# faster-whisper==1.1.1   # uncomment to enable local Whisper
+# ffmpeg-python==0.2.0
+
+# ── Benchmarks ────────────────────────────────────────────────────────────────
+matplotlib==3.10.1
+
+# ── Playwright (STRETCH) ──────────────────────────────────────────────────────
+# playwright==1.51.0

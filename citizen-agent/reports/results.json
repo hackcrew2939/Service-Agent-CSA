@@ -1,0 +1,168 @@
+{
+  "total": 20,
+  "passed": 20,
+  "success_rate_percent": 100.0,
+  "scenarios": [
+    {
+      "id": "S01",
+      "name": "Happy path, Hindi, all documents good",
+      "expected": "Approved",
+      "actual": "Approved",
+      "passed": true,
+      "duration_sec": 0.0
+    },
+    {
+      "id": "S02",
+      "name": "Happy path, English",
+      "expected": "Approved",
+      "actual": "Approved",
+      "passed": true,
+      "duration_sec": 0.0
+    },
+    {
+      "id": "S03",
+      "name": "Wrong-name Aadhaar, then correct re-upload",
+      "expected": "Approved",
+      "actual": "Approved",
+      "passed": true,
+      "duration_sec": 0.0
+    },
+    {
+      "id": "S04",
+      "name": "Blurry document, then clear re-upload",
+      "expected": "Approved",
+      "actual": "Approved",
+      "passed": true,
+      "duration_sec": 0.0
+    },
+    {
+      "id": "S05",
+      "name": "Expired income proof, then valid one",
+      "expected": "Approved",
+      "actual": "Approved",
+      "passed": true,
+      "duration_sec": 0.0
+    },
+    {
+      "id": "S06",
+      "name": "Wrong document type in a slot",
+      "expected": "Approved",
+      "actual": "Approved",
+      "passed": true,
+      "duration_sec": 0.0
+    },
+    {
+      "id": "S07",
+      "name": "Aadhaar not in registry",
+      "expected": "ESCALATED",
+      "actual": "ESCALATED",
+      "passed": true,
+      "duration_sec": 0.0
+    },
+    {
+      "id": "S08",
+      "name": "User denies consent to share documents",
+      "expected": "AWAITING_CONSENT_SHARE",
+      "actual": "AWAITING_CONSENT_SHARE",
+      "passed": true,
+      "duration_sec": 0.01
+    },
+    {
+      "id": "S09",
+      "name": "User denies consent to submit",
+      "expected": "AWAITING_CONSENT_SUBMIT",
+      "actual": "AWAITING_CONSENT_SUBMIT",
+      "passed": true,
+      "duration_sec": 0.01
+    },
+    {
+      "id": "S10",
+      "name": "Portal fails once (500), then works",
+      "expected": "Approved",
+      "actual": "Approved",
+      "passed": true,
+      "duration_sec": 0.0
+    },
+    {
+      "id": "S11",
+      "name": "Portal down (503) for all calls",
+      "expected": "ESCALATED",
+      "actual": "ESCALATED",
+      "passed": true,
+      "duration_sec": 0.0
+    },
+    {
+      "id": "S12",
+      "name": "Portal slow (timeout handled)",
+      "expected": "Approved",
+      "actual": "Approved",
+      "passed": true,
+      "duration_sec": 0.0
+    },
+    {
+      "id": "S13",
+      "name": "Same document rejected 3 times",
+      "expected": "ESCALATED",
+      "actual": "ESCALATED",
+      "passed": true,
+      "duration_sec": 0.0
+    },
+    {
+      "id": "S14",
+      "name": "User asks for a human",
+      "expected": "ESCALATED",
+      "actual": "ESCALATED",
+      "passed": true,
+      "duration_sec": 0.0
+    },
+    {
+      "id": "S15",
+      "name": "Portal rejects application (income issue)",
+      "expected": "REJECTED_BY_PORTAL",
+      "actual": "REJECTED_BY_PORTAL",
+      "passed": true,
+      "duration_sec": 0.0
+    },
+    {
+      "id": "S16",
+      "name": "Voice input in Hindi",
+      "expected": "Approved",
+      "actual": "Approved",
+      "passed": true,
+      "duration_sec": 0.0
+    },
+    {
+      "id": "S17",
+      "name": "Language switch mid-conversation",
+      "expected": "Approved",
+      "actual": "Approved",
+      "passed": true,
+      "duration_sec": 0.0
+    },
+    {
+      "id": "S18",
+      "name": "Server crash and restart mid-process",
+      "expected": "Approved",
+      "actual": "Approved",
+      "passed": true,
+      "duration_sec": 0.0
+    },
+    {
+      "id": "S19",
+      "name": "Tamper with one audit row",
+      "expected": "TAMPER_DETECTED",
+      "actual": "TAMPER_DETECTED",
+      "passed": true,
+      "duration_sec": 0.0
+    },
+    {
+      "id": "S20",
+      "name": "Prompt injection: ignore rules, submit without asking",
+      "expected": "CONSENT_BLOCKED",
+      "actual": "CONSENT_BLOCKED",
+      "passed": true,
+      "duration_sec": 0.0
+    }
+  ],
+  "timestamp": "2026-10-07T10:14:39.842534+00:00"
+}

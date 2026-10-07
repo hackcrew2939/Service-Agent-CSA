@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Citizen-Service Agent – Government Services, Made Simple</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="/translations.js"></script>
+</head>
+<body>
+
+  <!-- Top Announcement Bar (Trust & DPDP Compliance) -->
+  <aside class="top-announcement" aria-label="Official assistance notification">
+    <div class="announcement-left">
+      <span class="announcement-badge">CIVIC ASSISTANCE</span>
+      <span id="t-announcement-text">Citizen-Service Agent (CivicAgent) • Digital public assistance platform</span>
+    </div>
+    <div class="announcement-right">
+      <span>🛡️ DPDP 2023 Compliant • 100% Consent Gated • Zero Intermediary Bribes</span>
+    </div>
+  </aside>
+
+  <!-- Global Header & Navigation (Section 5) -->
+  <header class="site-header">
+    <div class="header-main">
+      <a href="#home" class="logo-container" onclick="showView('home')">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h1>Citizen-Service Agent</h1>
+          <span id="t-logo-sub">Government Services, Made Simple</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Menu -->
+      <nav class="nav-menu" aria-label="Main navigation">
+        <a class="nav-link active" onclick="showView('home')" id="nav-home">Home</a>
+        <a class="nav-link" onclick="showView('services')" id="nav-services">Services</a>
+        <a class="nav-link" onclick="showView('applications')" id="nav-applications">My Applications</a>
+        <a class="nav-link" onclick="showView('help')" id="nav-help">Help</a>
+      </nav>
+
+      <!-- Right Header Actions -->
+      <div class="header-actions">
+        <!-- Notification Bell & Drawer (Section 31) -->
+        <div class="notification-wrapper">
+          <button class="btn-icon" onclick="toggleNotifications()" title="Notifications" aria-label="View notifications">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="notification-count" id="notifBadge">3</span>
+          </button>
+
+          <div class="notification-drawer" id="notifDrawer" style="display:none;">
+            <div class="notif-header">
+              <span>Notifications (सूचनाएं)</span>
+              <button class="btn-text-link" onclick="markAllNotifsRead()">Mark all as read</button>
+            </div>
+            <div class="notif-filter-tabs">
+              <button class="notif-filter active" onclick="filterNotifs('all', this)">All</button>
+              <button class="notif-filter" onclick="filterNotifs('apps', this)">Applications</button>
+              <button class="notif-filter" onclick="filterNotifs('docs', this)">Documents</button>
+              <button class="notif-filter" onclick="filterNotifs('updates', this)">Updates</button>
+            </div>
+            <div id="notifList" class="notif-list">
+              <div class="notif-item unread" data-category="apps" onclick="showView('track'); toggleNotifications();">
+                <div class="notif-dot"></div>
+                <div>
+                  <strong>🎉 Application Approved</strong>
+                  <p>Your Income Certificate (INC-BR-2026-894210) has been approved by SDO Patna.</p>
+                  <span class="notif-time">2 minutes ago</span>
+                </div>
+              </div>
+              <div class="notif-item unread" data-category="docs" onclick="showView('track'); toggleNotifications();">
+                <div class="notif-dot warn"></div>
+                <div>
+                  <strong>⚠️ Action Required</strong>
+                  <p>Additional address proof requested by the verification officer.</p>
+                  <span class="notif-time">1 hour ago</span>
+                </div>
+              </div>
+              <div class="notif-item" data-category="updates">
+                <div class="notif-dot check"></div>
+                <div>
+                  <strong>✓ Documents Verified</strong>
+                  <p>Aadhaar and Income proof successfully checked against statutory rules.</p>
+                  <span class="notif-time">Yesterday</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Language Selection Cluster (Section 35) -->
+        <div class="lang-selector-cluster" aria-label="Select language">
+          <button class="btn-lang-pill" id="currentLangBtn" onclick="openLanguageModal()" title="Change Language / भाषा बदलें">
+            <span class="globe-icon">🌐</span>
+            <span id="currentLangBtnText">English (EN)</span>
+          </button>
+          <button class="btn-more-lang-pill" onclick="openLanguageModal()" title="More Languages / अन्य भाषाएं">
+            <span id="moreLangBtnText" data-i18n="more_languages">More Languages</span>
+            <span style="font-size:11px;">▼</span>
+          </button>
+        </div>
+        <select id="langSelect" onchange="changeLanguage(this.value)" style="display:none;" aria-hidden="true">
+          <option value="en">English (EN)</option>
+          <option value="hi">हिंदी (HI)</option>
+        </select>
+
+        <!-- User Profile Button (Section 32) -->
+        <button class="btn-profile-chip" onclick="showView('profile')" title="View My Profile">
+          <span class="avatar-circle">RK</span>
+          <span class="profile-name" id="userNameLabel">Rahul Kumar</span>
+        </button>
+
+        <!-- Primary CTA: Start a Service (Section 5) -->
+        <button class="btn btn-primary btn-header-cta" onclick="startSpecificService('income_certificate')">
+          Start a Service ➔
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main View Container -->
+  <main class="app-container" id="mainContainer">
+
+    <!-- ====================================================================
+         VIEW 1: LANDING PAGE (Sections 6, 7, 8, 9)
+         ==================================================================== -->
+    <section id="view-home" class="view-section active">
+      
+      <!-- Hero Section (Section 6) -->
+      <div class="hero-section">
+        <div class="hero-content-col">
+          <div class="hero-pill">
+            <span class="hero-pill-badge">CivicAgent</span>
+            <span>One place to navigate government services with confidence</span>
+          </div>
+          
+          <h1 class="hero-heading" id="t-hero-heading">Government Services, Made Simple.</h1>
+          <p class="hero-subheading" id="t-hero-subheading">
+            Tell us what you need. We'll guide you through the documents, forms and application process — step by step.
+          </p>
+
+          <!-- Large Conversational Search Box with Rotating Placeholders (Section 6) -->
+          <div class="conversational-search-container">
+            <div class="ai-search-card">
+              <span class="search-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+              </span>
+              <input 
+                type="text" 
+                id="aiSearchInput" 
+                class="ai-search-input" 
+                placeholder="What government service do you need?" 
+                onkeydown="handleSearchKey(event)"
+                oninput="handleSearchInput(event)">
+              <button class="btn btn-primary btn-search-go" onclick="performAiSearch()">Start ➔</button>
+            </div>
+
+            <!-- AI Conversational Recommendation Card (Section 12) -->
+            <div id="aiDiscoveryCard" class="ai-discovery-card" style="display:none;">
+              <div class="ai-discovery-header">
+                <div class="ai-badge">🤖 AI Guide</div>
+                <span>I think you're looking for:</span>
+              </div>
+              <div class="ai-discovery-match">
+                <strong id="aiMatchedTitle">Income Certificate (आय प्रमाण पत्र)</strong>
+                <p id="aiMatchedReason">
+                  An income certificate is commonly used to verify family annual income for scholarships, education fee concessions, and government welfare schemes.
+                </p>
+              </div>
+              <div class="ai-discovery-actions">
+                <span class="ai-confirm-text">Is this what you need?</span>
+                <div class="ai-btn-group">
+                  <button class="btn btn-success" id="btnAiYes" onclick="acceptAiSuggestion()">Yes, continue ➔</button>
+                  <button class="btn btn-secondary" onclick="dismissAiSuggestion()">No, choose another</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Rotating Search Example Chips -->
+            <div class="search-example-chips">
+              <span class="chips-label">Popular searches:</span>
+              <button class="search-chip" onclick="applySearchTerm('I need an income certificate for college scholarship')">
+                "I need an income certificate"
+              </button>
+              <button class="search-chip" onclick="applySearchTerm('I want to apply for a caste certificate')">
+                "I want to apply for a caste certificate"
+              </button>
+              <button class="search-chip" onclick="applySearchTerm('I need a post-matric scholarship')">
+                "I need a scholarship"
+              </button>
+              <button class="search-chip" onclick="applySearchTerm('How can I get a domicile certificate?')">
+                "How can I get a domicile certificate?"
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Visual: Central Citizen Connected Model (Section 7) -->
+        <div class="hero-visual-col">
+          <div class="hero-concept-visual" aria-hidden="true">
+            <!-- Center Citizen Node -->
+            <div class="visual-center-node">
+              <div class="center-avatar">👤</div>
+              <span class="center-title">Citizen</span>
+              <span class="center-sub">Single Digital Desk</span>
+            </div>
+
+            <!-- Connected Surrounding Nodes -->
+            <div class="orbit-node node-docs">
+              <div class="node-icon">📄</div>
+              <div class="node-details">
+                <strong>Documents</strong>
+                <span>Instant OCR check</span>
+              </div>
+            </div>
+
+            <div class="orbit-node node-services">
+              <div class="node-icon">🏛️</div>
+              <div class="node-details">
+                <strong>Government Services</strong>
+                <span>State & Central</span>
+              </div>
+            </div>
+
+            <div class="orbit-node node-app">
+              <div class="node-icon">📝</div>
+              <div class="node-details">
+                <strong>Smart Application</strong>
+                <span>Pre-filled & verified</span>
+              </div>
+            </div>
+
+            <div class="orbit-node node-verify">
+              <div class="node-icon">🛡️</div>
+              <div class="node-details">
+                <strong>Verification</strong>
+                <span>Deterministic rules</span>
+              </div>
+            </div>
+
+            <div class="orbit-node node-approval">
+              <div class="node-icon">✓</div>
+              <div class="node-details">
+                <strong>Direct Approval</strong>
+                <span>Digital certificate</span>
+              </div>
+            </div>
+
+            <!-- Connecting Ring Line -->
+            <div class="visual-orbit-ring"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust Section: "Designed around you" (Section 8) -->
+      <section class="trust-section">
+        <div class="section-title-box">
+          <span class="section-kicker">OUR PROMISE</span>
+          <h2>Designed around you.</h2>
+          <p>We eliminate confusing bureaucracy and protect your privacy at every step.</p>
+        </div>
+        <div class="trust-grid">
+          <div class="trust-card">
+            <div class="trust-card-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9"></path>
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+              </svg>
+            </div>
+            <h3>Simple</h3>
+            <p>Clear, guided steps instead of complicated government forms and confusing official jargon.</p>
+          </div>
+          <div class="trust-card">
+            <div class="trust-card-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+            </div>
+            <h3>Transparent</h3>
+            <p>Know exactly what information is being used, where it goes, and what happens next with zero hidden fees.</p>
+          </div>
+          <div class="trust-card">
+            <div class="trust-card-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </div>
+            <h3>Secure</h3>
+            <p>Your documents and personal information are handled in encrypted sandboxes with masked Aadhaar numbers.</p>
+          </div>
+          <div class="trust-card">
+            <div class="trust-card-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+            </div>
+            <h3>Accountable</h3>
+            <p>Every application has a traceable status, cryptographic audit history, and official reference ID.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- How It Works: Step-by-Step Connected Journey (Section 9) -->
+      <section class="how-it-works-section">
+        <div class="section-title-box">
+          <span class="section-kicker">THE CITIZEN JOURNEY</span>
+          <h2>From request to result, step by step.</h2>
+          <p>We transform complex multi-week administrative hurdles into a calm, predictable experience.</p>
+        </div>
+
+        <div class="timeline-stepper-horizontal">
+          <div class="timeline-step-item">
+            <div class="timeline-step-badge">01</div>
+            <h4>Tell us what you need</h4>
+            <p>Search or describe your requirement in plain words.</p>
+          </div>
+          <div class="timeline-step-divider"></div>
+          <div class="timeline-step-item">
+            <div class="timeline-step-badge">02</div>
+            <h4>Check eligibility</h4>
+            <p>Answer a few quick questions to confirm you qualify.</p>
+          </div>
+          <div class="timeline-step-divider"></div>
+          <div class="timeline-step-item">
+            <div class="timeline-step-badge">03</div>
+            <h4>Prepare documents</h4>
+            <p>Check simplified document rules and upload files.</p>
+          </div>
+          <div class="timeline-step-divider"></div>
+          <div class="timeline-step-item">
+            <div class="timeline-step-badge">04</div>
+            <h4>Complete application</h4>
+            <p>Review smart pre-filled information with full control.</p>
+          </div>
+          <div class="timeline-step-divider"></div>
+          <div class="timeline-step-item">
+            <div class="timeline-step-badge">05</div>
+            <h4>Review & confirm</h4>
+            <p>Give explicit consent with full cost transparency.</p>
+          </div>
+          <div class="timeline-step-divider"></div>
+          <div class="timeline-step-item">
+            <div class="timeline-step-badge">06</div>
+            <h4>Track your application</h4>
+            <p>Follow live progress until departmental approval.</p>
+          </div>
+          <div class="timeline-step-divider"></div>
+          <div class="timeline-step-item">
+            <div class="timeline-step-badge">07</div>
+            <h4>Get your service</h4>
+            <p>Download your verified official certificate.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Popular Services Section (Section 6) -->
+      <section class="popular-services-section">
+        <div class="section-title-box flex-between">
+          <div>
+            <span class="section-kicker">COMMONLY REQUESTED</span>
+            <h2>Popular Government Services</h2>
+            <p>Select any service to begin guided end-to-end processing.</p>
+          </div>
+          <button class="btn btn-secondary" onclick="showView('services')">View All Services ➔</button>
+        </div>
+        <div class="services-preview-grid" id="popularServicesGrid"></div>
+      </section>
+
+      <!-- Citizen Trust Banner -->
+      <section class="trust-cta-banner">
+        <div class="banner-content">
+          <h3>Need help finding the right scheme or certificate?</h3>
+          <p>Our platform handles everything: document verification, jurisdiction checks, and application submission.</p>
+        </div>
+        <button class="btn btn-primary" onclick="startSpecificService('income_certificate')">
+          Start Income Certificate (Demo) ➔
+        </button>
+      </section>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 2: EXPLORE SERVICES CATALOG (Section 10)
+         ==================================================================== -->
+    <section id="view-services" class="view-section">
+      <div class="page-header-box">
+        <div>
+          <span class="section-kicker">GOVERNMENT SERVICE DIRECTORY</span>
+          <h2>What do you need help with?</h2>
+          <p>Find certificates, scholarships, licences, and welfare schemes available in your state.</p>
+        </div>
+        <div class="catalog-search-wrap">
+          <input 
+            type="text" 
+            id="catalogSearchInput" 
+            class="form-control" 
+            placeholder="Search government services..." 
+            oninput="filterCatalogBySearch(this.value)">
+        </div>
+      </div>
+
+      <!-- State Selection Bar for Document Application -->
+      <div class="state-selection-bar">
+        <div class="state-selection-header">
+          <div class="state-selector-info">
+            <span class="state-selector-icon">🏛️</span>
+            <div>
+              <div class="state-selector-title">Select State for Document Application / राज्य चुनें</div>
+              <p class="state-selector-sub">Services, forms, and department portals adapt to your chosen state jurisdiction</p>
+            </div>
+          </div>
+          <div class="state-dropdown-container">
+            <label for="stateCatalogSelect" class="state-dropdown-label">Active State:</label>
+            <select id="stateCatalogSelect" class="state-selector-dropdown" onchange="onStateFilterChange(this.value)">
+              <option value="all">🇮🇳 All States & UTs (अखिल भारतीय)</option>
+              <option value="Bihar" selected>Bihar (बिहार) [Integrated]</option>
+              <option value="Uttar Pradesh">Uttar Pradesh (उत्तर प्रदेश)</option>
+              <option value="Jharkhand">Jharkhand (झारखंड)</option>
+              <option value="Delhi">Delhi (दिल्ली NCR)</option>
+              <option value="Maharashtra">Maharashtra (महाराष्ट्र)</option>
+              <option value="Madhya Pradesh">Madhya Pradesh (मध्य प्रदेश)</option>
+              <option value="Rajasthan">Rajasthan (राजस्थान)</option>
+              <option value="West Bengal">West Bengal (पश्चिम बंगाल)</option>
+              <option value="Karnataka">Karnataka (कर्नाटक)</option>
+              <option value="Tamil Nadu">Tamil Nadu (तमिलनाडु)</option>
+              <option value="Gujarat">Gujarat (गुजरात)</option>
+              <option value="Punjab">Punjab (पंजाब)</option>
+              <option value="Haryana">Haryana (हरियाणा)</option>
+              <option value="Odisha">Odisha (ओडिशा)</option>
+              <option value="Assam">Assam (असम)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Quick State Filter Chips -->
+        <div class="state-quick-chips" id="stateQuickChips">
+          <button class="state-chip-pill" data-state="all" onclick="selectStateChip('all')">🇮🇳 All States</button>
+          <button class="state-chip-pill active" data-state="Bihar" onclick="selectStateChip('Bihar')">Bihar (बिहार)</button>
+          <button class="state-chip-pill" data-state="Uttar Pradesh" onclick="selectStateChip('Uttar Pradesh')">Uttar Pradesh (उत्तर प्रदेश)</button>
+          <button class="state-chip-pill" data-state="Jharkhand" onclick="selectStateChip('Jharkhand')">Jharkhand (झारखंड)</button>
+          <button class="state-chip-pill" data-state="Delhi" onclick="selectStateChip('Delhi')">Delhi (दिल्ली)</button>
+          <button class="state-chip-pill" data-state="Maharashtra" onclick="selectStateChip('Maharashtra')">Maharashtra (महाराष्ट्र)</button>
+          <button class="state-chip-pill" data-state="Madhya Pradesh" onclick="selectStateChip('Madhya Pradesh')">Madhya Pradesh (मध्य प्रदेश)</button>
+        </div>
+
+        <div class="state-active-indicator" id="stateActiveIndicator">
+          <span class="active-dot"></span>
+          <span id="stateActiveNoticeText">Currently showing services for: <strong>Bihar (बिहार)</strong> • RTPS Right to Public Services & Departmental Integration</span>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills (Section 10) -->
+      <div class="category-filters-bar">
+        <button class="filter-pill active" onclick="filterServices('all', this)">All Services</button>
+        <button class="filter-pill" onclick="filterServices('certificates', this)">Certificates</button>
+        <button class="filter-pill" onclick="filterServices('education', this)">Education & Scholarships</button>
+        <button class="filter-pill" onclick="filterServices('licences', this)">Licences</button>
+        <button class="filter-pill" onclick="filterServices('welfare', this)">Welfare & Subsidies</button>
+        <button class="filter-pill" onclick="filterServices('agriculture', this)">Agriculture</button>
+        <button class="filter-pill" onclick="filterServices('business', this)">Business</button>
+      </div>
+
+      <!-- Services Grid -->
+      <div class="services-preview-grid" id="fullServicesCatalogGrid"></div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 3: WIZARD / END-TO-END APPLICATION ENGINE (Sections 13-25)
+         ==================================================================== -->
+    <section id="view-wizard" class="view-section">
+      <div class="wizard-shell">
+
+        <!-- Top Navigation / Back to Services -->
+        <div class="wizard-top-nav">
+          <button class="btn-text-link" onclick="confirmExitWizard()">
+            ← Back to Services
+          </button>
+          <div class="wizard-location-chip" id="wizardLocationIndicator">
+            📍 Bihar · Patna
+          </div>
+          <button class="btn-text-link" onclick="saveAndExitWizard()">
+            💾 Save & Exit
+          </button>
+        </div>
+
+        <!-- 6-Stage Progress Indicator (Section 14) -->
+        <div class="stepper-header-box">
+          <div class="stepper-meta-bar">
+            <div>
+              <span class="stepper-service-tag" id="wizardServiceName">Income Certificate</span>
+              <h2 id="wizardStepHeading" class="stepper-active-title">1. Location & Jurisdiction</h2>
+            </div>
+            <span class="stepper-counter-pill" id="wizardStepBadge">Step 1 of 6</span>
+          </div>
+          
+          <div class="stepper-progress-track">
+            <div class="stepper-progress-fill" id="wizardStepperFill" style="width: 16.6%;"></div>
+          </div>
+
+          <div class="stepper-nodes-row">
+            <div class="step-node active" id="node-1" onclick="jumpToStepIfAllowed(1)">
+              <div class="node-circle">1</div>
+              <span class="node-label">Location</span>
+            </div>
+            <div class="step-node" id="node-2" onclick="jumpToStepIfAllowed(2)">
+              <div class="node-circle">2</div>
+              <span class="node-label">Eligibility</span>
+            </div>
+            <div class="step-node" id="node-3" onclick="jumpToStepIfAllowed(3)">
+              <div class="node-circle">3</div>
+              <span class="node-label">Documents</span>
+            </div>
+            <div class="step-node" id="node-4" onclick="jumpToStepIfAllowed(4)">
+              <div class="node-circle">4</div>
+              <span class="node-label">Application</span>
+            </div>
+            <div class="step-node" id="node-5" onclick="jumpToStepIfAllowed(5)">
+              <div class="node-circle">5</div>
+              <span class="node-label">Review</span>
+            </div>
+            <div class="step-node" id="node-6" onclick="jumpToStepIfAllowed(6)">
+              <div class="node-circle">6</div>
+              <span class="node-label">Confirm</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Wizard Body Content -->
+        <div id="wizardCardBody" class="wizard-body-container"></div>
+
+        <!-- Sticky Mobile Bottom Bar during Application (Section 36) -->
+        <div class="wizard-mobile-sticky-bar" id="wizardMobileBar">
+          <button class="btn btn-secondary" id="btnMobileBack" onclick="handleWizardBack()">← Back</button>
+          <button class="btn btn-primary" id="btnMobileNext" onclick="handleWizardNext()">Continue ➔</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 4: APPLICATION TRACKING & STATUS TIMELINE (Sections 26-27 & 30)
+         ==================================================================== -->
+    <section id="view-track" class="view-section">
+      <div class="track-shell">
+        
+        <!-- Track Header Card -->
+        <div class="tracking-summary-card">
+          <div class="summary-details">
+            <span class="service-category-badge">OFFICIAL APPLICATION TRACKER</span>
+            <h2 id="trackServiceHeading">Income Certificate (आय प्रमाण पत्र)</h2>
+            <div class="track-meta-pills">
+              <span>Application ID: <strong id="trackAppIdDisplay">INC-BR-2026-894210</strong></span>
+              <span>• Jurisdiction: <strong>Patna Sadar, Bihar</strong></span>
+              <span>• Submitted: <strong>07 October 2026</strong></span>
+            </div>
+          </div>
+          <div class="summary-badge-col">
+            <span class="status-pill-lg processing" id="trackStatusBadge">
+              <span class="pulse-dot"></span> Department Review
+            </span>
+          </div>
+        </div>
+
+        <!-- Application Search Bar -->
+        <div class="track-search-card">
+          <label for="trackSearchInput" class="form-label" style="margin-bottom:0;">Track another application by ID:</label>
+          <div class="track-search-inputs">
+            <input 
+              type="text" 
+              id="trackSearchInput" 
+              class="form-control" 
+              placeholder="Enter Application ID (e.g. INC-BR-2026-894210)"
+              onkeydown="if(event.key==='Enter') searchTrackingId()">
+            <button class="btn btn-primary" onclick="searchTrackingId()">Track Status</button>
+          </div>
+          <!-- Live Generated Quick Track Chips -->
+          <div class="recent-track-chips-bar" id="recentTrackChips">
+            <span class="recent-track-label">Live Generated IDs:</span>
+          </div>
+        </div>
+
+        <!-- Action Required State Banner (Section 27) -->
+        <div id="actionRequiredBanner" class="action-required-banner" style="display:none;">
+          <div class="action-banner-icon">⚠️</div>
+          <div class="action-banner-content">
+            <strong class="action-title">Action required: The department needs an additional address proof.</strong>
+            <p class="action-desc">
+              The uploaded residence proof could not be verified by the block revenue officer. Please upload an alternate utility bill or ration card.
+            </p>
+            <div class="action-accepted-docs">
+              <span>What you can upload:</span>
+              <span class="accepted-tag">Electricity Bill</span>
+              <span class="accepted-tag">Ration Card</span>
+              <span class="accepted-tag">Gas Connection Bill</span>
+            </div>
+          </div>
+          <div class="action-banner-action">
+            <button class="btn btn-danger" onclick="openActionRequiredModal()">Upload Document ➔</button>
+          </div>
+        </div>
+
+        <!-- Timeline Card (Section 26) -->
+        <div class="timeline-container-card">
+          <div class="timeline-header-row">
+            <h3>Application Progress Timeline</h3>
+            <span class="timeline-auto-notice">Real-time status updates from RTPS Bihar Portal</span>
+          </div>
+
+          <div class="timeline-track-list" id="trackTimelineList"></div>
+
+          <!-- Approved State Banner (Section 30) -->
+          <div id="certificateReadyBox" class="certificate-ready-card" style="display:none;">
+            <div class="ready-badge-icon">🎉</div>
+            <div class="ready-text">
+              <h3>Your service is complete! Certificate Generated.</h3>
+              <p>Your official Income Certificate has been digitally signed and sealed by the Sub-Divisional Officer (SDO), Patna Sadar.</p>
+              <div class="ready-cert-meta">
+                <span>Certificate No: <strong id="certNumberLabel">INC-BR-2026-894210</strong></span>
+                <span>• Issue Date: <strong>07 October 2026</strong></span>
+                <span>• Validity: <strong>1 Year</strong></span>
+              </div>
+            </div>
+            <div class="ready-actions">
+              <button class="btn btn-success" onclick="viewDemoCertificate()">👁️ View Certificate</button>
+              <button class="btn btn-primary" onclick="downloadDemoCertificate()">📥 Download PDF (DEMO)</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 5: MY APPLICATIONS DASHBOARD (Section 28)
+         ==================================================================== -->
+    <section id="view-applications" class="view-section">
+      <div class="dashboard-shell">
+        <div class="dashboard-header-row">
+          <div>
+            <span class="section-kicker">CITIZEN DASHBOARD</span>
+            <h2>My Applications</h2>
+            <p>Monitor your active government applications, track progress, and download completed certificates.</p>
+          </div>
+          <button class="btn btn-primary" onclick="startSpecificService('income_certificate')">+ Start a New Service</button>
+        </div>
+
+        <!-- Top Statistics Cards (Section 28) -->
+        <div class="metrics-dashboard-grid">
+          <div class="dashboard-stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Active</span>
+              <span class="stat-icon-pill blue">⏳</span>
+            </div>
+            <div class="stat-number" style="color:var(--primary);">3</div>
+            <div class="stat-footnote">Processing in departments</div>
+          </div>
+          <div class="dashboard-stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Approved</span>
+              <span class="stat-icon-pill green">✓</span>
+            </div>
+            <div class="stat-number" style="color:var(--secondary);">5</div>
+            <div class="stat-footnote">Certificates ready for download</div>
+          </div>
+          <div class="dashboard-stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Action Required</span>
+              <span class="stat-icon-pill amber">⚠️</span>
+            </div>
+            <div class="stat-number" style="color:var(--accent);">1</div>
+            <div class="stat-footnote">Requires additional document</div>
+          </div>
+          <div class="dashboard-stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Completed All Time</span>
+              <span class="stat-icon-pill purple">📜</span>
+            </div>
+            <div class="stat-number" style="color:var(--slate-800);">8</div>
+            <div class="stat-footnote">Total services completed</div>
+          </div>
+        </div>
+
+        <!-- Applications Table & Filter Card -->
+        <div class="applications-table-card">
+          <div class="table-toolbar">
+            <div class="search-input-wrap">
+              <input 
+                type="text" 
+                id="appFilterSearch" 
+                class="form-control" 
+                placeholder="Search by ID or service name..." 
+                oninput="filterMyApplications(this.value)">
+            </div>
+            <div class="filter-tab-buttons">
+              <button class="btn-filter-tab active" onclick="filterAppTable('all', this)">All (8)</button>
+              <button class="btn-filter-tab" onclick="filterAppTable('active', this)">Active (3)</button>
+              <button class="btn-filter-tab" onclick="filterAppTable('action', this)">Action Required (1)</button>
+              <button class="btn-filter-tab" onclick="filterAppTable('approved', this)">Approved (5)</button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="civic-table">
+              <thead>
+                <tr>
+                  <th>Service</th>
+                  <th>Application ID</th>
+                  <th>Submitted Date & Time</th>
+                  <th>Jurisdiction</th>
+                  <th>Progress</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="myApplicationsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 6: MY PROFILE (Section 32)
+         ==================================================================== -->
+    <section id="view-profile" class="view-section">
+      <div class="profile-shell">
+        <div class="page-header-box">
+          <div>
+            <span class="section-kicker">USER ACCOUNT</span>
+            <h2>My Profile</h2>
+            <p>Manage your contact details, preferred language, and privacy settings.</p>
+          </div>
+        </div>
+
+        <div class="profile-layout-grid">
+          <!-- Profile Sidebar -->
+          <div class="profile-sidebar-card">
+            <div class="profile-avatar-large">RK</div>
+            <h3 id="p-displayName">Rahul Kumar</h3>
+            <p class="profile-meta-line">Citizen • Patna, Bihar</p>
+            <div class="profile-badge-pill">✓ Verified Citizen ID</div>
+
+            <nav class="profile-nav-list">
+              <button class="profile-nav-btn active" onclick="switchProfileTab('personal', this)">
+                👤 Personal Information
+              </button>
+              <button class="profile-nav-btn" onclick="switchProfileTab('language', this)">
+                🌐 Language Settings
+              </button>
+              <button class="profile-nav-btn" onclick="switchProfileTab('security', this)">
+                🔒 Security & Sign-in
+              </button>
+              <button class="profile-nav-btn" onclick="showView('privacy')">
+                🛡️ Privacy & Documents
+              </button>
+              <button class="profile-nav-btn" onclick="showView('help')">
+                ❓ Help & Support
+              </button>
+              <button class="profile-nav-btn danger" onclick="handleLogout()">
+                🚪 Sign Out
+              </button>
+            </nav>
+          </div>
+
+          <!-- Profile Main Content -->
+          <div class="profile-content-card">
+            <!-- Tab 1: Personal Information -->
+            <div id="ptab-personal" class="profile-tab-pane active">
+              <h3>Personal Information</h3>
+              <p class="tab-subtitle">Basic details used for pre-filling your government applications.</p>
+              
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Full Name</label>
+                  <input type="text" class="form-control" id="prof-fullName" value="Rahul Kumar">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Mobile Number</label>
+                  <input type="tel" class="form-control" id="prof-mobile" value="+91 98765 43210">
+                </div>
+              </div>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Email Address</label>
+                  <input type="email" class="form-control" id="prof-email" value="rahul.kumar@example.com">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Date of Birth</label>
+                  <input type="date" class="form-control" id="prof-dob" value="2004-05-12">
+                </div>
+              </div>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">State of Residence</label>
+                  <input type="text" class="form-control" value="Bihar" readonly>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">District</label>
+                  <input type="text" class="form-control" value="Patna" readonly>
+                </div>
+              </div>
+              <div style="margin-top:20px; display:flex; justify-content:flex-end;">
+                <button class="btn btn-primary" onclick="saveProfileChanges()">Save Changes</button>
+              </div>
+            </div>
+
+            <!-- Tab 2: Language -->
+            <div id="ptab-language" class="profile-tab-pane" style="display:none;">
+              <h3>Language & Localization</h3>
+              <p class="tab-subtitle">Choose your preferred language for the interface and document guidance.</p>
+              
+              <div class="language-selection-cards">
+                <label class="lang-option-card">
+                  <input type="radio" name="profLang" value="en" checked onchange="changeLanguage('en')">
+                  <div class="lang-option-text">
+                    <strong>English</strong>
+                    <span>Standard interface language</span>
+                  </div>
+                </label>
+                <label class="lang-option-card">
+                  <input type="radio" name="profLang" value="hi" onchange="changeLanguage('hi')">
+                  <div class="lang-option-text">
+                    <strong>हिंदी (Hindi)</strong>
+                    <span>नागरिक सेवाओं के लिए हिंदी इंटरफ़ेस</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Tab 3: Security -->
+            <div id="ptab-security" class="profile-tab-pane" style="display:none;">
+              <h3>Security & Verification</h3>
+              <p class="tab-subtitle">Manage login sessions, OTP verification and cryptographic audit identity.</p>
+
+              <div class="security-item-row">
+                <div>
+                  <strong>Mobile OTP Sign-in</strong>
+                  <p>Your account is protected via verified OTP sent to +91 98765 43210.</p>
+                </div>
+                <span class="badge-status ok">Enabled</span>
+              </div>
+              <div class="security-item-row">
+                <div>
+                  <strong>Audit Log Signatures</strong>
+                  <p>Every submission is cryptographically anchored to SHA-256 genesis.</p>
+                </div>
+                <span class="badge-status ok">Active</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 7: PRIVACY & DATA SECURITY CENTER (Section 33)
+         ==================================================================== -->
+    <section id="view-privacy" class="view-section">
+      <div class="privacy-shell">
+        <div class="page-header-box">
+          <div>
+            <span class="section-kicker">YOUR DATA, YOUR CONTROL</span>
+            <h2>Privacy & Consent Center</h2>
+            <p>Complete visibility into how your personal documents and permissions are used under DPDP 2023.</p>
+          </div>
+        </div>
+
+        <div class="privacy-grid">
+          <!-- Documents Uploaded Card -->
+          <div class="wizard-card">
+            <div class="wizard-card-header">
+              <h3>Documents You've Uploaded</h3>
+              <p>Stored temporarily in encrypted storage solely for active applications.</p>
+            </div>
+            
+            <div class="table-responsive">
+              <table class="civic-table">
+                <thead>
+                  <tr>
+                    <th>Document</th>
+                    <th>Used For</th>
+                    <th>Uploaded Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="privacyDocsTableBody">
+                  <tr>
+                    <td><strong>Identity Proof (Aadhaar)</strong></td>
+                    <td>Income Certificate (INC-BR-2026-894210)</td>
+                    <td>07 Oct 2026</td>
+                    <td><span class="badge-status ok">Available</span></td>
+                    <td><button class="btn btn-secondary" style="padding:4px 8px; font-size:12px;" onclick="viewDocumentPreview('Aadhaar')">View</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Address Proof (Ration Card)</strong></td>
+                    <td>Income Certificate (INC-BR-2026-894210)</td>
+                    <td>07 Oct 2026</td>
+                    <td><span class="badge-status ok">Available</span></td>
+                    <td><button class="btn btn-secondary" style="padding:4px 8px; font-size:12px;" onclick="viewDocumentPreview('Address Proof')">View</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Income Proof (Salary Slip)</strong></td>
+                    <td>Income Certificate (INC-BR-2026-894210)</td>
+                    <td>07 Oct 2026</td>
+                    <td><span class="badge-status ok">Available</span></td>
+                    <td><button class="btn btn-secondary" style="padding:4px 8px; font-size:12px;" onclick="viewDocumentPreview('Income Proof')">View</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="privacy-notice-box">
+              <strong>🔒 Aadhaar Masking Guarantee:</strong>
+              <p>Only the last 4 digits of Aadhaar are visible to human operators. Full numbers are never logged in plaintext.</p>
+            </div>
+          </div>
+
+          <!-- Active Consents & DPDP Controls -->
+          <div class="wizard-card">
+            <div class="wizard-card-header">
+              <h3>Active Consents & Permissions</h3>
+              <p>Every data transmission to a government department requires your revocable consent.</p>
+            </div>
+
+            <div id="privacyConsentsList" class="consents-list"></div>
+
+            <div class="danger-zone-box">
+              <div>
+                <strong>Purge All Local Account Data</strong>
+                <p>Permanently remove your local cache, draft forms, and document thumbnails from this browser.</p>
+              </div>
+              <button class="btn btn-danger" onclick="purgeSessionData()">Delete All Data</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 8: HELP CENTER & SUPPORT (Section 34)
+         ==================================================================== -->
+    <section id="view-help" class="view-section">
+      <div class="help-shell">
+        <div class="help-hero">
+          <span class="section-kicker">KNOWLEDGE BASE & SUPPORT</span>
+          <h2>How can we help you?</h2>
+          <div class="help-search-card">
+            <input 
+              type="text" 
+              id="helpSearchInput" 
+              class="form-control" 
+              placeholder="Search help topics (e.g. document rejected, fees, tracking...)" 
+              oninput="filterHelpFaq(this.value)">
+          </div>
+        </div>
+
+        <!-- Help Category Chips -->
+        <div class="help-categories-grid">
+          <div class="help-cat-card" onclick="filterFaqByCategory('general')">
+            <span class="cat-icon">🚀</span>
+            <strong>Getting Started</strong>
+            <span>How the agent works</span>
+          </div>
+          <div class="help-cat-card" onclick="filterFaqByCategory('documents')">
+            <span class="cat-icon">📄</span>
+            <strong>Documents</strong>
+            <span>Formats, OCR & size rules</span>
+          </div>
+          <div class="help-cat-card" onclick="filterFaqByCategory('applications')">
+            <span class="cat-icon">📝</span>
+            <strong>Applications</strong>
+            <span>Editing, states & jurisdictions</span>
+          </div>
+          <div class="help-cat-card" onclick="filterFaqByCategory('payments')">
+            <span class="cat-icon">💳</span>
+            <strong>Fees & Costs</strong>
+            <span>Statutory fees & ₹0 platform fee</span>
+          </div>
+          <div class="help-cat-card" onclick="filterFaqByCategory('privacy')">
+            <span class="cat-icon">🛡️</span>
+            <strong>Privacy & Data</strong>
+            <span>DPDP principles & consent</span>
+          </div>
+          <div class="help-cat-card" onclick="filterFaqByCategory('technical')">
+            <span class="cat-icon">⚙️</span>
+            <strong>Technical Help</strong>
+            <span>Troubleshooting & human helper</span>
+          </div>
+        </div>
+
+        <!-- FAQ Accordion -->
+        <div class="faq-container-card">
+          <h3 class="faq-title">Frequently Asked Questions</h3>
+          <div id="faqAccordion" class="faq-accordion">
+            
+            <div class="faq-item" data-category="general">
+              <button class="faq-question" onclick="toggleFaq(this)">
+                <span>How does Citizen-Service Agent help me navigate government procedures?</span>
+                <span class="faq-toggle-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                <p>
+                  Instead of forcing you to understand complicated state portals and gazetted rules, we break the process into simple steps: checking eligibility, verifying your documents with OCR, pre-filling the application, obtaining your explicit consent, and tracking the status directly with the department until your certificate is issued.
+                </p>
+              </div>
+            </div>
+
+            <div class="faq-item" data-category="payments">
+              <button class="faq-question" onclick="toggleFaq(this)">
+                <span>Are there any hidden platform fees or agent charges?</span>
+                <span class="faq-toggle-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                <p>
+                  None! Our platform assistance fee is strictly ₹0. Any statutory government fee (e.g. ₹0 for Bihar Income Certificate or ₹200 for Driving Licence) is paid directly to the government department with complete line-item transparency.
+                </p>
+              </div>
+            </div>
+
+            <div class="faq-item" data-category="documents">
+              <button class="faq-question" onclick="toggleFaq(this)">
+                <span>What happens if my document is blurry or rejected by the department?</span>
+                <span class="faq-toggle-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                <p>
+                  Our instant OCR checker alerts you immediately if a document is unclear or if a name mismatch is detected. If the government department requests an additional document after submission, our Action Required banner notifies you immediately with accepted alternate documents.
+                </p>
+              </div>
+            </div>
+
+            <div class="faq-item" data-category="general">
+              <button class="faq-question" onclick="toggleFaq(this)">
+                <span>Is Citizen-Service Agent an official government entity?</span>
+                <span class="faq-toggle-icon">+</span>
+              </button>
+              <div class="faq-answer">
+                <p>
+                  No. We are an independent civic-tech platform designed to assist citizens in preparing and tracking their applications. All final applications are submitted to the official designated state authorities (e.g. RTPS Bihar).
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Human Helper Escalation Card (Section 4 & ARCHITECTURE) -->
+        <div class="support-escalation-card">
+          <div class="escalation-left">
+            <span class="escalation-icon">🤝</span>
+            <div>
+              <h4>Still need help? Connect with a Human Helper</h4>
+              <p>Stuck on an edge case or need voice guidance? Our verified civic desk volunteers can step in to assist.</p>
+            </div>
+          </div>
+          <button class="btn btn-secondary" onclick="simulateEscalation()">Request Human Assistance</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 9: ADMIN & AUDITOR COCKPIT (Section 45 & Architecture)
+         ==================================================================== -->
+    <section id="view-admin" class="view-section">
+      <div class="admin-shell">
+        <div class="page-header-box flex-between">
+          <div>
+            <span class="section-kicker">GOVTECH COMPLIANCE</span>
+            <h2>Auditor & Platform Admin Cockpit</h2>
+            <p>Real-time verification of immutable cryptographic hash-chains and statutory rule enforcement.</p>
+          </div>
+          <button class="btn btn-primary" onclick="verifyAdminChain()">🛡️ Verify Hash Chain</button>
+        </div>
+
+        <!-- Compliance Stat Grid -->
+        <div class="metrics-dashboard-grid">
+          <div class="dashboard-stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Chain Integrity</span>
+              <span class="stat-icon-pill green">🔒</span>
+            </div>
+            <div class="stat-number" id="adminChainStatus" style="color:var(--secondary); font-size:20px;">VALID</div>
+            <div class="stat-footnote">SHA-256 Genesis Anchor Matched</div>
+          </div>
+          <div class="dashboard-stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Consent Violations</span>
+              <span class="stat-icon-pill green">🛡️</span>
+            </div>
+            <div class="stat-number" style="color:var(--secondary);">0</div>
+            <div class="stat-footnote">100% Gated by execute_action()</div>
+          </div>
+          <div class="dashboard-stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Statutory Rule Checks</span>
+              <span class="stat-icon-pill blue">⚙️</span>
+            </div>
+            <div class="stat-number" style="color:var(--primary);">100%</div>
+            <div class="stat-footnote">Deterministic Python Rules</div>
+          </div>
+          <div class="dashboard-stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Audit Log Count</span>
+              <span class="stat-icon-pill purple">📋</span>
+            </div>
+            <div class="stat-number" id="adminLogCount" style="color:var(--slate-800);">24</div>
+            <div class="stat-footnote">Append-Only SQLite WAL Records</div>
+          </div>
+        </div>
+
+        <!-- Audit Trail Table -->
+        <div class="applications-table-card">
+          <div class="table-toolbar">
+            <h3 style="font-size:16px; font-weight:800;">Cryptographic Audit Log Trail (Recent Entries)</h3>
+            <button class="btn btn-secondary" style="font-size:12px; padding:4px 10px;" onclick="loadAdminAuditRows()">🔄 Refresh Log</button>
+          </div>
+          <div class="table-responsive">
+            <table class="civic-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Timestamp (UTC)</th>
+                  <th>Actor</th>
+                  <th>Action</th>
+                  <th>Result</th>
+                  <th>Row Hash (SHA-256)</th>
+                </tr>
+              </thead>
+              <tbody id="adminAuditTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ====================================================================
+       MOBILE BOTTOM NAVIGATION (Section 36)
+       ==================================================================== -->
+  <nav class="mobile-nav-bar" aria-label="Mobile navigation">
+    <a class="mobile-nav-item active" onclick="showView('home')" id="mnav-home">
+      <span class="icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+      </span>
+      <span>Home</span>
+    </a>
+    <a class="mobile-nav-item" onclick="showView('services')" id="mnav-services">
+      <span class="icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="8" y1="6" x2="21" y2="6"></line>
+          <line x1="8" y1="12" x2="21" y2="12"></line>
+          <line x1="8" y1="18" x2="21" y2="18"></line>
+          <line x1="3" y1="6" x2="3.01" y2="6"></line>
+          <line x1="3" y1="12" x2="3.01" y2="12"></line>
+          <line x1="3" y1="18" x2="3.01" y2="18"></line>
+        </svg>
+      </span>
+      <span>Services</span>
+    </a>
+    <a class="mobile-nav-item" onclick="showView('applications')" id="mnav-applications">
+      <span class="icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+        </svg>
+      </span>
+      <span>My Apps</span>
+    </a>
+    <a class="mobile-nav-item" onclick="showView('track')" id="mnav-track">
+      <span class="icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </span>
+      <span>Track</span>
+    </a>
+    <a class="mobile-nav-item" onclick="showView('profile')" id="mnav-profile">
+      <span class="icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      </span>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <!-- ====================================================================
+       MODAL 1: SERVICE DETAILS OVERVIEW (Section 11)
+       ==================================================================== -->
+  <div id="serviceDetailsModal" class="modal-backdrop-custom" style="display:none;">
+    <div class="modal-dialog-card modal-lg">
+      <div class="modal-header-row">
+        <div>
+          <span class="modal-category-tag" id="mdCategory">CERTIFICATES</span>
+          <h3 id="mdTitle">Income Certificate (आय प्रमाण पत्र)</h3>
+          <p id="mdDept" class="modal-dept-line">Department of Revenue & Land Reforms, Government of Bihar</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeServiceDetailsModal()">✕</button>
+      </div>
+
+      <div class="modal-body-scroll">
+        <p id="mdDescription" class="modal-desc-text"></p>
+
+        <div class="service-details-meta-grid">
+          <div class="meta-box">
+            <span class="meta-box-label">Processing Time</span>
+            <strong id="mdTime">7 - 14 Days</strong>
+          </div>
+          <div class="meta-box">
+            <span class="meta-box-label">Government Fee</span>
+            <strong id="mdGovFee" style="color:var(--secondary);">₹0</strong>
+          </div>
+          <div class="meta-box">
+            <span class="meta-box-label">Platform Fee</span>
+            <strong style="color:var(--primary);">₹0</strong>
+          </div>
+          <div class="meta-box">
+            <span class="meta-box-label">Estimated Steps</span>
+            <strong id="mdSteps">6 Steps</strong>
+          </div>
+        </div>
+
+        <div class="service-section-box">
+          <h4>Who can apply?</h4>
+          <p id="mdWhoCanApply">
+            Any permanent resident of the state whose family annual income needs to be verified for scholarships, fee concessions, or government welfare subsidies.
+          </p>
+        </div>
+
+        <div class="service-section-box">
+          <h4>What you'll need (Document Checklist):</h4>
+          <ul id="mdDocsList" class="checked-list"></ul>
+        </div>
+
+        <div class="service-section-box">
+          <h4>What happens after applying?</h4>
+          <p>
+            Your application and verified documents will be transmitted to the local Sub-Divisional Officer (SDO). A Revenue Inspector reviews the declaration, and your digitally signed certificate will be ready for download directly on your dashboard.
+          </p>
+        </div>
+      </div>
+
+      <div class="modal-footer-row">
+        <button class="btn btn-secondary" onclick="closeServiceDetailsModal()">Save for Later</button>
+        <button class="btn btn-primary" id="btnMdStartApp" onclick="proceedToWizardFromModal()">Start Application ➔</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 2: DOCUMENT UPLOAD & OCR DROPZONE (Sections 17-18)
+       ==================================================================== -->
+  <div id="docUploadModal" class="modal-backdrop-custom" style="display:none;">
+    <div class="modal-dialog-card">
+      <div class="modal-header-row">
+        <div>
+          <h3 id="uploadModalDocTitle">Upload Identity Proof</h3>
+          <p class="modal-dept-line">Used to verify applicant identity against government records.</p>
+        </div>
+        <button class="modal-close-btn" onclick="closeDocUploadModal()">✕</button>
+      </div>
+
+      <!-- Drag & Drop Zone -->
+      <div 
+        class="file-dropzone-box" 
+        id="fileDropZone" 
+        ondrop="handleFileDrop(event)" 
+        ondragover="handleDragOver(event)" 
+        ondragleave="handleDragLeave(event)">
+        <div class="dropzone-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+        </div>
+        <h4>Drop your document here</h4>
+        <p>or</p>
+        <label class="btn btn-secondary" style="cursor:pointer; display:inline-block;">
+          Choose a file
+          <input type="file" id="modalFileInput" style="display:none;" onchange="handleModalFileSelect(this)">
+        </label>
+        <span class="dropzone-hints">Accepted formats: PDF, JPG, PNG (Max 5MB)</span>
+      </div>
+
+      <!-- Upload Progress & OCR Verification Animation (Section 17) -->
+      <div id="uploadProgressBox" class="upload-progress-box" style="display:none;">
+        <div class="progress-label-row">
+          <span id="uploadProgressLabel">Checking your document...</span>
+          <span id="uploadProgressPercent">65%</span>
+        </div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="uploadProgressBarFill" style="width:65%;"></div>
+        </div>
+        <div class="verification-subtext" id="uploadVerificationSubtext">
+          Running OCR text recognition & statutory field extraction...
+        </div>
+      </div>
+
+      <!-- Document Problem State Warning (Section 18) -->
+      <div id="docProblemStateBox" class="doc-problem-box" style="display:none;">
+        <div class="problem-icon">⚠️</div>
+        <div class="problem-content">
+          <h4>We couldn't clearly read this document.</h4>
+          <p>Please upload a clearer image with all four corners visible and text legible.</p>
+        </div>
+        <div class="problem-actions">
+          <button class="btn btn-primary" onclick="retryUploadModal()">Upload Again</button>
+          <button class="btn btn-secondary" onclick="continueAnywayModal()">Continue Anyway</button>
+        </div>
+      </div>
+
+      <!-- Quick Demo Auto-Fill -->
+      <div class="modal-footer-row" style="margin-top:16px;">
+        <button class="btn btn-secondary" onclick="autoUploadCurrentSlot()">⚡ Load Demo Document</button>
+        <button class="btn btn-secondary" onclick="closeDocUploadModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 3: EXPLICIT USER CONSENT GATE (Section 23 & ARCHITECTURE §15)
+       REDESIGNED: Full-screen gate — citizen must actively tick checkbox
+       ==================================================================== -->
+  <div id="wizardConsentModal" class="consent-fullscreen-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="consentGateTitle">
+    <div class="consent-gate-container">
+
+      <!-- Gate Header -->
+      <div class="consent-gate-header">
+        <div class="consent-gate-badge">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+        </div>
+        <div class="consent-gate-heading-group">
+          <div class="consent-gate-label">CONSENT REQUIRED • आपकी सहमति चाहिए</div>
+          <h2 id="consentGateTitle" class="consent-gate-title">Before we submit your application</h2>
+          <p class="consent-gate-sub">You are about to authorise us to transmit your verified documents to a government department on your behalf. Please review carefully.</p>
+        </div>
+      </div>
+
+      <div class="consent-gate-divider"></div>
+
+      <!-- Data Review -->
+      <div class="consent-gate-body">
+        <div class="consent-destination-row">
+          <span class="consent-dest-label">Submitting to:</span>
+          <span class="consent-dest-value">🏛️ Department of Revenue, Government of Bihar (RTPS Portal)</span>
+        </div>
+
+        <div class="consent-data-review-card">
+          <div class="consent-data-title">📋 Information being transmitted on your behalf:</div>
+          <div class="consent-data-grid">
+            <div class="consent-data-row">
+              <span class="cdr-label">Full Name</span>
+              <span class="cdr-value" id="c-name">Rahul Kumar</span>
+            </div>
+            <div class="consent-data-row">
+              <span class="cdr-label">Father's Name</span>
+              <span class="cdr-value" id="c-father">Suresh Prasad</span>
+            </div>
+            <div class="consent-data-row">
+              <span class="cdr-label">Address</span>
+              <span class="cdr-value" id="c-address">Patna Sadar, Patna, Bihar</span>
+            </div>
+            <div class="consent-data-row">
+              <span class="cdr-label">Annual Family Income</span>
+              <span class="cdr-value" id="c-income">₹1,20,000</span>
+            </div>
+            <div class="consent-data-row">
+              <span class="cdr-label">Attachments</span>
+              <span class="cdr-value">Aadhaar Card • Residence Proof • Income Slip</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Irrevocable Warning -->
+        <div class="consent-irrevocable-banner">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <span><strong>Once submitted, this application is cryptographically sealed</strong> in an immutable audit log and cannot be edited without formal departmental withdrawal.</span>
+        </div>
+
+        <!-- Explicit Checkbox — UNCHECKED by default, must be actively ticked -->
+        <label class="consent-explicit-checkbox" id="consentCheckLabel">
+          <input type="checkbox" id="modalFinalConsentCheck" onchange="toggleConsentButton(this.checked)">
+          <span class="consent-check-box-ui"></span>
+          <span class="consent-explicit-text">I, <strong id="c-name-inline">Rahul Kumar</strong>, confirm that the information above is accurate and complete, and I authorise this application to be submitted to the Government of Bihar on my behalf.</span>
+        </label>
+
+        <!-- DPDP Notice -->
+        <p class="consent-dpdp-note">Your consent is recorded under the Digital Personal Data Protection Act, 2023. You may revoke it at any time from <a href="#" onclick="closeConsentModal(false); showView('privacy'); return false;">Privacy &amp; Consent Center</a>.</p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="consent-gate-actions">
+        <button class="btn btn-secondary consent-back-btn" onclick="closeConsentModal(false)">
+          ← Go Back &amp; Review
+        </button>
+        <button class="btn btn-consent-submit" id="btnFinalSubmit" onclick="confirmAndExecuteSubmission()" disabled>
+          ✓ I Confirm — Submit Application
+          <span class="consent-btn-sub">जमा करें (Submit to Government)</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 4: DEMO CERTIFICATE VIEWER (Section 30)
+       ==================================================================== -->
+  <div id="certificateViewerModal" class="modal-backdrop-custom" style="display:none;">
+    <div class="modal-dialog-card modal-lg">
+      <div class="certificate-paper-card">
+        <!-- Prominent Demo Watermark -->
+        <div class="cert-watermark-overlay">DEMO / SAMPLE — NOT A GOVERNMENT DOCUMENT</div>
+
+        <!-- Official Header -->
+        <div class="cert-header">
+          <div class="cert-emblem">🏛️</div>
+          <h2>GOVERNMENT OF BIHAR</h2>
+          <h3>DEPARTMENT OF REVENUE & LAND REFORMS</h3>
+          <p>Office of the Sub-Divisional Officer (SDO), Patna Sadar</p>
+          <div class="cert-title-badge">INCOME CERTIFICATE (आय प्रमाण पत्र)</div>
+        </div>
+
+        <!-- Certificate Body -->
+        <div class="cert-content">
+          <div class="cert-meta-row">
+            <span><strong>Certificate No:</strong> <code id="certNoDisplay">INC-BR-2026-894210</code></span>
+            <span><strong>Date of Issue:</strong> 07 October 2026</span>
+          </div>
+
+          <p class="cert-paragraph">
+            This is to certify that <strong>Rahul Kumar</strong>, son of <strong>Suresh Prasad</strong>, resident of <strong>Kankarbagh Main Road, Patna Sadar, District Patna, Bihar - 800020</strong>, has a verified total annual family income of:
+          </p>
+
+          <div class="cert-income-highlight">
+            ₹1,20,000 (Rupees One Lakh Twenty Thousand Only)
+          </div>
+
+          <p class="cert-paragraph">
+            This certificate is digitally issued on the basis of verified statutory documents for educational scholarships and official purposes.
+          </p>
+
+          <div class="cert-footer-row">
+            <div class="cert-qr-box">
+              <div class="qr-placeholder">QR CODE</div>
+              <span>Digital Verification ID: BR-RTPS-2026-894210</span>
+            </div>
+            <div class="cert-sign-box">
+              <div class="digital-sign-seal">✓ DIGITALLY SIGNED</div>
+              <strong>Sub-Divisional Officer (SDO)</strong>
+              <span>Patna Sadar, District Magistrate Office</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer-row" style="margin-top:20px;">
+        <button class="btn btn-secondary" onclick="document.getElementById('certificateViewerModal').style.display='none'">Close</button>
+        <button class="btn btn-primary" onclick="downloadDemoCertificate()">📥 Download PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 5: DOCUMENT PREVIEW MODAL
+       ==================================================================== -->
+  <div id="docPreviewModal" class="modal-backdrop-custom" style="display:none;">
+    <div class="modal-dialog-card">
+      <div class="modal-header-row">
+        <h3 id="previewDocTitle">Document Preview</h3>
+        <button class="modal-close-btn" onclick="document.getElementById('docPreviewModal').style.display='none'">✕</button>
+      </div>
+      <div class="doc-preview-canvas" id="previewDocCanvas">
+        <div class="doc-preview-mock">
+          <div class="mock-doc-icon">📄</div>
+          <h4 id="previewDocSub">Verified Aadhaar Card</h4>
+          <p id="previewDocDetails">Number: XXXX-XXXX-7890 • Name: Rahul Kumar • Status: Verified</p>
+        </div>
+      </div>
+      <div class="modal-footer-row" style="margin-top:16px;">
+        <button class="btn btn-secondary" onclick="document.getElementById('docPreviewModal').style.display='none'">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL: IRCTC-INSPIRED MULTILINGUAL SELECTION POPUP (Section 35)
+       ==================================================================== -->
+  <div id="languageSelectionModal" class="lang-modal-overlay" onclick="if(event.target===this) closeLanguageModal()" role="dialog" aria-modal="true" aria-labelledby="langModalTitleHi">
+    <div class="lang-modal-window">
+      
+      <!-- Top Gov Alert Bar (Alert / सूचना) -->
+      <div class="lang-modal-top-bar">
+        <div class="lang-modal-top-title">
+          <span>🔔</span>
+          <span data-i18n="modal_alert_title">Alert • Language Selection (भाषा चयन)</span>
+        </div>
+        <button class="lang-modal-close-btn" onclick="closeLanguageModal()" aria-label="Close modal">✕</button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="lang-modal-body">
+        
+        <!-- Civic Emblem Badge -->
+        <div class="lang-modal-emblem-wrapper">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+        </div>
+
+        <div class="lang-modal-title-hi" id="langModalTitleHi">
+          नागरिक सेवा सहायक में आपका स्वागत है
+        </div>
+        <div class="lang-modal-title-en">
+          Welcome to Citizen-Service Agent
+        </div>
+
+        <div class="lang-modal-prompt-hi" id="langModalPromptHi">
+          कृपया अपनी पसंदीदा भाषा का चयन करें
+        </div>
+        <div class="lang-modal-prompt-en">
+          Please select your preferred language.
+        </div>
+
+        <!-- Quick Select Buttons (Vibrant Orange / Saffron Buttons like IRCTC) -->
+        <div class="lang-modal-quick-row">
+          <button class="quick-lang-btn hi" data-lang-code="hi" onclick="selectLanguageAndClose('hi')">
+            <span>हिंदी</span>
+            <span style="font-size:11.5px; opacity:0.9; font-weight:500;">(Hindi)</span>
+          </button>
+          <button class="quick-lang-btn en" data-lang-code="en" onclick="selectLanguageAndClose('en')">
+            <span>English</span>
+            <span style="font-size:11.5px; opacity:0.9; font-weight:500;">(English)</span>
+          </button>
+        </div>
+
+        <div class="lang-modal-divider">
+          <span data-i18n="more_languages">अथवा सभी क्षेत्रीय भाषाएं / Or Choose From All Languages</span>
+        </div>
+
+        <!-- Full Grid of 15 Languages -->
+        <div class="lang-modal-grid">
+          <div class="lang-grid-card" data-lang-code="en" onclick="selectLanguageAndClose('en')">
+            <div class="lang-card-text">
+              <span class="lang-card-native">English</span>
+              <span class="lang-card-sub">English</span>
+            </div>
+            <span class="lang-active-check">✓</span>
+          </div>
+          
+          <div class="lang-grid-card" data-lang-code="hi" onclick="selectLanguageAndClose('hi')">
+            <div class="lang-card-text">
+              <span class="lang-card-native">हिन्दी</span>
+              <span class="lang-card-sub">Hindi</span>
+            </div>
+            <span class="lang-active-check">✓</span>
+          </div>
+
+          <div class="lang-grid-card" data-lang-code="bn" onclick="selectLanguageAndClose('bn')">
+            <div class="lang-card-text">
+              <span class="lang-card-native">বাংলা</span>
+              <span class="lang-card-sub">Bengali</span>
+            </div>
+            <span class="lang-active-check">✓</span>
+          </div>
+
+          <div class="lang-grid-card" data-lang-code="mr" onclick="selectLanguageAndClose('mr')">
+            <div class="lang-card-text">
+              <span class="lang-card-native">मराठी</span>
+              <span class="lang-card-sub">Marathi</span>
+            </div>
+            <span class="lang-active-check">✓</span>
+          </div>
+
+          <div class="lang-grid-card" data-lang-code="ta" onclick="selectLanguageAndClose('ta')">
+            <div class="lang-card-text">
+              <span class="lang-card-native">தமிழ்</span>
+              <span class="lang-card-sub">Tamil</span>
+            </div>
+            <span class="lang-active-check">✓</span>
+          </div>
+
+          <div class="lang-grid-card" data-lang-code="te" onclick="selectLanguageAndClose('te')">
+            <div class="lang-card-text">
+              <span class="lang-card-native">తెలుగు</span>
+              <span class="lang-card-sub">Telugu</span>
+            </div>
+            <span class="lang-active-check">✓</span>
+          </div>
+
+          <div class="lang-grid-card" data-lang-code="gu" onclick="selectLanguageAndClose('gu')">
+            <div class="lang-card-text">
+              <span class="lang-card-native">ગુજરાતી</span>
+              <span class="lang-card-sub">Gujarati</span>
+            </div>
+            <span class="lang-active-check">✓</span>
+          </div>
+
+          <div class="lang-grid-card" data-lang-code="kn" onclick="selectLanguageAndClose('kn')">
+            <div class="lang-card-text">
+              <span class="lang-card-native">ಕನ್ನಡ</span>
+              <span class="lang-card-sub">Kannada</span>
+            </div>
+            <span class="lang-active-check">✓</span>
+          </div>
+
+          <div class="lang-grid-card" data-lang-code="ml" onclick="selectLanguageAndClose('ml')">
+            <div class="lang-card-text">
+              <span class="lang-card-native">മലയാളം</span>
+              <span class="lang-card-sub">Malayalam</span>
+            </div>
+            <span class="lang-active-check">✓</span>
+          </div>
+
+          <div class="lang-grid-card" data-lang-code="pa" onclick="selectLanguageAndClose('pa')">
+            <div class="lang-card-text">
+              <span class="lang-card-native">ਪੰਜਾਬੀ</span>
+              <span class="lang-card-sub">Punjabi</span>
+            </div>
+            <span class="lang-active-check">✓</span>
+          </div>
+
+          <div class="lang-grid-card" data-lang-code="or" onclick="selectLanguageAndClose('or')">
+            <div class="lang-card-text">
+              <span class="lang-card-native">ଓଡ଼ିଆ</span>
+              <span class="lang-card-sub">Odia</span>
+            </div>
+            <span class="lang-active-check">✓</span>
+          </div>
+
+          <div class="lang-grid-card" data-lang-code="mai" onclick="selectLanguageAndClose('mai')">
+            <div class="lang-card-text">
+              <span class="lang-card-native">मैथिली</span>
+              <span class="lang-card-sub">Maithili</span>
+            </div>
+            <span class="lang-active-check">✓</span>
+          </div>
+
+          <div class="lang-grid-card" data-lang-code="bho" onclick="selectLanguageAndClose('bho')">
+            <div class="lang-card-text">
+              <span class="lang-card-native">भोजपुरी</span>
+              <span class="lang-card-sub">Bhojpuri</span>
+            </div>
+            <span class="lang-active-check">✓</span>
+          </div>
+
+          <div class="lang-grid-card" data-lang-code="as" onclick="selectLanguageAndClose('as')">
+            <div class="lang-card-text">
+              <span class="lang-card-native">অসমীয়া</span>
+              <span class="lang-card-sub">Assamese</span>
+            </div>
+            <span class="lang-active-check">✓</span>
+          </div>
+
+          <div class="lang-grid-card" data-lang-code="ur" onclick="selectLanguageAndClose('ur')">
+            <div class="lang-card-text">
+              <span class="lang-card-native">اردو</span>
+              <span class="lang-card-sub">Urdu</span>
+            </div>
+            <span class="lang-active-check">✓</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="lang-modal-footer">
+        <button class="btn btn-secondary" onclick="closeLanguageModal()" data-i18n="btn_close">Close / बंद करें</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
