@@ -177,7 +177,7 @@
                 <span>I think you're looking for:</span>
               </div>
               <div class="ai-discovery-match">
-                <strong id="aiMatchedTitle">Income Certificate (आय प्रमाण पत्र)</strong>
+                <strong id="aiMatchedTitle">Income Certificate</strong>
                 <p id="aiMatchedReason">
                   An income certificate is commonly used to verify family annual income for scholarships, education fee concessions, and government welfare schemes.
                 </p>
@@ -425,47 +425,36 @@
           <div class="state-selector-info">
             <span class="state-selector-icon">🏛️</span>
             <div>
-              <div class="state-selector-title">Select State for Document Application / राज्य चुनें</div>
+              <div class="state-selector-title">Select State for Document Application</div>
               <p class="state-selector-sub">Services, forms, and department portals adapt to your chosen state jurisdiction</p>
             </div>
           </div>
           <div class="state-dropdown-container">
             <label for="stateCatalogSelect" class="state-dropdown-label">Active State:</label>
             <select id="stateCatalogSelect" class="state-selector-dropdown" onchange="onStateFilterChange(this.value)">
-              <option value="all">🇮🇳 All States & UTs (अखिल भारतीय)</option>
-              <option value="Bihar" selected>Bihar (बिहार) [Integrated]</option>
-              <option value="Uttar Pradesh">Uttar Pradesh (उत्तर प्रदेश)</option>
-              <option value="Jharkhand">Jharkhand (झारखंड)</option>
-              <option value="Delhi">Delhi (दिल्ली NCR)</option>
-              <option value="Maharashtra">Maharashtra (महाराष्ट्र)</option>
-              <option value="Madhya Pradesh">Madhya Pradesh (मध्य प्रदेश)</option>
-              <option value="Rajasthan">Rajasthan (राजस्थान)</option>
-              <option value="West Bengal">West Bengal (पश्चिम बंगाल)</option>
-              <option value="Karnataka">Karnataka (कर्नाटक)</option>
-              <option value="Tamil Nadu">Tamil Nadu (तमिलनाडु)</option>
-              <option value="Gujarat">Gujarat (गुजरात)</option>
-              <option value="Punjab">Punjab (पंजाब)</option>
-              <option value="Haryana">Haryana (हरियाणा)</option>
-              <option value="Odisha">Odisha (ओडिशा)</option>
-              <option value="Assam">Assam (असम)</option>
+              <option value="all">🇮🇳 All States & UTs</option>
+              <option value="Bihar" selected>Bihar</option>
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+              <option value="Jharkhand">Jharkhand</option>
+              <option value="Delhi">Delhi NCR</option>
+              <option value="Maharashtra">Maharashtra</option>
+              <option value="Madhya Pradesh">Madhya Pradesh</option>
+              <option value="Rajasthan">Rajasthan</option>
+              <option value="West Bengal">West Bengal</option>
+              <option value="Karnataka">Karnataka</option>
+              <option value="Tamil Nadu">Tamil Nadu</option>
+              <option value="Gujarat">Gujarat</option>
+              <option value="Punjab">Punjab</option>
+              <option value="Haryana">Haryana</option>
+              <option value="Odisha">Odisha</option>
+              <option value="Assam">Assam</option>
             </select>
           </div>
         </div>
 
-        <!-- Quick State Filter Chips -->
-        <div class="state-quick-chips" id="stateQuickChips">
-          <button class="state-chip-pill" data-state="all" onclick="selectStateChip('all')">🇮🇳 All States</button>
-          <button class="state-chip-pill active" data-state="Bihar" onclick="selectStateChip('Bihar')">Bihar (बिहार)</button>
-          <button class="state-chip-pill" data-state="Uttar Pradesh" onclick="selectStateChip('Uttar Pradesh')">Uttar Pradesh (उत्तर प्रदेश)</button>
-          <button class="state-chip-pill" data-state="Jharkhand" onclick="selectStateChip('Jharkhand')">Jharkhand (झारखंड)</button>
-          <button class="state-chip-pill" data-state="Delhi" onclick="selectStateChip('Delhi')">Delhi (दिल्ली)</button>
-          <button class="state-chip-pill" data-state="Maharashtra" onclick="selectStateChip('Maharashtra')">Maharashtra (महाराष्ट्र)</button>
-          <button class="state-chip-pill" data-state="Madhya Pradesh" onclick="selectStateChip('Madhya Pradesh')">Madhya Pradesh (मध्य प्रदेश)</button>
-        </div>
-
         <div class="state-active-indicator" id="stateActiveIndicator">
           <span class="active-dot"></span>
-          <span id="stateActiveNoticeText">Currently showing services for: <strong>Bihar (बिहार)</strong> • RTPS Right to Public Services & Departmental Integration</span>
+          <span id="stateActiveNoticeText">Currently showing services for <strong>Bihar</strong> • Integrated with Bihar RTPS Right to Public Services Portal</span>
         </div>
       </div>
 
@@ -567,7 +556,7 @@
         <div class="tracking-summary-card">
           <div class="summary-details">
             <span class="service-category-badge">OFFICIAL APPLICATION TRACKER</span>
-            <h2 id="trackServiceHeading">Income Certificate (आय प्रमाण पत्र)</h2>
+            <h2 id="trackServiceHeading">Income Certificate</h2>
             <div class="track-meta-pills">
               <span>Application ID: <strong id="trackAppIdDisplay">INC-BR-2026-894210</strong></span>
               <span>• Jurisdiction: <strong>Patna Sadar, Bihar</strong></span>
