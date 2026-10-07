@@ -255,6 +255,7 @@ window.addEventListener('DOMContentLoaded', () => {
   renderPopularServices();
   renderFullCatalog('all');
   renderMyApplications();
+  renderRecentTrackChips();
   renderPrivacyConsents();
   initPlaceholderTypewriter();
   initBackendSession();
@@ -1402,105 +1403,288 @@ function confirmAndExecuteSubmission() {
     if (submittingBox) submittingBox.style.display = 'none';
     if (successBox) successBox.style.display = 'block';
 
-    const newId = `INC-BR-2026-${Math.floor(100000 + Math.random() * 900000)}`;
+    const stateCodeMap = {
+      'Bihar': 'BR', 'Uttar Pradesh': 'UP', 'Jharkhand': 'JH',
+      'Delhi': 'DL', 'Maharashtra': 'MH', 'Madhya Pradesh': 'MP',
+      'Rajasthan': 'RJ', 'West Bengal': 'WB', 'Karnataka': 'KA',
+      'Tamil Nadu': 'TN', 'Gujarat': 'GJ', 'Punjab': 'PB'
+    };
+    const stCode = stateCodeMap[appState.formData.state] || 'BR';
+    const sId = (appState.activeService && appState.activeService.id) || 'income_certificate';
+    const svcPrefix = (sId === 'caste_certificate') ? 'CST'
+      : (sId === 'domicile_certificate') ? 'DOM'
+      : (sId === 'driving_licence') ? 'DL'
+      : (sId === 'scholarship') ? 'SCH'
+      : (sId === 'birth_certificate') ? 'BRT'
+      : (sId === 'pension') ? 'PEN'
+      : 'INC';
+    const newId = `${svcPrefix}-${stCode}-2026-${Math.floor(100000 + Math.random() * 900000)}`;
     appState.activeApplicationId = newId;
+
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    const timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+    const fullSubmittedAt = `${dateStr}, ${timeStr}`;
+
     const appIdEl = document.getElementById('generatedAppId');
     if (appIdEl) appIdEl.innerText = newId;
 
-    // Prepend to applications list
+    const timeEl = document.getElementById('submittedTimestampDisplay');
+    if (timeEl) timeEl.innerText = fullSubmittedAt;
+
+    const trackBtn = document.getElementById('btnSuccessTrack');
+    if (trackBtn) trackBtn.setAttribute('onclick', `goToTrackingView('${newId}')`);
+
+    const svcName = (appState.activeService && appState.activeService.title) 
+      ? appState.activeService.title.split('(')[0].trim() 
+      : 'Income Certificate';
+
+    // Prepend to applications list with live submitted time
     appState.myApplications.unshift({
       id: newId,
-      service: 'Income Certificate',
-      state: 'Bihar',
-      district: 'Patna',
-      date: '07 Oct 2026',
+      service: svcName,
+      state: appState.formData.state || 'Bihar',
+      district: appState.formData.district || 'Patna',
+      date: fullSubmittedAt,
       status: 'UNDER_REVIEW',
       progress: 35
     });
+
     renderMyApplications();
+    renderRecentTrackChips();
   }, 3500);
 }
 
 // ── 26. Application Tracking View & Timeline ──────────────────────────────────
 function goToTrackingView(appId) {
   showView('track');
-  loadTrackingDetails(appId || appState.activeApplicationId);
+  const targetId = appId || appState.activeApplicationId;
+  const searchInput = document.getElementById('trackSearchInput');
+  if (searchInput) searchInput.value = targetId;
+  loadTrackingDetails(targetId);
+  renderRecentTrackChips();
 }
 
 function searchTrackingId() {
   const val = document.getElementById('trackSearchInput').value.trim();
-  if (val) loadTrackingDetails(val);
+  if (val) {
+    loadTrackingDetails(val);
+    renderRecentTrackChips();
+  }
+}
+
+function copyAppId(appId, btn) {
+  if (!appId) appId = appState.activeApplicationId;
+  navigator.clipboard.writeText(appId).then(() => {
+    const oldText = btn.innerHTML;
+    btn.innerHTML = '✓ Copied';
+    btn.style.color = '#15803d';
+    setTimeout(() => {
+      btn.innerHTML = oldText;
+      btn.style.color = '';
+    }, 1500);
+  }).catch(() => {
+    alert(`Application ID: ${appId}`);
+  });
+}
+
+function renderRecentTrackChips() {
+  const box = document.getElementById('recentTrackChips');
+  if (!box) return;
+  const list = appState.myApplications.slice(0, 5);
+  box.innerHTML = `
+    <span class="recent-track-label">🔍 Live Generated IDs:</span>
+    ${list.map(a => `
+      <button class="recent-track-chip ${a.id === appState.activeApplicationId ? 'active' : ''}" onclick="goToTrackingView('${a.id}')">
+        <code>${a.id}</code> · <span>${a.service.split(' ')[0]}</span>
+      </button>
+    `).join('')}
+  `;
 }
 
 function loadTrackingDetails(appId) {
-  document.getElementById('trackAppIdDisplay').innerText = appId;
-  document.getElementById('certNumberLabel').innerText = appId;
-  document.getElementById('certNoDisplay').innerText = appId;
+  if (!appId) appId = appState.activeApplicationId;
+  appState.activeApplicationId = appId;
+
+  const foundApp = appState.myApplications.find(a => a.id.toLowerCase() === appId.toLowerCase());
+  
+  const displayId = foundApp ? foundApp.id : appId;
+  const displayService = foundApp ? foundApp.service : 'Income Certificate (आय प्रमाण पत्र)';
+  const displayJurisdiction = foundApp ? `${foundApp.district}, ${foundApp.state}` : 'Patna Sadar, Bihar';
+  const displayDate = foundApp ? foundApp.date : '07 Oct 2026, 02:45 PM';
+  const displayStatus = foundApp ? foundApp.status : 'UNDER_REVIEW';
+
+  const trackAppIdDisplay = document.getElementById('trackAppIdDisplay');
+  if (trackAppIdDisplay) trackAppIdDisplay.innerText = displayId;
+  
+  const trackHeading = document.getElementById('trackServiceHeading');
+  if (trackHeading) trackHeading.innerText = displayService;
+
+  const certNumberLabel = document.getElementById('certNumberLabel');
+  if (certNumberLabel) certNumberLabel.innerText = displayId;
+  const certNoDisplay = document.getElementById('certNoDisplay');
+  if (certNoDisplay) certNoDisplay.innerText = displayId;
+
+  const metaPills = document.querySelector('.track-meta-pills');
+  if (metaPills) {
+    metaPills.innerHTML = `
+      <span>Application ID: <strong id="trackAppIdDisplay">${displayId}</strong></span>
+      <span>• Jurisdiction: <strong>${displayJurisdiction}</strong></span>
+      <span>• Submitted: <strong>${displayDate}</strong></span>
+    `;
+  }
 
   const timeline = document.getElementById('trackTimelineList');
   const readyBox = document.getElementById('certificateReadyBox');
   const statusBadge = document.getElementById('trackStatusBadge');
+  const actionBanner = document.getElementById('actionRequiredBanner');
 
-  timeline.innerHTML = `
-    <div class="timeline-node-item done">
-      <div class="timeline-node-circle">✓</div>
-      <div class="timeline-content">
-        <h4>Application submitted</h4>
-        <p>Received online via Citizen-Service Agent • 07 Oct 2026, 10:12 UTC</p>
-      </div>
-    </div>
-    <div class="timeline-node-item done">
-      <div class="timeline-node-circle">✓</div>
-      <div class="timeline-content">
-        <h4>Documents received</h4>
-        <p>Aadhaar, Residence Proof and Income documents verified • 07 Oct 2026, 10:14 UTC</p>
-      </div>
-    </div>
-    <div class="timeline-node-item done">
-      <div class="timeline-node-circle">✓</div>
-      <div class="timeline-content">
-        <h4>Document verification</h4>
-        <p>Statutory income criteria evaluated (&lt; ₹3,00,000) • 07 Oct 2026, 10:15 UTC</p>
-      </div>
-    </div>
-    <div class="timeline-node-item current" id="node-dept-review">
-      <div class="timeline-node-circle">🟡</div>
-      <div class="timeline-content">
-        <h4>Department review</h4>
-        <p>Assigned to Revenue Officer, Patna Sadar SDO Office</p>
-      </div>
-    </div>
-    <div class="timeline-node-item" id="node-approval">
-      <div class="timeline-node-circle">○</div>
-      <div class="timeline-content">
-        <h4>Approval</h4>
-        <p>Sub-Divisional Officer digital signature endorsement</p>
-      </div>
-    </div>
-    <div class="timeline-node-item" id="node-cert-gen">
-      <div class="timeline-node-circle">○</div>
-      <div class="timeline-content">
-        <h4>Certificate generated</h4>
-        <p>Official digitally signed certificate ready for download</p>
-      </div>
-    </div>
-  `;
-
-  // Auto transition to Approved after 3.5 seconds
-  setTimeout(() => {
-    const nodeReview = document.getElementById('node-dept-review');
-    const nodeApp = document.getElementById('node-approval');
-    const nodeCert = document.getElementById('node-cert-gen');
-    if (nodeReview) nodeReview.className = 'timeline-node-item done';
-    if (nodeApp) nodeApp.className = 'timeline-node-item done';
-    if (nodeCert) nodeCert.className = 'timeline-node-item done';
-
+  if (displayStatus === 'APPROVED') {
     if (statusBadge) {
       statusBadge.className = 'status-pill-lg approved';
-      statusBadge.innerHTML = '✓ Approved & Issued';
+      statusBadge.innerHTML = '✓ Approved & Ready for Download';
     }
     if (readyBox) readyBox.style.display = 'flex';
-  }, 3500);
+    if (actionBanner) actionBanner.style.display = 'none';
+
+    timeline.innerHTML = `
+      <div class="timeline-node-item done">
+        <div class="timeline-node-circle">✓</div>
+        <div class="timeline-content">
+          <h4>Application submitted</h4>
+          <p>Received online via Citizen-Service Agent • ${displayDate}</p>
+        </div>
+      </div>
+      <div class="timeline-node-item done">
+        <div class="timeline-node-circle">✓</div>
+        <div class="timeline-content">
+          <h4>Documents verified</h4>
+          <p>Identity, residence and statutory declarations evaluated successfully</p>
+        </div>
+      </div>
+      <div class="timeline-node-item done">
+        <div class="timeline-node-circle">✓</div>
+        <div class="timeline-content">
+          <h4>Department review</h4>
+          <p>Revenue Officer verification completed at ${displayJurisdiction}</p>
+        </div>
+      </div>
+      <div class="timeline-node-item done">
+        <div class="timeline-node-circle">✓</div>
+        <div class="timeline-content">
+          <h4>Approval & Digital Signature</h4>
+          <p>Sub-Divisional Officer (SDO) digital token signature verified</p>
+        </div>
+      </div>
+      <div class="timeline-node-item done">
+        <div class="timeline-node-circle">✓</div>
+        <div class="timeline-content">
+          <h4>Certificate issued</h4>
+          <p>Official digitally signed certificate is available for download</p>
+        </div>
+      </div>
+    `;
+  } else if (displayStatus === 'ACTION_REQUIRED') {
+    if (statusBadge) {
+      statusBadge.className = 'status-pill-lg reject';
+      statusBadge.innerHTML = '⚠️ Action Required';
+    }
+    if (readyBox) readyBox.style.display = 'none';
+    if (actionBanner) actionBanner.style.display = 'flex';
+
+    timeline.innerHTML = `
+      <div class="timeline-node-item done">
+        <div class="timeline-node-circle">✓</div>
+        <div class="timeline-content">
+          <h4>Application submitted</h4>
+          <p>Received online via Citizen-Service Agent • ${displayDate}</p>
+        </div>
+      </div>
+      <div class="timeline-node-item current">
+        <div class="timeline-node-circle">⚠️</div>
+        <div class="timeline-content">
+          <h4>Additional document requested</h4>
+          <p>Officer in ${displayJurisdiction} requires an alternate address document</p>
+        </div>
+      </div>
+      <div class="timeline-node-item">
+        <div class="timeline-node-circle">○</div>
+        <div class="timeline-content">
+          <h4>Department re-evaluation</h4>
+          <p>Pending applicant upload</p>
+        </div>
+      </div>
+    `;
+  } else {
+    // UNDER_REVIEW / Processing
+    if (statusBadge) {
+      statusBadge.className = 'status-pill-lg processing';
+      statusBadge.innerHTML = '<span class="pulse-dot"></span> In Department Review';
+    }
+    if (readyBox) readyBox.style.display = 'none';
+    if (actionBanner) actionBanner.style.display = 'none';
+
+    timeline.innerHTML = `
+      <div class="timeline-node-item done">
+        <div class="timeline-node-circle">✓</div>
+        <div class="timeline-content">
+          <h4>Application submitted</h4>
+          <p>Received online via Citizen-Service Agent • ${displayDate}</p>
+        </div>
+      </div>
+      <div class="timeline-node-item done">
+        <div class="timeline-node-circle">✓</div>
+        <div class="timeline-content">
+          <h4>Documents received</h4>
+          <p>Statutory identity and income records verified against database</p>
+        </div>
+      </div>
+      <div class="timeline-node-item done">
+        <div class="timeline-node-circle">✓</div>
+        <div class="timeline-content">
+          <h4>Document verification</h4>
+          <p>Statutory criteria evaluated (&lt; ₹3,00,000 threshold)</p>
+        </div>
+      </div>
+      <div class="timeline-node-item current" id="node-dept-review">
+        <div class="timeline-node-circle">🟡</div>
+        <div class="timeline-content">
+          <h4>Department review</h4>
+          <p>Assigned to Revenue Officer, ${displayJurisdiction}</p>
+        </div>
+      </div>
+      <div class="timeline-node-item" id="node-approval">
+        <div class="timeline-node-circle">○</div>
+        <div class="timeline-content">
+          <h4>Approval</h4>
+          <p>Sub-Divisional Officer digital signature endorsement</p>
+        </div>
+      </div>
+      <div class="timeline-node-item" id="node-cert-gen">
+        <div class="timeline-node-circle">○</div>
+        <div class="timeline-content">
+          <h4>Certificate generated</h4>
+          <p>Official digitally signed certificate ready for download</p>
+        </div>
+      </div>
+    `;
+
+    // Auto transition demo
+    setTimeout(() => {
+      const nodeReview = document.getElementById('node-dept-review');
+      const nodeApp = document.getElementById('node-approval');
+      const nodeCert = document.getElementById('node-cert-gen');
+      if (nodeReview) nodeReview.className = 'timeline-node-item done';
+      if (nodeApp) nodeApp.className = 'timeline-node-item done';
+      if (nodeCert) nodeCert.className = 'timeline-node-item done';
+
+      if (statusBadge && displayStatus === 'UNDER_REVIEW') {
+        statusBadge.className = 'status-pill-lg approved';
+        statusBadge.innerHTML = '✓ Approved & Issued';
+      }
+      if (readyBox && displayStatus === 'UNDER_REVIEW') readyBox.style.display = 'flex';
+    }, 4000);
+  }
 }
 
 function openActionRequiredModal() {
@@ -1527,11 +1711,29 @@ function renderMyApplications() {
     if (app.status === 'UNDER_REVIEW') { badgeClass = 'badge-status warn'; badgeText = 'Processing'; }
     if (app.status === 'ACTION_REQUIRED') { badgeClass = 'badge-status reject'; badgeText = 'Action Required'; }
 
+    // Parse date and time cleanly
+    const parts = app.date.includes(',') ? app.date.split(', ') : [app.date, ''];
+    const datePart = parts[0];
+    const timePart = parts[1] || '';
+
     return `
       <tr>
         <td><strong>${app.service}</strong></td>
-        <td><code>${app.id}</code></td>
-        <td>${app.date}</td>
+        <td>
+          <div class="app-id-cell-wrap">
+            <button class="app-id-track-btn" onclick="goToTrackingView('${app.id}')" title="Click to track ${app.id}">
+              <code class="app-id-code">${app.id}</code>
+              <span class="track-icon-hint" title="Live Track">🔍</span>
+            </button>
+            <button class="btn-copy-mini" onclick="copyAppId('${app.id}', this)" title="Copy Application ID">📋</button>
+          </div>
+        </td>
+        <td>
+          <div class="submission-time-cell">
+            <span class="sub-date">📅 ${datePart}</span>
+            ${timePart ? `<span class="sub-time">🕒 ${timePart}</span>` : ''}
+          </div>
+        </td>
         <td>${app.district}, ${app.state}</td>
         <td>
           <div style="display:flex; align-items:center; gap:8px;">
@@ -1543,8 +1745,8 @@ function renderMyApplications() {
         </td>
         <td><span class="${badgeClass}">${badgeText}</span></td>
         <td>
-          <button class="btn btn-secondary" style="padding:4px 10px; font-size:12px;" onclick="goToTrackingView('${app.id}')">
-            Track ➔
+          <button class="btn btn-secondary btn-track-action" onclick="goToTrackingView('${app.id}')">
+            Track Status ➔
           </button>
         </td>
       </tr>
