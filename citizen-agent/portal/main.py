@@ -280,9 +280,9 @@ async def set_fail_mode(body: FailModeRequest):
 # ── HTML pages ─────────────────────────────────────────────────────────────────
 @app.get("/portal/apply", response_class=HTMLResponse)
 async def portal_apply_page(request: Request):
-    return templates.TemplateResponse("apply.html", {"request": request})
+    return templates.TemplateResponse(request=request, name="apply.html")
 
 
 @app.get("/portal/status", response_class=HTMLResponse)
 async def portal_status_page(request: Request):
-    return templates.TemplateResponse("status.html", {"request": request})
+    return templates.TemplateResponse(request=request, name="status.html")

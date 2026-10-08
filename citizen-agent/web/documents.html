@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload & Verify Documents – Citizen Agent</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/favicon.png">
+    <script>
+        (function() {
+            try {
+                var savedTheme = localStorage.getItem('civic_theme') || 'dark';
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } catch (e) {}
+        })();
+    </script>
     <link rel="stylesheet" href="/style.css">
     <script src="/translations.js"></script>
     <style>
@@ -75,7 +86,9 @@
 
     <header class="app-header">
         <div class="app-brand">
-            <div class="brand-icon">📎</div>
+            <div class="brand-icon" style="background:transparent; display:flex; align-items:center; justify-content:center;">
+                <img src="/favicon.png" alt="Logo" style="width:36px; height:36px; object-fit:contain;">
+            </div>
             <div class="brand-info">
                 <h1>Document Verification <span style="font-size:13px; font-weight:600; color:var(--primary);">(दस्तावेज सत्यापन)</span></h1>
                 <p>Rule-based cross-checking & auto-replan on faults</p>
@@ -251,7 +264,7 @@
             </div>
             <div class="lang-modal-body">
                 <div class="lang-modal-emblem-wrapper">
-                    <span class="emblem-icon">🌐</span>
+                    <img src="/favicon.png" alt="Citizen-Service Agent" class="lang-modal-logo-img">
                 </div>
                 <div class="lang-modal-title-hi" data-i18n="modal_welcome_title">
                     नागरिक सेवा सहायक में आपका स्वागत है
@@ -274,70 +287,68 @@
                         <span>English</span>
                         <span style="font-size:11.5px; opacity:0.9; font-weight:500;">(English)</span>
                     </button>
+                    <button class="quick-lang-btn more" id="btnToggleMoreLang" onclick="toggleMoreLanguages()">
+                        <span id="moreLangBtnTitle">🌐 More</span>
+                        <span style="font-size:11.5px; opacity:0.9; font-weight:500;" id="moreLangBtnSub">Languages ▾</span>
+                    </button>
                 </div>
-                <div class="lang-modal-divider">
-                    <span data-i18n="more_languages">अथवा सभी क्षेत्रीय भाषाएं / Or Choose From All Languages</span>
-                </div>
-                <div class="lang-modal-grid">
-                    <div class="lang-grid-card" data-lang-code="en" onclick="selectLanguageAndClose('en')">
-                        <div class="lang-card-text"><span class="lang-card-native">English</span><span class="lang-card-sub">English</span></div>
-                        <span class="lang-active-check">✓</span>
+                <div id="moreLanguagesSection" style="display: none; animation: fadeInLang 0.25s ease;">
+                    <div class="lang-modal-divider">
+                        <span data-i18n="more_languages">अथवा सभी क्षेत्रीय भाषाएं / Or Choose From All Languages</span>
                     </div>
-                    <div class="lang-grid-card" data-lang-code="hi" onclick="selectLanguageAndClose('hi')">
-                        <div class="lang-card-text"><span class="lang-card-native">हिन्दी</span><span class="lang-card-sub">Hindi</span></div>
-                        <span class="lang-active-check">✓</span>
-                    </div>
-                    <div class="lang-grid-card" data-lang-code="bn" onclick="selectLanguageAndClose('bn')">
-                        <div class="lang-card-text"><span class="lang-card-native">বাংলা</span><span class="lang-card-sub">Bengali</span></div>
-                        <span class="lang-active-check">✓</span>
-                    </div>
-                    <div class="lang-grid-card" data-lang-code="mr" onclick="selectLanguageAndClose('mr')">
-                        <div class="lang-card-text"><span class="lang-card-native">मराठी</span><span class="lang-card-sub">Marathi</span></div>
-                        <span class="lang-active-check">✓</span>
-                    </div>
-                    <div class="lang-grid-card" data-lang-code="ta" onclick="selectLanguageAndClose('ta')">
-                        <div class="lang-card-text"><span class="lang-card-native">தமிழ்</span><span class="lang-card-sub">Tamil</span></div>
-                        <span class="lang-active-check">✓</span>
-                    </div>
-                    <div class="lang-grid-card" data-lang-code="te" onclick="selectLanguageAndClose('te')">
-                        <div class="lang-card-text"><span class="lang-card-native">తెలుగు</span><span class="lang-card-sub">Telugu</span></div>
-                        <span class="lang-active-check">✓</span>
-                    </div>
-                    <div class="lang-grid-card" data-lang-code="gu" onclick="selectLanguageAndClose('gu')">
-                        <div class="lang-card-text"><span class="lang-card-native">ગુજરાતી</span><span class="lang-card-sub">Gujarati</span></div>
-                        <span class="lang-active-check">✓</span>
-                    </div>
-                    <div class="lang-grid-card" data-lang-code="kn" onclick="selectLanguageAndClose('kn')">
-                        <div class="lang-card-text"><span class="lang-card-native">ಕನ್ನಡ</span><span class="lang-card-sub">Kannada</span></div>
-                        <span class="lang-active-check">✓</span>
-                    </div>
-                    <div class="lang-grid-card" data-lang-code="ml" onclick="selectLanguageAndClose('ml')">
-                        <div class="lang-card-text"><span class="lang-card-native">മലയാളം</span><span class="lang-card-sub">Malayalam</span></div>
-                        <span class="lang-active-check">✓</span>
-                    </div>
-                    <div class="lang-grid-card" data-lang-code="pa" onclick="selectLanguageAndClose('pa')">
-                        <div class="lang-card-text"><span class="lang-card-native">ਪੰਜਾਬੀ</span><span class="lang-card-sub">Punjabi</span></div>
-                        <span class="lang-active-check">✓</span>
-                    </div>
-                    <div class="lang-grid-card" data-lang-code="or" onclick="selectLanguageAndClose('or')">
-                        <div class="lang-card-text"><span class="lang-card-native">ଓଡ଼ିଆ</span><span class="lang-card-sub">Odia</span></div>
-                        <span class="lang-active-check">✓</span>
-                    </div>
-                    <div class="lang-grid-card" data-lang-code="mai" onclick="selectLanguageAndClose('mai')">
-                        <div class="lang-card-text"><span class="lang-card-native">मैथिली</span><span class="lang-card-sub">Maithili</span></div>
-                        <span class="lang-active-check">✓</span>
-                    </div>
-                    <div class="lang-grid-card" data-lang-code="bho" onclick="selectLanguageAndClose('bho')">
-                        <div class="lang-card-text"><span class="lang-card-native">भोजपुरी</span><span class="lang-card-sub">Bhojpuri</span></div>
-                        <span class="lang-active-check">✓</span>
-                    </div>
-                    <div class="lang-grid-card" data-lang-code="as" onclick="selectLanguageAndClose('as')">
-                        <div class="lang-card-text"><span class="lang-card-native">অসমীয়া</span><span class="lang-card-sub">Assamese</span></div>
-                        <span class="lang-active-check">✓</span>
-                    </div>
-                    <div class="lang-grid-card" data-lang-code="ur" onclick="selectLanguageAndClose('ur')">
-                        <div class="lang-card-text"><span class="lang-card-native">اردو</span><span class="lang-card-sub">Urdu</span></div>
-                        <span class="lang-active-check">✓</span>
+                    <div class="lang-modal-grid">
+                        <div class="lang-grid-card" data-lang-code="bn" onclick="selectLanguageAndClose('bn')">
+                            <div class="lang-card-text"><span class="lang-card-native">বাংলা</span><span class="lang-card-sub">Bengali</span></div>
+                            <span class="lang-active-check">✓</span>
+                        </div>
+                        <div class="lang-grid-card" data-lang-code="mr" onclick="selectLanguageAndClose('mr')">
+                            <div class="lang-card-text"><span class="lang-card-native">मराठी</span><span class="lang-card-sub">Marathi</span></div>
+                            <span class="lang-active-check">✓</span>
+                        </div>
+                        <div class="lang-grid-card" data-lang-code="ta" onclick="selectLanguageAndClose('ta')">
+                            <div class="lang-card-text"><span class="lang-card-native">தமிழ்</span><span class="lang-card-sub">Tamil</span></div>
+                            <span class="lang-active-check">✓</span>
+                        </div>
+                        <div class="lang-grid-card" data-lang-code="te" onclick="selectLanguageAndClose('te')">
+                            <div class="lang-card-text"><span class="lang-card-native">తెలుగు</span><span class="lang-card-sub">Telugu</span></div>
+                            <span class="lang-active-check">✓</span>
+                        </div>
+                        <div class="lang-grid-card" data-lang-code="gu" onclick="selectLanguageAndClose('gu')">
+                            <div class="lang-card-text"><span class="lang-card-native">ગુજરાતી</span><span class="lang-card-sub">Gujarati</span></div>
+                            <span class="lang-active-check">✓</span>
+                        </div>
+                        <div class="lang-grid-card" data-lang-code="kn" onclick="selectLanguageAndClose('kn')">
+                            <div class="lang-card-text"><span class="lang-card-native">ಕನ್ನಡ</span><span class="lang-card-sub">Kannada</span></div>
+                            <span class="lang-active-check">✓</span>
+                        </div>
+                        <div class="lang-grid-card" data-lang-code="ml" onclick="selectLanguageAndClose('ml')">
+                            <div class="lang-card-text"><span class="lang-card-native">മലയാളം</span><span class="lang-card-sub">Malayalam</span></div>
+                            <span class="lang-active-check">✓</span>
+                        </div>
+                        <div class="lang-grid-card" data-lang-code="pa" onclick="selectLanguageAndClose('pa')">
+                            <div class="lang-card-text"><span class="lang-card-native">ਪੰਜਾਬੀ</span><span class="lang-card-sub">Punjabi</span></div>
+                            <span class="lang-active-check">✓</span>
+                        </div>
+                        <div class="lang-grid-card" data-lang-code="or" onclick="selectLanguageAndClose('or')">
+                            <div class="lang-card-text"><span class="lang-card-native">ଓଡ଼ିଆ</span><span class="lang-card-sub">Odia</span></div>
+                            <span class="lang-active-check">✓</span>
+                        </div>
+                        <div class="lang-grid-card" data-lang-code="mai" onclick="selectLanguageAndClose('mai')">
+                            <div class="lang-card-text"><span class="lang-card-native">मैथिली</span><span class="lang-card-sub">Maithili</span></div>
+                            <span class="lang-active-check">✓</span>
+                        </div>
+                        <div class="lang-grid-card" data-lang-code="bho" onclick="selectLanguageAndClose('bho')">
+                            <div class="lang-card-text"><span class="lang-card-native">भोजपुरी</span><span class="lang-card-sub">Bhojpuri</span></div>
+                            <span class="lang-active-check">✓</span>
+                        </div>
+                        <div class="lang-grid-card" data-lang-code="as" onclick="selectLanguageAndClose('as')">
+                            <div class="lang-card-text"><span class="lang-card-native">অসমীয়া</span><span class="lang-card-sub">Assamese</span></div>
+                            <span class="lang-active-check">✓</span>
+                        </div>
+                        <div class="lang-grid-card" data-lang-code="ur" onclick="selectLanguageAndClose('ur')">
+                            <div class="lang-card-text"><span class="lang-card-native">اردو</span><span class="lang-card-sub">Urdu</span></div>
+                            <span class="lang-active-check">✓</span>
+                        </div>
                     </div>
                 </div>
             </div>

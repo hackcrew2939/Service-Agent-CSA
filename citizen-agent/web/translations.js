@@ -821,10 +821,13 @@ class CivicI18n {
       moreBtn.textContent = this.t('more_languages');
     }
 
-    // Keep legacy select in sync if present
+    // Keep language select pill in sync if present
     const legacySelect = document.getElementById('langSelect');
     if (legacySelect && legacySelect.value !== this.currentLang) {
       legacySelect.value = this.currentLang;
+    }
+    if (typeof updateLangPillLabel === 'function') {
+      updateLangPillLabel(this.currentLang);
     }
   }
 
@@ -880,9 +883,40 @@ function changeLanguage(langCode) {
   civicI18n.setLanguage(langCode);
 }
 
+function toggleMoreLanguages() {
+  const section = document.getElementById('moreLanguagesSection');
+  const title = document.getElementById('moreLangBtnTitle');
+  const sub = document.getElementById('moreLangBtnSub');
+  const btn = document.getElementById('btnToggleMoreLang');
+  if (!section) return;
+
+  const isHidden = section.style.display === 'none' || section.style.display === '';
+  if (isHidden) {
+    section.style.display = 'block';
+    if (title) title.textContent = '▲ Less';
+    if (sub) sub.textContent = 'Languages';
+    if (btn) btn.classList.add('active');
+  } else {
+    section.style.display = 'none';
+    if (title) title.textContent = '🌐 More';
+    if (sub) sub.textContent = 'Languages ▾';
+    if (btn) btn.classList.remove('active');
+  }
+}
+
 function openLanguageModal() {
   const modal = document.getElementById('languageSelectionModal');
   if (modal) {
+    // Reset more languages collapsible section on open
+    const section = document.getElementById('moreLanguagesSection');
+    const title = document.getElementById('moreLangBtnTitle');
+    const sub = document.getElementById('moreLangBtnSub');
+    const btn = document.getElementById('btnToggleMoreLang');
+    if (section) section.style.display = 'none';
+    if (title) title.textContent = '🌐 More';
+    if (sub) sub.textContent = 'Languages ▾';
+    if (btn) btn.classList.remove('active');
+
     modal.style.display = 'flex';
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -910,14 +944,9 @@ function selectLanguageAndClose(langCode) {
   }
 }
 
-// Auto-initialize and pop up language selection when website opens
+// Auto-initialize language on website open without blocking modal popup
 document.addEventListener('DOMContentLoaded', () => {
   civicI18n.setLanguage(civicI18n.currentLang);
-  
-  // Automatically open Language Selection Popup on website open
-  setTimeout(() => {
-    openLanguageModal();
-  }, 300);
 
   // Keyboard listener: Escape to close modal
   document.addEventListener('keydown', (e) => {

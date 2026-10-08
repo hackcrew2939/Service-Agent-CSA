@@ -1,13 +1,26 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Citizen-Service Agent – Government Services, Made Simple</title>
+  <title>CivicAgent — Citizen Service Agent | Government Services, Without the Confusion</title>
+  <meta name="description" content="CivicAgent is an AI-powered citizen service assistant helping citizens understand, prepare, and track government services with full transparency and consent.">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/favicon.png">
+  <script>
+    (function() {
+      try {
+        var savedTheme = localStorage.getItem('civic_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      } catch (e) {}
+    })();
+  </script>
   <link rel="stylesheet" href="/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="/place_documents_db.js"></script>
   <script src="/translations.js"></script>
 </head>
 <body>
@@ -18,44 +31,32 @@
     <div class="header-main">
       <a href="#home" class="logo-container" onclick="showView('home')">
         <div class="logo-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-            <path d="M2 17l10 5 10-5"></path>
-            <path d="M2 12l10 5 10-5"></path>
-          </svg>
+          <img src="/favicon.png" alt="CivicAgent Logo" class="site-logo-img">
         </div>
         <div class="logo-text">
-          <h1>Citizen-Service Agent</h1>
+          <h1>CivicAgent</h1>
           <span id="t-logo-sub">Government Services, Made Simple</span>
         </div>
       </a>
 
-      <!-- Desktop Navigation Menu -->
+      <!-- Desktop Navigation Menu (Section 5) -->
       <nav class="nav-menu" aria-label="Main navigation">
-        <a class="nav-link active" onclick="showView('home')" id="nav-home">Home</a>
         <a class="nav-link" onclick="showView('services')" id="nav-services">Services</a>
-        <a class="nav-link" onclick="showView('applications')" id="nav-applications">My Applications</a>
-        <a class="nav-link" onclick="showView('help')" id="nav-help">Help</a>
-        <a class="nav-link" onclick="showView('terms')" id="nav-terms">Terms</a>
+        <a class="nav-link" onclick="scrollToSection('how-it-works')" id="nav-how-it-works">How It Works</a>
+        <a class="nav-link" onclick="scrollToSection('trust-security')" id="nav-trust-security">Trust &amp; Security</a>
+        <a class="nav-link" onclick="showView('help')" id="nav-help">Help &amp; FAQ</a>
       </nav>
 
-      <!-- Right Header Actions -->
+      <!-- Right Header Actions (Section 5) -->
       <div class="header-actions">
-        <!-- 24x7 Toll-Free Citizen Helpline Pill -->
-        <a href="tel:18001802026" class="btn-helpline-pill" title="24x7 Toll-Free Citizen Helpline: 1800-180-2026">
-          <span class="helpline-pulse-dot"></span>
-          <span class="helpline-phone-icon">📞</span>
-          <span class="helpline-text">24x7 Help: <strong>1800-180-2026</strong></span>
-        </a>
-
         <!-- Notification Bell & Drawer (Section 31) -->
-        <div class="notification-wrapper">
+        <div class="notification-wrapper" id="headerNotifWrapper">
           <button class="btn-icon" onclick="toggleNotifications()" title="Notifications" aria-label="View notifications">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
               <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
             </svg>
-            <span class="notification-count" id="notifBadge">3</span>
+            <span class="notification-count" id="notifBadge">0</span>
           </button>
 
           <div class="notification-drawer" id="notifDrawer" style="display:none;">
@@ -98,50 +99,90 @@
           </div>
         </div>
 
-        <!-- Language Selection Cluster (Section 35) -->
-        <div class="lang-selector-cluster" aria-label="Select language">
-          <span class="globe-icon" style="font-size:16px;">🌐</span>
-          <select id="langSelect" onchange="changeLanguage(this.value)" class="btn-lang-pill" style="cursor:pointer; border:none; background:transparent; font-size:13px; font-weight:600; color:var(--slate-800);">
+        <!-- Small Language Selection Pill (Screenshot 2) -->
+        <div class="lang-pill-small" id="headerLangPill" title="Select Language / भाषा चुनें">
+          <svg class="lang-globe-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+          <select id="langSelect" onchange="changeLanguage(this.value); updateLangPillLabel(this.value);" class="lang-pill-select" aria-label="Select language">
             <option value="en" selected>English (EN)</option>
             <option value="hi">हिंदी (HI)</option>
             <option value="bn">বাংলা (BN)</option>
+            <option value="mr">मराठी (MR)</option>
             <option value="ta">தமிழ் (TA)</option>
             <option value="te">తెలుగు (TE)</option>
-            <option value="mr">मराठी (MR)</option>
             <option value="gu">ગુજરાતી (GU)</option>
             <option value="kn">ಕನ್ನಡ (KN)</option>
             <option value="ml">മലയാളം (ML)</option>
             <option value="pa">ਪੰਜਾਬੀ (PA)</option>
             <option value="or">ଓଡ଼ିଆ (OR)</option>
           </select>
+          <svg class="lang-chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
         </div>
 
-        <!-- User Profile Dropdown (Section 32) -->
-        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper" style="position:relative; display:inline-block;">
+        <!-- Dark & Light Mode Theme Toggle Button -->
+        <button class="btn-theme-toggle" id="btnThemeToggle" onclick="toggleTheme()" title="Switch Theme (Dark / Light)" aria-label="Toggle dark and light theme">
+          <span class="theme-icon sun-icon" id="sunIcon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </span>
+          <span class="theme-icon moon-icon" id="moonIcon" style="display:none;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </span>
+          <span class="theme-toggle-label" id="themeToggleLabel">Light</span>
+        </button>
+
+        <!-- Public Guest Login & Get Started Buttons (Shown when logged out) -->
+        <div class="header-guest-actions" id="headerGuestActions">
+          <button class="btn btn-ghost btn-header-login" onclick="showAuthModal()" id="btnHeaderLogin">
+            Login
+          </button>
+          <button class="btn btn-primary btn-header-cta" onclick="handleStartServicePublic('income_certificate')" id="btnHeaderGetStarted">
+            Start a Service ➔
+          </button>
+        </div>
+
+        <!-- User Profile Dropdown (Shown when logged in) -->
+        <div class="profile-dropdown-wrapper" id="profileDropdownWrapper" style="display:none; position:relative;">
           <button class="btn-profile-chip" onclick="toggleProfileDropdown()" title="View Profile / Sign Out" id="headerProfileChip">
-            <span class="avatar-circle" id="headerAvatarCircle">?</span>
-            <span class="profile-name" id="userNameLabel">Guest</span>
+            <span class="avatar-circle" id="headerAvatarCircle">R</span>
+            <span class="profile-name" id="userNameLabel">rik</span>
             <span style="font-size:10px; margin-left:4px; opacity:0.6;">▾</span>
           </button>
-          <div id="profileDropdownMenu" style="display:none; position:absolute; right:0; top:calc(100% + 6px); background:#fff; border:1px solid #e2e8f0; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.12); min-width:160px; z-index:9999; overflow:hidden;">
-            <div style="padding:12px 16px; border-bottom:1px solid #f1f5f9;">
-              <div style="font-size:11px; color:#94a3b8; text-transform:uppercase; letter-spacing:0.05em;">Signed in as</div>
-              <div style="font-weight:700; font-size:14px; color:#1e293b; margin-top:2px;" id="dropdownUserName">Guest</div>
+          <div id="profileDropdownMenu" class="header-profile-menu" style="display:none; position:absolute; right:0; top:calc(100% + 6px); background:var(--bg-surface); border:1px solid var(--border-color); border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.18); min-width:160px; z-index:9999; overflow:hidden;">
+            <div style="padding:12px 16px; border-bottom:1px solid var(--border-color);">
+              <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Signed in as</div>
+              <div style="font-weight:700; font-size:14px; color:var(--text-primary); margin-top:2px;" id="dropdownUserName">rik</div>
             </div>
-            <button onclick="showView('profile'); closeProfileDropdown();" style="display:flex; align-items:center; gap:8px; width:100%; padding:10px 16px; border:none; background:transparent; cursor:pointer; font-size:13px; color:#334155; transition:background 0.15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+            <button onclick="showView('applications'); closeProfileDropdown();" class="profile-menu-item">
+              📂 My Applications
+            </button>
+            <button onclick="showView('profile'); closeProfileDropdown();" class="profile-menu-item">
               👤 My Profile
             </button>
-            <button id="btnLogout" onclick="doLogout()" style="display:flex; align-items:center; gap:8px; width:100%; padding:10px 16px; border:none; background:transparent; cursor:pointer; font-size:13px; color:#ef4444; font-weight:600; transition:background 0.15s; border-top:1px solid #fee2e2;" onmouseover="this.style.background='#fff5f5'" onmouseout="this.style.background='transparent'">
+            <button id="btnLogout" onclick="doLogout()" class="profile-menu-item danger">
               🚪 Logout
             </button>
           </div>
+          <button class="btn btn-primary btn-header-cta" onclick="startSpecificService('income_certificate')">
+            Start a Service ➔
+          </button>
         </div>
-
-        <!-- Primary CTA: Start a Service (Section 5) -->
-        <button class="btn btn-primary btn-header-cta" onclick="startSpecificService('income_certificate')">
-          Start a Service ➔
-        </button>
-      </div>
     </div>
   </header>
 
@@ -149,269 +190,539 @@
   <main class="app-container" id="mainContainer">
 
     <!-- ====================================================================
-         VIEW 1: LANDING PAGE (Sections 6, 7, 8, 9)
+         VIEW 1: NEW PUBLIC CIVICAGENT HOME / INTRO LANDING PAGE
          ==================================================================== -->
     <section id="view-home" class="view-section active">
       
-      <!-- Hero Section (Section 6) -->
-      <div class="hero-section">
-        <div class="hero-content-col">
-          <div class="hero-pill">
-            <span class="hero-pill-badge">CivicAgent</span>
-            <span>One place to navigate government services with confidence</span>
-          </div>
-          
-          <h1 class="hero-heading" id="t-hero-heading">Government Services, Made Simple.</h1>
-          <p class="hero-subheading" id="t-hero-subheading">
-            Tell us what you need. We'll guide you through the documents, forms and application process — step by step.
-          </p>
+      <!-- ── SECTION 4 & 6: HERO / FIRST SCREEN (#10172F Deep Navy) ── -->
+      <div class="civic-hero-section">
+        <div class="civic-hero-ambient-glow"></div>
+        
+        <div class="civic-hero-container">
+          <!-- Left Column: Copy & CTAs -->
+          <div class="civic-hero-copy-col">
+            <div class="civic-hero-eyebrow">
+              <span class="hero-eyebrow-pulse"></span>
+              <span>YOUR DIGITAL CITIZEN ASSISTANT</span>
+            </div>
+            
+            <h1 class="civic-hero-title">
+              Government Services,<br>
+              <span class="hero-title-gradient">Without the Confusion.</span>
+            </h1>
+            
+            <p class="civic-hero-subtitle">
+              Tell CivicAgent what you need. Get help with the right service, documents, application and tracking — all in one place.
+            </p>
 
-          <!-- Large Conversational Search Box with Rotating Placeholders (Section 6) -->
-          <div class="conversational-search-container">
-            <div class="ai-search-card">
-              <span class="search-icon">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-              </span>
-              <input 
-                type="text" 
-                id="aiSearchInput" 
-                class="ai-search-input" 
-                placeholder="What government service do you need?" 
-                onkeydown="handleSearchKey(event)"
-                oninput="handleSearchInput(event)">
-              <button class="btn btn-primary btn-search-go" onclick="performAiSearch()">Start ➔</button>
+            <div class="civic-hero-cta-row">
+              <button class="btn btn-hero-primary" onclick="handleStartServicePublic('income_certificate')">
+                Start a Service →
+              </button>
+              <a href="#how-it-works" class="btn btn-hero-secondary" onclick="scrollToSection('how-it-works'); return false;">
+                See How It Works
+              </a>
             </div>
 
-            <!-- AI Conversational Recommendation Card (Section 12) -->
-            <div id="aiDiscoveryCard" class="ai-discovery-card" style="display:none;">
-              <div class="ai-discovery-header">
-                <div class="ai-badge">🤖 AI Guide</div>
-                <span>I think you're looking for:</span>
+            <div class="civic-hero-trust-badges">
+              <span class="trust-badge-item">Simple</span>
+              <span class="trust-badge-dot">•</span>
+              <span class="trust-badge-item">Guided</span>
+              <span class="trust-badge-dot">•</span>
+              <span class="trust-badge-item">Transparent</span>
+            </div>
+          </div>
+
+          <!-- Right Column: Custom CivicAgent Product Visual -->
+          <div class="civic-hero-visual-col">
+            <div class="civic-product-hub" aria-label="CivicAgent AI Assistant connecting documents, application, review, consent, and tracking">
+              
+              <!-- Ambient background connection lines & orbits -->
+              <div class="hub-orbit-circuit"></div>
+              <div class="hub-orbit-circuit outer"></div>
+
+              <!-- Connecting SVG flow threads -->
+              <svg class="hub-flow-lines" viewBox="0 0 460 440" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M230 220 L100 80" stroke="url(#lineGradBlue)" stroke-width="1.8" stroke-dasharray="4 4" class="hub-line-anim" />
+                <path d="M230 220 L360 80" stroke="url(#lineGradBlue)" stroke-width="1.8" stroke-dasharray="4 4" class="hub-line-anim" />
+                <path d="M230 220 L370 230" stroke="url(#lineGradBlue)" stroke-width="1.8" stroke-dasharray="4 4" class="hub-line-anim" />
+                <path d="M230 220 L95 360" stroke="url(#lineGradGreen)" stroke-width="1.8" stroke-dasharray="4 4" class="hub-line-anim" />
+                <path d="M230 220 L360 360" stroke="url(#lineGradAmber)" stroke-width="1.8" stroke-dasharray="4 4" class="hub-line-anim" />
+                <defs>
+                  <linearGradient id="lineGradBlue" x1="230" y1="220" x2="100" y2="80" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#38bdf8" stop-opacity="0.8"/>
+                    <stop offset="1" stop-color="#0284c7" stop-opacity="0.1"/>
+                  </linearGradient>
+                  <linearGradient id="lineGradGreen" x1="230" y1="220" x2="95" y2="360" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#34d399" stop-opacity="0.8"/>
+                    <stop offset="1" stop-color="#059669" stop-opacity="0.1"/>
+                  </linearGradient>
+                  <linearGradient id="lineGradAmber" x1="230" y1="220" x2="360" y2="360" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#fbbf24" stop-opacity="0.8"/>
+                    <stop offset="1" stop-color="#d97706" stop-opacity="0.1"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+
+              <!-- Central CivicAgent Hub Node -->
+              <div class="hub-center-node">
+                <div class="hub-center-pulse"></div>
+                <div class="hub-center-pulse secondary"></div>
+                <div class="hub-center-avatar">
+                  <img src="/favicon.png" alt="CivicAgent AI Assistant" class="hub-avatar-logo">
+                </div>
+                <strong class="hub-center-name">CivicAgent</strong>
+                <span class="hub-center-desc">Digital Citizen Assistant</span>
               </div>
-              <div class="ai-discovery-match">
-                <strong id="aiMatchedTitle">Income Certificate</strong>
-                <p id="aiMatchedReason">
-                  An income certificate is commonly used to verify family annual income for scholarships, education fee concessions, and government welfare schemes.
-                </p>
-              </div>
-              <div class="ai-discovery-actions">
-                <span class="ai-confirm-text">Is this what you need?</span>
-                <div class="ai-btn-group">
-                  <button class="btn btn-success" id="btnAiYes" onclick="acceptAiSuggestion()">Yes, continue ➔</button>
-                  <button class="btn btn-secondary" onclick="dismissAiSuggestion()">No, choose another</button>
+
+              <!-- Floating Card 1: Documents -->
+              <div class="hub-floating-card card-docs">
+                <div class="float-card-icon-title">
+                  <span class="float-card-emoji">📄</span>
+                  <div>
+                    <strong>Income Certificate</strong>
+                    <div class="float-card-sub">Statutory Requirement</div>
+                  </div>
+                </div>
+                <div class="float-card-badge badge-ready">
+                  <span>✓ Documents ready</span>
                 </div>
               </div>
-            </div>
 
-            <!-- Rotating Search Example Chips -->
-            <div class="search-example-chips">
-              <span class="chips-label">Popular searches:</span>
-              <button class="search-chip" onclick="applySearchTerm('I need an income certificate for college scholarship')">
-                "I need an income certificate"
-              </button>
-              <button class="search-chip" onclick="applySearchTerm('I want to apply for a caste certificate')">
-                "I want to apply for a caste certificate"
-              </button>
-              <button class="search-chip" onclick="applySearchTerm('I need a post-matric scholarship')">
-                "I need a scholarship"
-              </button>
-              <button class="search-chip" onclick="applySearchTerm('How can I get a domicile certificate?')">
-                "How can I get a domicile certificate?"
-              </button>
+              <!-- Floating Card 2: Application -->
+              <div class="hub-floating-card card-app">
+                <div class="float-card-icon-title">
+                  <span class="float-card-emoji">📝</span>
+                  <div>
+                    <strong>Application</strong>
+                    <div class="float-card-sub">Pre-filled &amp; Validated</div>
+                  </div>
+                </div>
+                <div class="float-card-badge badge-review">
+                  <span>Ready for review</span>
+                </div>
+              </div>
+
+              <!-- Floating Card 3: Review -->
+              <div class="hub-floating-card card-review-node">
+                <div class="float-card-icon-title">
+                  <span class="float-card-emoji">🔍</span>
+                  <div>
+                    <strong>Review</strong>
+                    <div class="float-card-sub">Eligibility Checked</div>
+                  </div>
+                </div>
+                <div class="float-card-badge badge-verified">
+                  <span>✓ Verified data</span>
+                </div>
+              </div>
+
+              <!-- Floating Card 4: Consent -->
+              <div class="hub-floating-card card-consent">
+                <div class="float-card-icon-title">
+                  <span class="float-card-emoji">🔒</span>
+                  <div>
+                    <strong>Consent</strong>
+                    <div class="float-card-sub">Explicit Approval</div>
+                  </div>
+                </div>
+                <div class="float-card-badge badge-consent">
+                  <span>✓ Approved by you</span>
+                </div>
+              </div>
+
+              <!-- Floating Card 5: Application Status -->
+              <div class="hub-floating-card card-status">
+                <div class="float-card-icon-title">
+                  <span class="float-card-emoji">⚡</span>
+                  <div>
+                    <strong>Application Status</strong>
+                    <div class="float-card-sub">INC-BR-2026-894210</div>
+                  </div>
+                </div>
+                <div class="float-card-badge badge-progress">
+                  <span class="live-amber-dot"></span>
+                  <span>Under Review</span>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
 
-        <!-- Hero Visual: Central Citizen Connected Model (Section 7) -->
-        <div class="hero-visual-col">
-          <div class="hero-concept-visual" aria-hidden="true">
-            <!-- Center Citizen Node -->
-            <div class="visual-center-node">
-              <div class="center-avatar">👤</div>
-              <span class="center-title">Citizen</span>
-              <span class="center-sub">Single Digital Desk</span>
+        <!-- Section 3: Core Experience Lifecycle Bar -->
+        <div class="civic-lifecycle-ribbon-container">
+          <div class="civic-lifecycle-ribbon" aria-label="Core CivicAgent Experience: Ask, Plan, Prepare, Review, Consent, Act, Track, Complete">
+            <span class="lifecycle-eyebrow">CORE EXPERIENCE:</span>
+            <div class="lifecycle-steps-row">
+              <span class="l-step">ASK</span>
+              <span class="l-arr">→</span>
+              <span class="l-step">PLAN</span>
+              <span class="l-arr">→</span>
+              <span class="l-step">PREPARE</span>
+              <span class="l-arr">→</span>
+              <span class="l-step">REVIEW</span>
+              <span class="l-arr">→</span>
+              <span class="l-step highlight">CONSENT</span>
+              <span class="l-arr">→</span>
+              <span class="l-step">ACT</span>
+              <span class="l-arr">→</span>
+              <span class="l-step">TRACK</span>
+              <span class="l-arr">→</span>
+              <span class="l-step complete">COMPLETE</span>
             </div>
-
-            <!-- Connected Surrounding Nodes -->
-            <div class="orbit-node node-docs">
-              <div class="node-icon">📄</div>
-              <div class="node-details">
-                <strong>Documents</strong>
-                <span>Instant OCR check</span>
-              </div>
-            </div>
-
-            <div class="orbit-node node-services">
-              <div class="node-icon">🏛️</div>
-              <div class="node-details">
-                <strong>Government Services</strong>
-                <span>State & Central</span>
-              </div>
-            </div>
-
-            <div class="orbit-node node-app">
-              <div class="node-icon">📝</div>
-              <div class="node-details">
-                <strong>Smart Application</strong>
-                <span>Pre-filled & verified</span>
-              </div>
-            </div>
-
-            <div class="orbit-node node-verify">
-              <div class="node-icon">🛡️</div>
-              <div class="node-details">
-                <strong>Verification</strong>
-                <span>Deterministic rules</span>
-              </div>
-            </div>
-
-            <div class="orbit-node node-approval">
-              <div class="node-icon">✓</div>
-              <div class="node-details">
-                <strong>Direct Approval</strong>
-                <span>Digital certificate</span>
-              </div>
-            </div>
-
-            <!-- Connecting Ring Line -->
-            <div class="visual-orbit-ring"></div>
           </div>
         </div>
       </div>
 
-      <!-- Trust Section: "Designed around you" (Section 8) -->
-      <section class="trust-section">
-        <div class="section-title-box">
-          <span class="section-kicker">OUR PROMISE</span>
-          <h2>Designed around you.</h2>
-          <p>We eliminate confusing bureaucracy and protect your privacy at every step.</p>
-        </div>
-        <div class="trust-grid">
-          <div class="trust-card">
-            <div class="trust-card-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 20h9"></path>
-                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-              </svg>
-            </div>
-            <h3>Simple</h3>
-            <p>Clear, guided steps instead of complicated government forms and confusing official jargon.</p>
+      <!-- ── SECTION 7: HOW CIVICAGENT WORKS ("From Need to Done.") ── -->
+      <section id="how-it-works" class="landing-section-wrap section-how-it-works">
+        <div class="landing-container">
+          <div class="landing-section-header">
+            <span class="landing-kicker">HOW CIVICAGENT WORKS</span>
+            <h2 class="landing-title">From Need to Done.</h2>
+            <p class="landing-subtitle">Four clear steps from finding your government service to verified completion.</p>
           </div>
-          <div class="trust-card">
-            <div class="trust-card-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="16" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-              </svg>
+
+          <div class="steps-four-grid">
+            <!-- Step 01 -->
+            <div class="step-process-card">
+              <div class="step-number-tag">01 — Tell Us</div>
+              <div class="step-card-icon-wrap">💬</div>
+              <h3>Tell Us</h3>
+              <p class="step-quote">"Describe the government service you need."</p>
+              <p class="step-detail">State what you want in simple words or speak via microphone to find the exact service.</p>
             </div>
-            <h3>Transparent</h3>
-            <p>Know exactly what information is being used, where it goes, and what happens next with zero hidden fees.</p>
-          </div>
-          <div class="trust-card">
-            <div class="trust-card-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-              </svg>
+
+            <!-- Step 02 -->
+            <div class="step-process-card">
+              <div class="step-number-tag">02 — Get a Plan</div>
+              <div class="step-card-icon-wrap">📋</div>
+              <h3>Get a Plan</h3>
+              <p class="step-quote">"Understand eligibility, documents and next steps."</p>
+              <p class="step-detail">Review clear eligibility checklists, mandatory vs optional files, official fees, and timelines.</p>
             </div>
-            <h3>Secure</h3>
-            <p>Your documents and personal information are handled in encrypted sandboxes with masked Aadhaar numbers.</p>
-          </div>
-          <div class="trust-card">
-            <div class="trust-card-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="16" y1="13" x2="8" y2="13"></line>
-                <line x1="16" y1="17" x2="8" y2="17"></line>
-              </svg>
+
+            <!-- Step 03 -->
+            <div class="step-process-card">
+              <div class="step-number-tag">03 — Review &amp; Consent</div>
+              <div class="step-card-icon-wrap">🔒</div>
+              <h3>Review &amp; Consent</h3>
+              <p class="step-quote">"Check everything before anything is submitted."</p>
+              <p class="step-detail">Verify every pre-filled field. Zero silent transmissions — only your affirmative approval sends data.</p>
             </div>
-            <h3>Accountable</h3>
-            <p>Every application has a traceable status, cryptographic audit history, and official reference ID.</p>
+
+            <!-- Step 04 -->
+            <div class="step-process-card">
+              <div class="step-number-tag">04 — Track</div>
+              <div class="step-card-icon-wrap">⚡</div>
+              <h3>Track</h3>
+              <p class="step-quote">"Follow your application until completion."</p>
+              <p class="step-detail">Monitor stages, respond to officer inquiries with guidance, and download the official certificate.</p>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- How It Works: Step-by-Step Connected Journey (Section 9) -->
-      <section class="how-it-works-section">
-        <div class="section-title-box">
-          <span class="section-kicker">THE CITIZEN JOURNEY</span>
-          <h2>From request to result, step by step.</h2>
-          <p>We transform complex multi-week administrative hurdles into a calm, predictable experience.</p>
-        </div>
+      <!-- ── SECTION 8: SERVICES SECTION ("What can CivicAgent help you with?") ── -->
+      <section id="landing-services" class="landing-section-wrap section-services-categories">
+        <div class="landing-container">
+          <div class="landing-section-header">
+            <span class="landing-kicker">SERVICE DIRECTORY</span>
+            <h2 class="landing-title">What can CivicAgent help you with?</h2>
+            <p class="landing-subtitle">Explore key citizen service categories with guided checklists and transparent procedures.</p>
+          </div>
 
-        <div class="timeline-stepper-horizontal">
-          <div class="timeline-step-item">
-            <div class="timeline-step-badge">01</div>
-            <h4>Tell us what you need</h4>
-            <p>Search or describe your requirement in plain words.</p>
+          <div class="service-categories-six-grid">
+            <!-- 1. Certificates -->
+            <div class="category-card" onclick="handleStartServicePublic('income_certificate')">
+              <div class="category-icon-wrap">📄</div>
+              <h3>Certificates</h3>
+              <p>Income, caste, domicile and more</p>
+              <span class="category-explore-link">Explore Certificates →</span>
+            </div>
+
+            <!-- 2. Education -->
+            <div class="category-card" onclick="handleStartServicePublic('scholarship')">
+              <div class="category-icon-wrap">🎓</div>
+              <h3>Education</h3>
+              <p>Scholarships and student services</p>
+              <span class="category-explore-link">Explore Education →</span>
+            </div>
+
+            <!-- 3. Agriculture -->
+            <div class="category-card" onclick="handleStartServicePublic('farmer_subsidy')">
+              <div class="category-icon-wrap">🌾</div>
+              <h3>Agriculture</h3>
+              <p>Farmer services and schemes</p>
+              <span class="category-explore-link">Explore Agriculture →</span>
+            </div>
+
+            <!-- 4. Welfare -->
+            <div class="category-card" onclick="handleStartServicePublic('pension')">
+              <div class="category-icon-wrap">💰</div>
+              <h3>Welfare</h3>
+              <p>Pensions and social benefits</p>
+              <span class="category-explore-link">Explore Welfare →</span>
+            </div>
+
+            <!-- 5. Transport -->
+            <div class="category-card" onclick="handleStartServicePublic('driving_licence')">
+              <div class="category-icon-wrap">🚗</div>
+              <h3>Transport</h3>
+              <p>Driving licence and vehicle services</p>
+              <span class="category-explore-link">Explore Transport →</span>
+            </div>
+
+            <!-- 6. Business -->
+            <div class="category-card" onclick="handleStartServicePublic('trade_licence')">
+              <div class="category-icon-wrap">🏪</div>
+              <h3>Business</h3>
+              <p>Licences and registrations</p>
+              <span class="category-explore-link">Explore Business →</span>
+            </div>
           </div>
-          <div class="timeline-step-divider"></div>
-          <div class="timeline-step-item">
-            <div class="timeline-step-badge">02</div>
-            <h4>Check eligibility</h4>
-            <p>Answer a few quick questions to confirm you qualify.</p>
-          </div>
-          <div class="timeline-step-divider"></div>
-          <div class="timeline-step-item">
-            <div class="timeline-step-badge">03</div>
-            <h4>Prepare documents</h4>
-            <p>Check simplified document rules and upload files.</p>
-          </div>
-          <div class="timeline-step-divider"></div>
-          <div class="timeline-step-item">
-            <div class="timeline-step-badge">04</div>
-            <h4>Complete application</h4>
-            <p>Review smart pre-filled information with full control.</p>
-          </div>
-          <div class="timeline-step-divider"></div>
-          <div class="timeline-step-item">
-            <div class="timeline-step-badge">05</div>
-            <h4>Review & confirm</h4>
-            <p>Give explicit consent with full cost transparency.</p>
-          </div>
-          <div class="timeline-step-divider"></div>
-          <div class="timeline-step-item">
-            <div class="timeline-step-badge">06</div>
-            <h4>Track your application</h4>
-            <p>Follow live progress until departmental approval.</p>
-          </div>
-          <div class="timeline-step-divider"></div>
-          <div class="timeline-step-item">
-            <div class="timeline-step-badge">07</div>
-            <h4>Get your service</h4>
-            <p>Download your verified official certificate.</p>
+
+          <div class="category-bottom-cta">
+            <button class="btn btn-secondary btn-all-services-cta" onclick="showView('services')">
+              Explore All Services →
+            </button>
           </div>
         </div>
       </section>
 
-      <!-- Popular Services Section (Section 6) -->
-      <section class="popular-services-section">
-        <div class="section-title-box flex-between">
-          <div>
-            <span class="section-kicker">COMMONLY REQUESTED</span>
-            <h2>Popular Government Services</h2>
-            <p>Select any service to begin guided end-to-end processing.</p>
+      <!-- ── SECTION 9: BROWSE DOCUMENTS BY LOCATION (PRD-Powered) ── -->
+      <section class="landing-section-wrap section-place-browser" id="browse-by-place">
+        <div class="landing-container">
+          <div class="landing-section-header">
+            <span class="landing-kicker">📍 APPLY BY YOUR LOCATION</span>
+            <h2 class="landing-title">Find Documents for <span class="hero-title-gradient">Your State or UT</span></h2>
+            <p class="landing-subtitle">Every state, union territory, and central government has specific document requirements. Select your location to see exactly which documents you can apply for and via which official portal.</p>
           </div>
-          <button class="btn btn-secondary" onclick="showView('services')">View All Services ➔</button>
+
+          <!-- Location Type Tabs -->
+          <div class="place-type-tabs" id="placeTypeTabs">
+            <button class="place-type-tab active" onclick="filterPlaceBrowser('all', this)" id="tab-all">🇮🇳 All (37)</button>
+            <button class="place-type-tab" onclick="filterPlaceBrowser('state', this)" id="tab-state">🏛️ States (28)</button>
+            <button class="place-type-tab" onclick="filterPlaceBrowser('ut', this)" id="tab-ut">🔷 Union Territories (8)</button>
+            <button class="place-type-tab" onclick="filterPlaceBrowser('central', this)" id="tab-central">🇮🇳 Central Govt</button>
+          </div>
+
+          <!-- Places Grid -->
+          <div class="places-grid" id="placesGrid"></div>
+
+          <!-- Place Documents Panel (shown when a place is selected) -->
+          <div class="place-docs-panel" id="placeDocsPanel" style="display:none;">
+            <div class="place-docs-panel-header">
+              <div class="place-docs-panel-title-row">
+                <div>
+                  <h3 id="placeDocsPanelTitle">Documents for State</h3>
+                  <p id="placeDocsPanelPortal" class="place-docs-portal-badge"></p>
+                </div>
+                <button class="place-docs-close-btn" onclick="closePlaceDocsPanel()" aria-label="Close">✕ Close</button>
+              </div>
+              <div class="place-docs-search-row">
+                <input type="text" id="placeDocsSearchInput" class="place-docs-search" placeholder="Search documents for this location..." oninput="filterPlaceDocs(this.value)">
+              </div>
+            </div>
+            <div class="place-docs-grid" id="placeDocsGrid"></div>
+          </div>
+
         </div>
-        <div class="services-preview-grid" id="popularServicesGrid"></div>
       </section>
 
-      <!-- Citizen Trust Banner -->
-      <section class="trust-cta-banner">
-        <div class="banner-content">
-          <h3>Need help finding the right scheme or certificate?</h3>
-          <p>Our platform handles everything: document verification, jurisdiction checks, and application submission.</p>
+      <!-- ── SECTION 10: USER CONTROL / CONSENT ("You Stay in Control.") ── -->
+      <section id="trust-security" class="landing-section-wrap section-user-control">
+        <div class="landing-container">
+          <div class="user-control-flex-wrap">
+            <div class="user-control-text-col">
+              <span class="landing-kicker">CONSENT-FIRST ASSISTANCE</span>
+              <h2 class="landing-title">You Stay in Control.</h2>
+              <p class="landing-subtitle" style="text-align: left; margin: 0 0 18px 0;">
+                The agent assists the citizen but does not silently submit applications. Every step requires your explicit, verified authorization.
+              </p>
+
+              <div class="control-key-points">
+                <div class="control-point-row">
+                  <span class="control-check-icon">✓</span>
+                  <div>
+                    <strong>No Silent Submissions</strong>
+                    <p>Applications are only dispatched after you review the exact pre-filled form.</p>
+                  </div>
+                </div>
+                <div class="control-point-row">
+                  <span class="control-check-icon">✓</span>
+                  <div>
+                    <strong>Granular Document Permissions</strong>
+                    <p>You choose exactly which verified files (Aadhaar, income proof, address) are shared.</p>
+                  </div>
+                </div>
+                <div class="control-point-row">
+                  <span class="control-check-icon">✓</span>
+                  <div>
+                    <strong>Full Decision Transparency</strong>
+                    <p>Every consent choice and state change is clearly confirmed and recorded.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="user-control-visual-col">
+              <div class="consent-demo-card">
+                <div class="consent-demo-header">
+                  <div class="consent-card-service-title">
+                    <span style="font-size:18px;">📄</span>
+                    <div>
+                      <strong>Income Certificate</strong>
+                      <span class="consent-dept-sub">Application Review</span>
+                    </div>
+                  </div>
+                  <span class="consent-status-pill">Ready to Review</span>
+                </div>
+
+                <div class="consent-checklist-box">
+                  <div class="consent-check-item">
+                    <span class="consent-check-mark">✓</span>
+                    <span>Information verified</span>
+                  </div>
+                  <div class="consent-check-item">
+                    <span class="consent-check-mark">✓</span>
+                    <span>Documents checked</span>
+                  </div>
+                  <div class="consent-check-item">
+                    <span class="consent-check-mark">✓</span>
+                    <span>Application prepared</span>
+                  </div>
+                </div>
+
+                <div class="consent-banner-alert">
+                  <span class="consent-lock-icon">🔒</span>
+                  <span><strong>Nothing is submitted without your consent.</strong></span>
+                </div>
+
+                <button class="btn btn-primary btn-review-submission-demo" onclick="handleStartServicePublic('income_certificate')">
+                  Review Before Submission
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        <button class="btn btn-primary" onclick="startSpecificService('income_certificate')">
-          Start Income Certificate (Demo) ➔
-        </button>
       </section>
+
+      <!-- ── SECTION 11: APPLICATION TRACKING ── -->
+      <section class="landing-section-wrap section-tracking-preview">
+        <div class="landing-container">
+          <div class="tracking-preview-flex-wrap">
+            <div class="tracking-visual-col">
+              <div class="tracking-demo-card">
+                <div class="tracking-card-header">
+                  <div>
+                    <div class="tracking-card-title">Income Certificate</div>
+                    <div class="tracking-card-id">Application ID: <strong>INC-BR-2026-894210</strong></div>
+                  </div>
+                  <span class="tracking-live-pill">
+                    <span class="pulse-amber-dot"></span> Under Review
+                  </span>
+                </div>
+
+                <div class="tracking-timeline-flow">
+                  <!-- Step 1 -->
+                  <div class="track-timeline-node done">
+                    <div class="track-node-circle">●</div>
+                    <div class="track-node-details">
+                      <strong>Submitted</strong>
+                      <span>Application successfully recorded</span>
+                    </div>
+                  </div>
+
+                  <!-- Step 2 -->
+                  <div class="track-timeline-node active">
+                    <div class="track-node-circle pulse">●</div>
+                    <div class="track-node-details">
+                      <strong>Under Review</strong>
+                      <span>Revenue verification in progress</span>
+                    </div>
+                  </div>
+
+                  <!-- Step 3 -->
+                  <div class="track-timeline-node future">
+                    <div class="track-node-circle">○</div>
+                    <div class="track-node-details">
+                      <strong>Additional Information</strong>
+                      <span>If requested by verification officer</span>
+                    </div>
+                  </div>
+
+                  <!-- Step 4 -->
+                  <div class="track-timeline-node future">
+                    <div class="track-node-circle">○</div>
+                    <div class="track-node-details">
+                      <strong>Approved</strong>
+                      <span>Digitally signed certificate issued</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="tracking-card-footer">
+                  <span>⏱️ Average Processing Time: <strong>7 - 10 Days</strong></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tracking-text-col">
+              <span class="landing-kicker">POST-SUBMISSION LIFECYCLE</span>
+              <h2 class="landing-title">Follow-Through Beyond the Form.</h2>
+              <p class="landing-subtitle" style="text-align: left; margin: 0 0 18px 0;">
+                CivicAgent supports the process beyond just filling a form. Track real-time progress, receive officer updates, and download your official certificate directly.
+              </p>
+
+              <div class="tracking-feature-pills">
+                <div class="track-feat-item">
+                  <span class="track-feat-icon">📱</span>
+                  <span>Instant status notifications &amp; alerts</span>
+                </div>
+                <div class="track-feat-item">
+                  <span class="track-feat-icon">📑</span>
+                  <span>Standardized digital PDF certificate downloads</span>
+                </div>
+                <div class="track-feat-item">
+                  <span class="track-feat-icon">📞</span>
+                  <span>24x7 helpline guidance for verification queries</span>
+                </div>
+              </div>
+
+              <div style="margin-top: 24px;">
+                <button class="btn btn-secondary btn-track-now" onclick="showView('track')">
+                  Track an Application →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── SECTION 12: FINAL CTA ("Have a Government Service in Mind?") ── -->
+      <section class="landing-final-cta-section">
+        <div class="landing-container">
+          <div class="final-cta-card">
+            <div class="final-cta-content">
+              <h2 class="final-cta-heading">Have a Government Service in Mind?</h2>
+              <p class="final-cta-subtext">
+                Tell CivicAgent what you need and let us guide you through the process.
+              </p>
+              <div class="final-cta-btn-group">
+                <button class="btn btn-hero-primary btn-cta-large" onclick="handleStartServicePublic('income_certificate')">
+                  Start a Service →
+                </button>
+                <button class="btn btn-hero-secondary btn-cta-large" onclick="showView('services')">
+                  Explore Services
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </section>
 
     <!-- ====================================================================
@@ -447,22 +758,50 @@
           <div class="state-dropdown-container">
             <label for="stateCatalogSelect" class="state-dropdown-label">Active State:</label>
             <select id="stateCatalogSelect" class="state-selector-dropdown" onchange="onStateFilterChange(this.value)">
-              <option value="all" selected>🇮🇳 All States & UTs</option>
-              <option value="Uttar Pradesh">Uttar Pradesh</option>
-              <option value="Bihar">Bihar</option>
-              <option value="Delhi">Delhi NCR</option>
-              <option value="Maharashtra">Maharashtra</option>
-              <option value="Karnataka">Karnataka</option>
-              <option value="Rajasthan">Rajasthan</option>
-              <option value="West Bengal">West Bengal</option>
-              <option value="Madhya Pradesh">Madhya Pradesh</option>
-              <option value="Gujarat">Gujarat</option>
-              <option value="Jharkhand">Jharkhand</option>
-              <option value="Tamil Nadu">Tamil Nadu</option>
-              <option value="Punjab">Punjab</option>
-              <option value="Haryana">Haryana</option>
-              <option value="Odisha">Odisha</option>
-              <option value="Assam">Assam</option>
+              <option value="all" selected>🇮🇳 All States &amp; UTs</option>
+              <optgroup label="── 28 States ──">
+                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                <option value="Assam">Assam</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Chhattisgarh">Chhattisgarh</option>
+                <option value="Goa">Goa</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Haryana">Haryana</option>
+                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                <option value="Jharkhand">Jharkhand</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Manipur">Manipur</option>
+                <option value="Meghalaya">Meghalaya</option>
+                <option value="Mizoram">Mizoram</option>
+                <option value="Nagaland">Nagaland</option>
+                <option value="Odisha">Odisha</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Sikkim">Sikkim</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Telangana">Telangana</option>
+                <option value="Tripura">Tripura</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Uttarakhand">Uttarakhand</option>
+                <option value="West Bengal">West Bengal</option>
+              </optgroup>
+              <optgroup label="── 8 Union Territories ──">
+                <option value="Andaman &amp; Nicobar Islands">Andaman &amp; Nicobar Islands</option>
+                <option value="Chandigarh">Chandigarh</option>
+                <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra, NH &amp; DD</option>
+                <option value="Delhi">Delhi (NCT)</option>
+                <option value="Jammu &amp; Kashmir">Jammu &amp; Kashmir</option>
+                <option value="Ladakh">Ladakh</option>
+                <option value="Lakshadweep">Lakshadweep</option>
+                <option value="Puducherry">Puducherry</option>
+              </optgroup>
+              <optgroup label="── Central Government ──">
+                <option value="Central Government">🇮🇳 Central Government</option>
+              </optgroup>
             </select>
           </div>
         </div>
@@ -1306,66 +1645,53 @@
   </main>
 
   <!-- ====================================================================
-       SITE FOOTER (With 24x7 Helpline & Governance Links)
+       SITE FOOTER (Section 13: Clean & Minimal)
        ==================================================================== -->
   <footer class="site-footer">
     <div class="footer-container">
       <div class="footer-brand-col">
         <div class="footer-logo">
-          <span class="logo-icon-sm">🏛️</span>
-          <h3>Citizen-Service Agent</h3>
+          <img src="/favicon.png" alt="CivicAgent Logo" class="footer-logo-img">
+          <h3>CivicAgent</h3>
         </div>
-        <p class="footer-tagline">Digital Public Assistance Platform • Government Services, Made Simple.</p>
-        <div class="footer-helpline-box">
-          <span class="helpline-live-dot"></span>
-          <div>
-            <div class="helpline-title">24x7 Citizen Guidance Helpline</div>
-            <a href="tel:18001802026" class="helpline-phone-link">📞 1800-180-2026 (Toll-Free)</a>
-            <div class="helpline-subtext">Round-the-clock telephone guidance in Hindi, English & regional dialects</div>
-          </div>
-        </div>
+        <p class="footer-tagline">"Making government services easier to understand and complete."</p>
+        <div class="footer-civic-badge">Citizen assistance platform</div>
       </div>
 
       <div class="footer-links-col">
-        <h4>Navigation</h4>
+        <h4>Links</h4>
         <ul>
-          <li><a onclick="showView('home')">Home</a></li>
-          <li><a onclick="showView('services')">All Services</a></li>
-          <li><a onclick="showView('applications')">My Applications</a></li>
-          <li><a onclick="showView('track')">Track Status</a></li>
-          <li><a onclick="showView('help')">Help Center</a></li>
+          <li><a onclick="showView('services')">Services</a></li>
+          <li><a onclick="scrollToSection('how-it-works')">How It Works</a></li>
+          <li><a onclick="scrollToSection('trust-security')">Trust &amp; Security</a></li>
+          <li><a onclick="showView('help')">Help</a></li>
+          <li><a onclick="showView('privacy')">Privacy</a></li>
+          <li><a onclick="showView('terms')">Terms</a></li>
         </ul>
       </div>
 
       <div class="footer-links-col">
-        <h4>Trust & Governance</h4>
+        <h4>Government</h4>
         <ul>
-          <li><a onclick="showView('terms')">Terms & Conditions</a></li>
-          <li><a onclick="showView('privacy')">Privacy Policy (DPDP 2023)</a></li>
-          <li><a onclick="showView('help')">24x7 Citizen Support</a></li>
-          <li><a onclick="showView('admin')">Auditor Cockpit</a></li>
+          <li><a onclick="openStateServices()">State Services</a></li>
+          <li><a onclick="openCentralServices()">Central Services</a></li>
         </ul>
       </div>
 
-      <div class="footer-cert-col">
-        <h4>Guaranteed Standards</h4>
-        <div class="footer-badges-list">
-          <div class="footer-badge-item">🛡️ DPDP Act 2023 Compliant</div>
-          <div class="footer-badge-item">⚡ 100% Consent Gated</div>
-          <div class="footer-badge-item">🚫 Zero Intermediary Fees</div>
-          <div class="footer-badge-item">🔒 SHA-256 Tamper-Evident Logs</div>
-        </div>
+      <div class="footer-links-col">
+        <h4>Account</h4>
+        <ul>
+          <li><a onclick="showAuthModal(); switchAuthTab('login');" id="footerLoginLink">Login</a></li>
+        </ul>
       </div>
     </div>
 
     <div class="footer-bottom-bar">
-      <div>© 2026 Citizen-Service Agent (CivicAgent). Designed for Transparent Citizen Governance.</div>
+      <div>© 2026 CivicAgent. Citizen assistance platform.</div>
       <div class="footer-bottom-links">
-        <a onclick="showView('terms')">Terms & Conditions</a>
+        <a onclick="showView('terms')">Terms</a>
         <span>•</span>
-        <a onclick="showView('privacy')">Privacy Policy</a>
-        <span>•</span>
-        <a href="tel:18001802026">24x7 Helpline: 1800-180-2026</a>
+        <a onclick="showView('privacy')">Privacy</a>
       </div>
     </div>
   </footer>
@@ -1750,11 +2076,7 @@
         
         <!-- Civic Emblem Badge -->
         <div class="lang-modal-emblem-wrapper">
-          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-            <path d="M2 17l10 5 10-5"></path>
-            <path d="M2 12l10 5 10-5"></path>
-          </svg>
+          <img src="/favicon.png" alt="Citizen-Service Agent" class="lang-modal-logo-img">
         </div>
 
         <div class="lang-modal-title-en">
@@ -1765,7 +2087,7 @@
           Please select your preferred language to continue.
         </div>
 
-        <!-- Quick Select Buttons (Vibrant Orange / Saffron Buttons like IRCTC) -->
+        <!-- Quick Select Buttons (Only English, Hindi, and More Languages) -->
         <div class="lang-modal-quick-row">
           <button class="quick-lang-btn hi" data-lang-code="hi" onclick="selectLanguageAndClose('hi')">
             <span>हिंदी</span>
@@ -1775,132 +2097,123 @@
             <span>English</span>
             <span style="font-size:11.5px; opacity:0.9; font-weight:500;">(English)</span>
           </button>
+          <button class="quick-lang-btn more" id="btnToggleMoreLang" onclick="toggleMoreLanguages()">
+            <span id="moreLangBtnTitle">🌐 More</span>
+            <span style="font-size:11.5px; opacity:0.9; font-weight:500;" id="moreLangBtnSub">Languages ▾</span>
+          </button>
         </div>
 
-        <div class="lang-modal-divider">
-          <span data-i18n="more_languages">Or Choose From All Regional Languages</span>
-        </div>
-
-        <!-- Full Grid of 15 Languages -->
-        <div class="lang-modal-grid">
-          <div class="lang-grid-card" data-lang-code="en" onclick="selectLanguageAndClose('en')">
-            <div class="lang-card-text">
-              <span class="lang-card-native">English</span>
-              <span class="lang-card-sub">English</span>
-            </div>
-            <span class="lang-active-check">✓</span>
-          </div>
-          
-          <div class="lang-grid-card" data-lang-code="hi" onclick="selectLanguageAndClose('hi')">
-            <div class="lang-card-text">
-              <span class="lang-card-native">हिन्दी</span>
-              <span class="lang-card-sub">Hindi</span>
-            </div>
-            <span class="lang-active-check">✓</span>
+        <!-- Collapsible Section: Hidden by default, shown when clicking "More Languages" -->
+        <div id="moreLanguagesSection" style="display: none; animation: fadeInLang 0.25s ease;">
+          <div class="lang-modal-divider">
+            <span data-i18n="more_languages">Regional Indian Languages</span>
           </div>
 
-          <div class="lang-grid-card" data-lang-code="bn" onclick="selectLanguageAndClose('bn')">
-            <div class="lang-card-text">
-              <span class="lang-card-native">বাংলা</span>
-              <span class="lang-card-sub">Bengali</span>
+          <!-- Grid of Regional Languages -->
+          <div class="lang-modal-grid">
+            <div class="lang-grid-card" data-lang-code="bn" onclick="selectLanguageAndClose('bn')">
+              <div class="lang-card-text">
+                <span class="lang-card-native">বাংলা</span>
+                <span class="lang-card-sub">Bengali</span>
+              </div>
+              <span class="lang-active-check">✓</span>
             </div>
-            <span class="lang-active-check">✓</span>
-          </div>
 
-          <div class="lang-grid-card" data-lang-code="mr" onclick="selectLanguageAndClose('mr')">
-            <div class="lang-card-text">
-              <span class="lang-card-native">मराठी</span>
-              <span class="lang-card-sub">Marathi</span>
+            <div class="lang-grid-card" data-lang-code="mr" onclick="selectLanguageAndClose('mr')">
+              <div class="lang-card-text">
+                <span class="lang-card-native">मराठी</span>
+                <span class="lang-card-sub">Marathi</span>
+              </div>
+              <span class="lang-active-check">✓</span>
             </div>
-            <span class="lang-active-check">✓</span>
-          </div>
 
-          <div class="lang-grid-card" data-lang-code="ta" onclick="selectLanguageAndClose('ta')">
-            <div class="lang-card-text">
-              <span class="lang-card-native">தமிழ்</span>
-              <span class="lang-card-sub">Tamil</span>
+            <div class="lang-grid-card" data-lang-code="ta" onclick="selectLanguageAndClose('ta')">
+              <div class="lang-card-text">
+                <span class="lang-card-native">தமிழ்</span>
+                <span class="lang-card-sub">Tamil</span>
+              </div>
+              <span class="lang-active-check">✓</span>
             </div>
-            <span class="lang-active-check">✓</span>
-          </div>
 
-          <div class="lang-grid-card" data-lang-code="te" onclick="selectLanguageAndClose('te')">
-            <div class="lang-card-text">
-              <span class="lang-card-native">తెలుగు</span>
-              <span class="lang-card-sub">Telugu</span>
+            <div class="lang-grid-card" data-lang-code="te" onclick="selectLanguageAndClose('te')">
+              <div class="lang-card-text">
+                <span class="lang-card-native">తెలుగు</span>
+                <span class="lang-card-sub">Telugu</span>
+              </div>
+              <span class="lang-active-check">✓</span>
             </div>
-            <span class="lang-active-check">✓</span>
-          </div>
 
-          <div class="lang-grid-card" data-lang-code="gu" onclick="selectLanguageAndClose('gu')">
-            <div class="lang-card-text">
-              <span class="lang-card-native">ગુજરાતી</span>
-              <span class="lang-card-sub">Gujarati</span>
+            <div class="lang-grid-card" data-lang-code="gu" onclick="selectLanguageAndClose('gu')">
+              <div class="lang-card-text">
+                <span class="lang-card-native">ગુજરાતી</span>
+                <span class="lang-card-sub">Gujarati</span>
+              </div>
+              <span class="lang-active-check">✓</span>
             </div>
-            <span class="lang-active-check">✓</span>
-          </div>
 
-          <div class="lang-grid-card" data-lang-code="kn" onclick="selectLanguageAndClose('kn')">
-            <div class="lang-card-text">
-              <span class="lang-card-native">ಕನ್ನಡ</span>
-              <span class="lang-card-sub">Kannada</span>
+            <div class="lang-grid-card" data-lang-code="kn" onclick="selectLanguageAndClose('kn')">
+              <div class="lang-card-text">
+                <span class="lang-card-native">ಕನ್ನಡ</span>
+                <span class="lang-card-sub">Kannada</span>
+              </div>
+              <span class="lang-active-check">✓</span>
             </div>
-            <span class="lang-active-check">✓</span>
-          </div>
 
-          <div class="lang-grid-card" data-lang-code="ml" onclick="selectLanguageAndClose('ml')">
-            <div class="lang-card-text">
-              <span class="lang-card-native">മലയാളം</span>
-              <span class="lang-card-sub">Malayalam</span>
+            <div class="lang-grid-card" data-lang-code="ml" onclick="selectLanguageAndClose('ml')">
+              <div class="lang-card-text">
+                <span class="lang-card-native">മലയാളം</span>
+                <span class="lang-card-sub">Malayalam</span>
+              </div>
+              <span class="lang-active-check">✓</span>
             </div>
-            <span class="lang-active-check">✓</span>
-          </div>
 
-          <div class="lang-grid-card" data-lang-code="pa" onclick="selectLanguageAndClose('pa')">
-            <div class="lang-card-text">
-              <span class="lang-card-native">ਪੰਜਾਬੀ</span>
-              <span class="lang-card-sub">Punjabi</span>
+            <div class="lang-grid-card" data-lang-code="pa" onclick="selectLanguageAndClose('pa')">
+              <div class="lang-card-text">
+                <span class="lang-card-native">ਪੰਜਾਬੀ</span>
+                <span class="lang-card-sub">Punjabi</span>
+              </div>
+              <span class="lang-active-check">✓</span>
             </div>
-            <span class="lang-active-check">✓</span>
-          </div>
 
-          <div class="lang-grid-card" data-lang-code="or" onclick="selectLanguageAndClose('or')">
-            <div class="lang-card-text">
-              <span class="lang-card-native">ଓଡ଼ିଆ</span>
-              <span class="lang-card-sub">Odia</span>
+            <div class="lang-grid-card" data-lang-code="or" onclick="selectLanguageAndClose('or')">
+              <div class="lang-card-text">
+                <span class="lang-card-native">ଓଡ଼ିଆ</span>
+                <span class="lang-card-sub">Odia</span>
+              </div>
+              <span class="lang-active-check">✓</span>
             </div>
-            <span class="lang-active-check">✓</span>
-          </div>
 
-          <div class="lang-grid-card" data-lang-code="mai" onclick="selectLanguageAndClose('mai')">
-            <div class="lang-card-text">
-              <span class="lang-card-native">मैथिली</span>
-              <span class="lang-card-sub">Maithili</span>
+            <div class="lang-grid-card" data-lang-code="mai" onclick="selectLanguageAndClose('mai')">
+              <div class="lang-card-text">
+                <span class="lang-card-native">मैथिली</span>
+                <span class="lang-card-sub">Maithili</span>
+              </div>
+              <span class="lang-active-check">✓</span>
             </div>
-            <span class="lang-active-check">✓</span>
-          </div>
 
-          <div class="lang-grid-card" data-lang-code="bho" onclick="selectLanguageAndClose('bho')">
-            <div class="lang-card-text">
-              <span class="lang-card-native">भोजपुरी</span>
-              <span class="lang-card-sub">Bhojpuri</span>
+            <div class="lang-grid-card" data-lang-code="bho" onclick="selectLanguageAndClose('bho')">
+              <div class="lang-card-text">
+                <span class="lang-card-native">भोजपुरी</span>
+                <span class="lang-card-sub">Bhojpuri</span>
+              </div>
+              <span class="lang-active-check">✓</span>
             </div>
-            <span class="lang-active-check">✓</span>
-          </div>
 
-          <div class="lang-grid-card" data-lang-code="as" onclick="selectLanguageAndClose('as')">
-            <div class="lang-card-text">
-              <span class="lang-card-native">অসমীয়া</span>
-              <span class="lang-card-sub">Assamese</span>
+            <div class="lang-grid-card" data-lang-code="as" onclick="selectLanguageAndClose('as')">
+              <div class="lang-card-text">
+                <span class="lang-card-native">অসমীয়া</span>
+                <span class="lang-card-sub">Assamese</span>
+              </div>
+              <span class="lang-active-check">✓</span>
             </div>
-            <span class="lang-active-check">✓</span>
-          </div>
 
-          <div class="lang-grid-card" data-lang-code="ur" onclick="selectLanguageAndClose('ur')">
-            <div class="lang-card-text">
-              <span class="lang-card-native">اردو</span>
-              <span class="lang-card-sub">Urdu</span>
+            <div class="lang-grid-card" data-lang-code="ur" onclick="selectLanguageAndClose('ur')">
+              <div class="lang-card-text">
+                <span class="lang-card-native">اردو</span>
+                <span class="lang-card-sub">Urdu</span>
+              </div>
+              <span class="lang-active-check">✓</span>
             </div>
-            <span class="lang-active-check">✓</span>
           </div>
         </div>
 
@@ -1917,21 +2230,18 @@
   <!-- ============================================================
        AUTH MODAL — Login / Register / Phone OTP Verification
        ============================================================ -->
-  <div id="authModal" class="auth-modal-overlay" style="display:flex;" role="dialog" aria-modal="true" aria-label="Sign in to Citizen-Service Agent">
+  <div id="authModal" class="auth-modal-overlay" style="display:none;" role="dialog" aria-modal="true" aria-label="Sign in to Citizen-Service Agent">
     <div class="auth-modal-card">
+      <button class="auth-modal-close" onclick="hideAuthModal()" aria-label="Close modal">✕</button>
 
       <!-- Branding -->
       <div class="auth-modal-brand">
         <div class="auth-brand-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-            <path d="M2 17l10 5 10-5"></path>
-            <path d="M2 12l10 5 10-5"></path>
-          </svg>
+          <img src="/favicon.png" alt="CivicAgent Logo" class="auth-brand-img">
         </div>
         <div>
-          <div class="auth-brand-title">Citizen-Service Agent</div>
-          <div class="auth-brand-sub">🛡️ Government Services Portal — DPDP 2023 Compliant</div>
+          <div class="auth-brand-title">CivicAgent</div>
+          <div class="auth-brand-sub">🛡️ Citizen Assistance Platform • Secure &amp; Transparent</div>
         </div>
       </div>
 

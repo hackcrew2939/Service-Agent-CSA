@@ -1,0 +1,527 @@
+=== PAGE 1 ===
+India Government Documents & Certificates
+ Database
+PRD / Master Document — 28 States + 8 Union Territories + Central Government
+Purpose: create a comprehensive website/database containing important government documents and certificates
+only. The source material identifies core documents, state-wise documents, Union Territories, and Central
+Government documents.
+1. Core Documents
+Document / Certificate
+Importance
+Typical use
+Birth Certificate
+★★★★★
+Age/date-of-birth proof, school, passport, government services
+Aadhaar Card
+★★★★★
+Identity/address verification and many government services
+PAN Card
+★★★★★
+Income tax, banking, financial transactions
+Voter ID / EPIC
+★★★★★
+Electoral identification
+Passport
+★★★★★
+International travel and citizenship/identity purposes
+Driving Licence
+★★★★★
+Driving + identity/address proof
+Death Certificate
+★★★★★
+Inheritance, pension, insurance, legal records
+Marriage Certificate
+★★★★★
+Legal proof of marriage
+Domicile / Residence Certificate
+★★★★★
+State residency, admissions, jobs, quotas/schemes
+Caste Certificate
+★★★★★
+Reservation and eligible government benefits
+Income Certificate
+★★★★★
+Scholarships, fee concessions, welfare schemes
+EWS Certificate
+★★★★★
+EWS reservation/benefits where applicable
+Disability Certificate / UDID
+★★★★★
+Disability-related benefits and reservations
+Character Certificate
+★★★★
+Jobs, education, certain applications
+Nationality / Citizenship-related proof
+★★★★
+Citizenship-related requirements
+Land/Property documents
+★★★★
+Ownership and property transactions
+Family / Legal Heir Certificate
+★★★★
+Succession, pension, inheritance
+Solvency Certificate
+★★★
+Financial/legal requirements in applicable cases
+Income & Asset Certificate
+★★★★
+EWS and other eligibility processes
+Important: a document should not be labelled universally mandatory. Whether it is required depends on the service,
+applicant, state and purpose.
+
+
+=== PAGE 2 ===
+2. State-wise Documents
+The following state-wise lists are reproduced from the provided source document. They are document/certificate lists,
+not claims that every item is mandatory in every situation.
+1. Andhra Pradesh
+ Integrated / Caste Certificate
+ Income Certificate
+ Residence Certificate
+ Family Member Certificate
+ Nativity Certificate
+ Birth Certificate
+ Death Certificate
+ EWS Certificate
+ Local Candidate / Study-related certificates
+ Agricultural / land-related certificates
+ Legal heir/family certificates
+ Revenue certificates
+2. Arunachal Pradesh
+ Permanent Resident Certificate (PRC)
+ Income Certificate
+ ST Certificate
+ Residence-related certificate
+ Character Certificate
+ Birth Certificate
+ Death Certificate
+ Legal Heir Certificate
+ Land/revenue-related documents
+3. Assam
+ PRC / Permanent Resident Certificate
+ Caste Certificate
+ OBC/MOBC Certificate
+ Income Certificate
+ EWS Certificate
+ Birth Certificate
+ Death Certificate
+ Legal Heir Certificate
+ Residence-related documents
+ Land/revenue certificates
+4. Bihar
+ Residential / Residence Certificate
+ Caste Certificate
+ Income Certificate
+ EWS Certificate
+ OBC / BC / EBC Certificate
+ Non-Creamy Layer Certificate, where applicable
+ Character Certificate
+ Birth Certificate
+ Death Certificate
+ Domicile/residence-related proof
+ Family Member Certificate
+ Legal Heir Certificate
+
+
+=== PAGE 3 ===
+ Land possession/revenue documents
+ Mutation-related documents
+ Land records
+ Agricultural certificates
+ Disability certificate/UDID
+ Marriage-related certificates
+5. Chhattisgarh
+ Domicile/Residence Certificate
+ Caste Certificate
+ Income Certificate
+ EWS Certificate
+ Birth Certificate
+ Death Certificate
+ Character Certificate
+ Legal Heir Certificate
+ Land/revenue certificates
+ Farmer/agriculture-related certificates
+6. Goa
+ Residence/Domicile Certificate
+ Income Certificate
+ Caste Certificate
+ Birth Certificate
+ Death Certificate
+ Character Certificate
+ Marriage Certificate
+ Legal Heir Certificate
+ Land/property certificates
+7. Gujarat
+ Domicile Certificate
+ Caste Certificate
+ Non-Creamy Layer Certificate
+ Income Certificate
+ EWS Certificate
+ Birth Certificate
+ Death Certificate
+ Widow-related certificates
+ Legal heir certificate
+ Land/revenue documents
+ Farmer certificates
+8. Haryana
+ Resident/Domicile Certificate
+ Caste Certificate
+ OBC/BC Certificate
+ Income Certificate
+ EWS Certificate
+ Character Certificate
+ Birth/Death Certificate
+ Family ID/Parivar-related records
+ Legal Heir Certificate
+ Land/revenue records
+
+
+=== PAGE 4 ===
+9. Himachal Pradesh
+ Bonafide Himachali Certificate
+ Domicile/Residence Certificate
+ Caste Certificate
+ Income Certificate
+ EWS Certificate
+ OBC Certificate
+ Character Certificate
+ Birth/Death Certificate
+ Legal Heir Certificate
+ Land/revenue documents
+10. Jharkhand
+ Local Resident Certificate
+ Caste Certificate
+ Income Certificate
+ EWS Certificate
+ Residential Certificate
+ Birth Certificate
+ Death Certificate
+ Character Certificate
+ Legal Heir Certificate
+ Land/revenue documents
+11. Karnataka
+ Residence/Domicile-related certificate
+ Caste Certificate
+ Income Certificate
+ OBC/Category Certificate
+ EWS Certificate
+ Non-Creamy Layer Certificate
+ Birth Certificate
+ Death Certificate
+ Character Certificate
+ Land/revenue certificates
+12. Kerala
+ Nativity Certificate
+ Domicile/Residence Certificate
+ Community/Caste Certificate
+ Income Certificate
+ Non-Creamy Layer Certificate
+ EWS Certificate
+ Birth Certificate
+ Death Certificate
+ Legal Heir Certificate
+ Possession Certificate
+ Land-related certificates
+13. Madhya Pradesh
+ Domicile Certificate
+ Caste Certificate
+ Income Certificate
+ OBC Certificate
+ EWS Certificate
+
+
+=== PAGE 5 ===
+ Birth Certificate
+ Death Certificate
+ Character Certificate
+ Legal Heir Certificate
+ Land/revenue certificates
+14. Maharashtra
+ Domicile Certificate
+ Caste Certificate
+ Caste Validity Certificate
+ Non-Creamy Layer Certificate
+ Income Certificate
+ EWS Certificate
+ Birth Certificate
+ Death Certificate
+ Nationality Certificate
+ Resident Certificate
+ Legal Heir Certificate
+ Land/revenue documents
+15. Manipur
+ Permanent Resident/Residence Certificate
+ Scheduled Tribe/Caste Certificate
+ OBC-related certificate
+ Income Certificate
+ EWS Certificate
+ Birth/Death Certificate
+ Character Certificate
+ Land/revenue documents
+16. Meghalaya
+ Permanent Resident Certificate
+ Scheduled Tribe Certificate
+ Income Certificate
+ Residence Certificate
+ Birth Certificate
+ Death Certificate
+ Character Certificate
+ Land/revenue certificates
+17. Mizoram
+ Permanent Residential Certificate
+ Scheduled Tribe Certificate
+ Income Certificate
+ Residence-related documents
+ Birth/Death Certificate
+ Character Certificate
+ Land/revenue certificates
+18. Nagaland
+ Indigenous Inhabitant Certificate
+ Indigenous/Tribal Certificate
+ Permanent Residence-related certificate
+ Income Certificate
+
+
+=== PAGE 6 ===
+ Birth Certificate
+ Death Certificate
+ Character Certificate
+ Land/revenue documents
+19. Odisha
+ Resident Certificate
+ Caste Certificate
+ OBC/SEBC Certificate
+ Income Certificate
+ EWS Certificate
+ Legal Heir Certificate
+ Birth Certificate
+ Death Certificate
+ Character Certificate
+ Land/revenue certificates
+20. Punjab
+ Residence/Domicile Certificate
+ Caste Certificate
+ Backward Class Certificate
+ Income Certificate
+ EWS Certificate
+ Birth Certificate
+ Death Certificate
+ Character Certificate
+ Legal Heir Certificate
+ Land/revenue documents
+21. Rajasthan
+ Domicile/Bonafide Certificate
+ Caste Certificate
+ OBC/MBC Certificate
+ Non-Creamy Layer Certificate
+ Income Certificate
+ EWS Certificate
+ Birth Certificate
+ Death Certificate
+ Character Certificate
+ Legal Heir Certificate
+ Land/revenue documents
+22. Sikkim
+ Sikkim Subject Certificate
+ Certificate of Identification
+ Residential Certificate
+ Caste Certificate
+ Income Certificate
+ Birth/Death Certificate
+ Land/property-related documents
+23. Tamil Nadu
+ Nativity Certificate
+ Community Certificate
+
+
+=== PAGE 7 ===
+ Income Certificate
+ EWS Certificate
+ Residence Certificate
+ Birth Certificate
+ Death Certificate
+ Legal Heir Certificate
+ First Graduate Certificate
+ Solvency Certificate
+ Agricultural/revenue certificates
+24. Telangana
+ Integrated Certificate
+ Residence Certificate
+ Income Certificate
+ Caste Certificate
+ EWS Certificate
+ Birth Certificate
+ Death Certificate
+ Family Member Certificate
+ Legal Heir Certificate
+ Land/revenue certificates
+25. Tripura
+ Permanent Resident of Tripura Certificate (PRTC)
+ Caste/Tribe Certificate
+ Income Certificate
+ Residence Certificate
+ Birth/Death Certificate
+ Character Certificate
+ Land/revenue documents
+26. Uttar Pradesh
+ Domicile Certificate
+ Caste Certificate
+ Income Certificate
+ EWS Certificate
+ Birth Certificate
+ Death Certificate
+ Character Certificate
+ Residence Certificate
+ Legal Heir Certificate
+ Family Register-related documents
+ Land/revenue documents
+27. Uttarakhand
+ Domicile Certificate
+ Caste Certificate
+ Income Certificate
+ EWS Certificate
+ Permanent Residence-related certificate
+ Character Certificate
+ Hill Area Certificate
+ Birth Certificate
+ Death Certificate
+
+
+=== PAGE 8 ===
+ Legal Heir/Varisan Certificate
+ Land/revenue certificates
+28. West Bengal
+ Domicile/Residential Certificate
+ Caste Certificate
+ OBC Certificate
+ Income Certificate
+ EWS Certificate
+ Birth Certificate
+ Death Certificate
+ Legal Heir Certificate
+ Character Certificate
+ Land/revenue documents
+
+
+=== PAGE 9 ===
+3. Union Territories
+Separate entries should be maintained for all 8 Union Territories:
+ Andaman & Nicobar Islands
+ Chandigarh
+ Dadra and Nagar Haveli and Daman and Diu
+ Delhi
+ Jammu & Kashmir
+ Ladakh
+ Lakshadweep
+ Puducherry
+4. Central / National Documents
+Identity & Citizenship
+ Aadhaar
+ PAN
+ Passport
+ Voter ID / EPIC
+ Government employee ID, where applicable
+ Citizenship-related documents where applicable
+Civil Registration
+ Birth Certificate
+ Death Certificate
+ Marriage Certificate
+ Adoption-related documents, where applicable
+ Legal Heir / Succession-related documents
+Social Category
+ SC Certificate
+ ST Certificate
+ OBC Certificate
+ Central OBC Non-Creamy Layer eligibility/documentation
+ EWS Certificate
+ Disability Certificate
+ UDID Card
+Financial
+ PAN
+ Income Certificate
+ Income & Asset Certificate
+ Bank account documents
+ Form 16
+ Income-tax-related documents
+ GST Registration — primarily for businesses
+ Udyam Registration — for eligible MSMEs
+Education
+ 10th Marksheet
+ 10th Certificate
+ 12th Marksheet
+ 12th Certificate
+ Graduation Degree
+
+
+=== PAGE 10 ===
+ Diploma
+ Transfer Certificate
+ Migration Certificate
+ Character Certificate
+ School/college bonafide certificate
+ Disability certificate where applicable
+ Scholarship-related certificates
+Employment
+ Employment/Experience Certificate
+ Character Certificate
+ Police Verification Certificate
+ Skill/training certificates
+ Apprenticeship certificate
+ Employment Exchange registration where applicable
+ NOC for government employees, where applicable
+Property & Land
+ Sale Deed
+ Title documents
+ Encumbrance Certificate
+ Land Record / RoR
+ Mutation document
+ Property tax receipt
+ Possession Certificate
+ Building approval documents where applicable
+Vehicle
+ Registration Certificate (RC)
+ Driving Licence
+ Learner's Licence
+ Vehicle insurance
+ Pollution Under Control (PUC) Certificate
+ Fitness Certificate, where applicable
+Business
+ PAN
+ GST Registration
+ Udyam Registration
+ Shop & Establishment registration, where applicable
+ FSSAI licence/registration for applicable food businesses
+ Professional Tax registration where applicable
+ Import Export Code (IEC), where applicable
+ Company/LLP incorporation documents
+5. Recommended Database Fields
+ document_id
+ document_name
+ alternate_names
+ category
+ sub_category
+ government_level
+ state
+
+
+=== PAGE 11 ===
+ union_territory
+ district
+ description
+ importance
+ common_uses
+ applicable_to
+ issuing_authority
+ official_source
+ status
+ last_verified
+6. Website Structure
+Home → All Documents → Central Documents → States & UTs → Document Categories → Search. Each document
+page should show its name, alternate names, category, government level, state/UT, description, importance, common
+uses, applicable users, issuing authority, official source and last verified date.
+7. Accuracy Notice
+The source material explicitly cautions that documents should not be labelled universally mandatory: whether a
+document is required depends on the service, applicant, state and purpose. Government information should be
+verified through the relevant official authority.
+
+

@@ -604,6 +604,8 @@ window.addEventListener('DOMContentLoaded', () => {
   renderPrivacyConsents();
   initPlaceholderTypewriter();
   initBackendSession();
+  // Initialize the PRD-powered place browser (Section 9)
+  if (window.PlaceDocsEngine) renderPlacesGrid('all');
 });
 
 async function initBackendSession() {
@@ -625,6 +627,15 @@ async function initBackendSession() {
 
 // ── Router / View Controller (Section 5) ──────────────────────────────────────
 function showView(viewName) {
+  // Existing protected pages must remain protected (Section 1)
+  const protectedViews = ['applications', 'profile', 'admin'];
+  if (protectedViews.includes(viewName) && (!authState.token || !authState.user)) {
+    window.pendingPostLoginView = viewName;
+    switchAuthTab('login');
+    showAuthModal();
+    return;
+  }
+
   appState.currentView = viewName;
   document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
@@ -643,6 +654,18 @@ function showView(viewName) {
   const stickyBar = document.getElementById('wizardMobileBar');
   if (stickyBar) {
     stickyBar.style.display = viewName === 'wizard' ? 'flex' : 'none';
+  }
+
+  // ── Full-bleed for landing page; normal padding for all other views ──
+  const appContainer = document.getElementById('mainContainer');
+  if (appContainer) {
+    if (viewName === 'home') {
+      appContainer.style.maxWidth = '100%';
+      appContainer.style.padding  = '0';
+    } else {
+      appContainer.style.maxWidth = '1440px';
+      appContainer.style.padding  = '36px 44px 100px 44px';
+    }
   }
 
   // ── Refresh profile page with live user data ──────────────────
@@ -847,6 +870,193 @@ function filterCatalogBySearch(query) {
   const activePill = document.querySelector('.category-filters-bar .filter-pill.active');
   const cat = activePill ? (activePill.innerText.toLowerCase().includes('cert') ? 'certificates' : 'all') : 'all';
   renderFullCatalog(cat, query);
+}
+
+// ── Place Browser (PRD-powered: 28 States + 8 UTs + Central) ─────────────────
+let _currentPlaceName = null;
+
+// Place type emoji map
+const PLACE_TYPE_EMOJI = { state: '🏛️', ut: '🔷', central: '🇮🇳' };
+const PLACE_TYPE_LABEL = { state: 'State', ut: 'Union Territory', central: 'Central Govt' };
+
+function filterPlaceBrowser(type, btn) {
+  document.querySelectorAll('#placeTypeTabs .place-type-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  closePlaceDocsPanel();
+  renderPlacesGrid(type);
+}
+
+function renderPlacesGrid(typeFilter = 'all') {
+  const grid = document.getElementById('placesGrid');
+  if (!grid || !window.PlaceDocsEngine) return;
+
+  const places = typeFilter === 'all'
+    ? PlaceDocsEngine.getAllPlaces()
+    : PlaceDocsEngine.getPlacesByType(typeFilter);
+
+  grid.innerHTML = places.map(place => {
+    const docs = PlaceDocsEngine.getDocumentsForPlace(place.name);
+    const count = docs.length;
+    const emoji = PLACE_TYPE_EMOJI[place.type] || '🏛️';
+    const typeLabel = PLACE_TYPE_LABEL[place.type] || place.type;
+    const isCentral = place.type === 'central';
+    return `
+      <button class="place-card${isCentral ? ' place-card-central' : ''}" onclick="openPlaceDocsPanel('${place.name.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')" aria-label="View documents for ${place.name}">
+        <div class="place-card-flag">${emoji}</div>
+        <div class="place-card-body">
+          <div class="place-card-name">${place.name}</div>
+          <div class="place-card-type">${typeLabel}</div>
+          <div class="place-card-count">${count} document${count !== 1 ? 's' : ''}</div>
+        </div>
+        <div class="place-card-arrow">→</div>
+      </button>
+    `;
+  }).join('');
+}
+
+function openPlaceDocsPanel(placeName) {
+  _currentPlaceName = placeName;
+  const panel = document.getElementById('placeDocsPanel');
+  const title = document.getElementById('placeDocsPanelTitle');
+  const portalEl = document.getElementById('placeDocsPanelPortal');
+  const searchInput = document.getElementById('placeDocsSearchInput');
+
+  if (!panel || !window.PlaceDocsEngine) return;
+
+  const meta = PlaceDocsEngine.getPlaceMetadata(placeName);
+  const typeLabel = PLACE_TYPE_LABEL[meta.type] || meta.type;
+  const emoji = PLACE_TYPE_EMOJI[meta.type] || '🏛️';
+
+  title.innerHTML = `${emoji} ${placeName} <span class="place-panel-type-badge">${typeLabel}</span>`;
+  portalEl.innerHTML = `<strong>Official Portal:</strong> ${meta.portal || placeName + ' Citizen Services'} &nbsp;|&nbsp; <strong>Dept:</strong> ${meta.dept || 'State Administration'}`;
+
+  if (searchInput) searchInput.value = '';
+
+  panel.style.display = 'block';
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  renderPlaceDocCards(placeName, '');
+}
+
+function closePlaceDocsPanel() {
+  const panel = document.getElementById('placeDocsPanel');
+  if (panel) panel.style.display = 'none';
+  _currentPlaceName = null;
+}
+
+function filterPlaceDocs(query) {
+  if (_currentPlaceName) renderPlaceDocCards(_currentPlaceName, query);
+}
+
+function renderPlaceDocCards(placeName, searchQuery = '') {
+  const grid = document.getElementById('placeDocsGrid');
+  if (!grid || !window.PlaceDocsEngine) return;
+
+  const docs = PlaceDocsEngine.searchDocuments(placeName, searchQuery);
+
+  if (docs.length === 0) {
+    grid.innerHTML = `
+      <div class="place-docs-empty">
+        <div style="font-size:36px; margin-bottom:8px;">🔍</div>
+        <h4>No documents found</h4>
+        <p>Try a different search term or <a href="#" onclick="filterPlaceDocs(''); return false;">clear search</a>.</p>
+      </div>`;
+    return;
+  }
+
+  const isStar5 = d => d.importance && d.importance.includes('★★★★★');
+  const sorted = [...docs].sort((a, b) => (isStar5(b) ? 1 : 0) - (isStar5(a) ? 1 : 0));
+
+  grid.innerHTML = sorted.map(doc => {
+    const stars = doc.importance || '★★★';
+    const docList = (doc.docsRequired || []).slice(0, 3).map(d => `<li>${d}</li>`).join('');
+    const moreCount = (doc.docsRequired || []).length - 3;
+    return `
+      <div class="place-doc-card">
+        <div class="place-doc-card-header">
+          <div>
+            <h4 class="place-doc-title">${doc.title}</h4>
+            <div class="place-doc-meta">
+              <span class="place-doc-stars">${stars}</span>
+              <span class="place-doc-dept">${doc.dept || 'State Dept.'}</span>
+            </div>
+          </div>
+          <div class="place-doc-time-badge">⏱️ ${doc.time || '7-14 Days'}</div>
+        </div>
+        <p class="place-doc-desc">${doc.description || ''}</p>
+        <div class="place-doc-docs-needed">
+          <strong>Documents Needed:</strong>
+          <ul>${docList}${moreCount > 0 ? `<li>+${moreCount} more...</li>` : ''}</ul>
+        </div>
+        <div class="place-doc-footer">
+          <span class="place-doc-fee">Govt Fee: ₹${doc.govFee || 1}</span>
+          <button class="btn btn-primary place-doc-apply-btn" onclick="startPlaceDocument('${doc.id}', '${placeName.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">
+            Apply Now →
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function startPlaceDocument(docId, placeName) {
+  // Set the selected state for the wizard and start the service
+  if (placeName && placeName !== 'Central Government') {
+    appState.selectedState = placeName;
+    appState.formData.state = placeName;
+    const stateConf = getStateConfig(placeName);
+    if (stateConf && stateConf.districts) {
+      const firstDistrict = Object.keys(stateConf.districts)[0];
+      appState.formData.district = firstDistrict || 'Central District';
+    }
+  }
+
+  // Look up in PLACE_DOCUMENTS_DB first, fall back to generic SERVICES catalog
+  const placeDoc = window.PlaceDocsEngine ? PlaceDocsEngine.findDocumentById(docId) : null;
+  if (placeDoc) {
+    // Store the PRD document as active service for context
+    appState.activeService = {
+      id: docId,
+      title: placeDoc.title,
+      dept: placeDoc.dept,
+      time: placeDoc.time || '7 - 14 Days',
+      govFee: placeDoc.govFee || 1,
+      steps: placeDoc.steps || '5 steps',
+      docsRequired: placeDoc.docsRequired || [],
+      description: placeDoc.description,
+      whoCanApply: placeDoc.whoCanApply || 'Eligible citizens of ' + placeName,
+      location: placeName,
+      portal: placeDoc.portal,
+    };
+  }
+
+  // Determine a matching SERVICES catalog id to start the wizard
+  const titleL = (placeDoc ? placeDoc.title : docId).toLowerCase();
+  let wizardServiceId = 'income_certificate';
+  if (titleL.includes('caste') || titleL.includes('community')) wizardServiceId = 'caste_certificate';
+  else if (titleL.includes('domicile') || titleL.includes('residence') || titleL.includes('nativity')) wizardServiceId = 'domicile_certificate';
+  else if (titleL.includes('birth')) wizardServiceId = 'birth_certificate';
+  else if (titleL.includes('death')) wizardServiceId = 'death_certificate';
+  else if (titleL.includes('scholarship')) wizardServiceId = 'scholarship_postmatric';
+  else if (titleL.includes('pension') || titleL.includes('old age')) wizardServiceId = 'old_age_pension';
+  else if (titleL.includes('driving') || titleL.includes('licence')) wizardServiceId = 'driving_licence_learner';
+  else if (titleL.includes('marriage')) wizardServiceId = 'marriage_certificate';
+  else if (titleL.includes('income')) wizardServiceId = 'income_certificate';
+
+  handleStartServicePublic(wizardServiceId);
+}
+
+function openStateServices() {
+  // Scroll to Section 9 and activate State tab
+  filterPlaceBrowser('state', document.getElementById('tab-state'));
+  document.getElementById('browse-by-place').scrollIntoView({ behavior: 'smooth' });
+}
+
+function openCentralServices() {
+  // Scroll to Section 9 and activate Central tab, then open panel
+  filterPlaceBrowser('central', document.getElementById('tab-central'));
+  document.getElementById('browse-by-place').scrollIntoView({ behavior: 'smooth' });
+  setTimeout(() => openPlaceDocsPanel('Central Government'), 400);
 }
 
 // ── 11. Service Details Modal ─────────────────────────────────────────────────
@@ -3427,11 +3637,23 @@ function simulateEscalation() {
   alert('Connecting to civic desk support volunteer... A human helper will assist you within 2 minutes.');
 }
 
-// ── 35. Multilingual Localization ─────────────────────────────────────────────
+// ── 35. Multilingual Localization & Theme System ──────────────────────────────
+function updateLangPillLabel(langCode) {
+  const select = document.getElementById('langSelect');
+  if (select && langCode) {
+    select.value = langCode;
+  }
+}
+
 function changeLanguage(lang) {
   appState.language = lang;
-  const isHi = lang === 'hi';
+  updateLangPillLabel(lang);
+  
+  if (window.civicI18n && typeof window.civicI18n.setLanguage === 'function') {
+    window.civicI18n.setLanguage(lang);
+  }
 
+  const isHi = lang === 'hi';
   const heading = document.getElementById('t-hero-heading');
   const subheading = document.getElementById('t-hero-subheading');
   const logoSub = document.getElementById('t-logo-sub');
@@ -3440,7 +3662,7 @@ function changeLanguage(lang) {
   if (isHi) {
     if (heading) heading.innerText = 'सरकारी सेवाएं, अब आसान और सरल।';
     if (subheading) subheading.innerText = 'हमें बताएं आपको क्या चाहिए। हम आपको आवश्यक दस्तावेज, फॉर्म और आवेदन स्थिति तक पूरा मार्गदर्शन करेंगे।';
-    if (logoSub) logoSub.innerText = 'सरकारी सेवाएं, अब आसान';
+    if (logoSub) logoSub.innerText = 'Government Services, Made Simple';
     if (searchInput) searchInput.placeholder = 'आपको किस सरकारी सेवा की आवश्यकता है? (उदा. आय प्रमाण पत्र...)';
   } else {
     if (heading) heading.innerText = 'Government Services, Made Simple.';
@@ -3449,6 +3671,49 @@ function changeLanguage(lang) {
     if (searchInput) searchInput.placeholder = 'What government service do you need?';
   }
 }
+
+// ── Dark & Light Mode Theme Management ────────────────────────────────────────
+function initTheme() {
+  const saved = localStorage.getItem('civic_theme') || 'dark';
+  setTheme(saved, false);
+}
+
+function setTheme(theme, save = true) {
+  const isDark = theme === 'dark';
+  document.documentElement.setAttribute('data-theme', theme);
+  if (document.body) document.body.setAttribute('data-theme', theme);
+  if (save) {
+    try { localStorage.setItem('civic_theme', theme); } catch(e) {}
+  }
+  
+  const sunIcon = document.getElementById('sunIcon');
+  const moonIcon = document.getElementById('moonIcon');
+  const label = document.getElementById('themeToggleLabel');
+  const btn = document.getElementById('btnThemeToggle');
+  
+  if (sunIcon && moonIcon) {
+    if (isDark) {
+      sunIcon.style.display = 'inline-flex';
+      moonIcon.style.display = 'none';
+      if (label) label.textContent = 'Light';
+      if (btn) btn.setAttribute('title', 'Switch to Light Mode');
+    } else {
+      sunIcon.style.display = 'none';
+      moonIcon.style.display = 'inline-flex';
+      if (label) label.textContent = 'Dark';
+      if (btn) btn.setAttribute('title', 'Switch to Dark Mode');
+    }
+  }
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  const next = current === 'dark' ? 'light' : 'dark';
+  setTheme(next, true);
+}
+
+// Initialize theme immediately
+try { initTheme(); } catch(e) {}
 
 // ── Admin Cockpit Verification ────────────────────────────────────────────────
 async function verifyAdminChain() {
@@ -3517,6 +3782,7 @@ const authState = {
 };
 
 // ── Initialise: check localStorage for saved session ──────────────
+// Public visitors can browse the landing page without being forced to log in.
 (function initAuth() {
   const savedToken = localStorage.getItem('civic_auth_token');
   const savedUser  = localStorage.getItem('civic_auth_user');
@@ -3528,16 +3794,79 @@ const authState = {
     } catch(e) {
       localStorage.removeItem('civic_auth_token');
       localStorage.removeItem('civic_auth_user');
-      showAuthModal();
+      // Guest mode — let them browse the landing page freely
+      updateHeaderAuthState(false);
     }
   } else {
-    showAuthModal();
+    // Guest mode — landing page is publicly visible, no forced login popup
+    updateHeaderAuthState(false);
+  }
+
+  // Apply full-bleed padding for home view on initial load
+  const appContainer = document.getElementById('mainContainer');
+  if (appContainer && appState.currentView === 'home') {
+    appContainer.style.maxWidth = '100%';
+    appContainer.style.padding  = '0';
   }
 })();
 
+// ── Header state helper (show guest CTAs or user profile chip) ─────
+function updateHeaderAuthState(isLoggedIn) {
+  const guestActions = document.getElementById('headerGuestActions');
+  const profileWrapper = document.getElementById('profileDropdownWrapper');
+  const notifWrapper = document.getElementById('headerNotifWrapper');
+  // AI floating widget is ONLY available after login
+  const aiWidget = document.getElementById('aiFloatingAgentRoot');
+  if (guestActions) guestActions.style.display = isLoggedIn ? 'none' : 'flex';
+  if (profileWrapper) profileWrapper.style.display = isLoggedIn ? 'flex' : 'none';
+  if (notifWrapper) notifWrapper.style.display = isLoggedIn ? 'block' : 'none';
+  // Show AI widget only for authenticated users
+  if (aiWidget) aiWidget.style.display = isLoggedIn ? 'block' : 'none';
+}
+
+// ── Public landing page: route to login or directly to service ─────
+function handleStartServicePublic(serviceId) {
+  if (authState.token && authState.user) {
+    // Already logged in → go to service wizard directly
+    if (typeof startSpecificService === 'function') {
+      startSpecificService(serviceId || 'income_certificate');
+    } else {
+      showView('wizard');
+    }
+  } else {
+    // Guest → save intended service and prompt login
+    window.pendingPostLoginService = serviceId || 'income_certificate';
+    switchAuthTab('login');
+    showAuthModal();
+  }
+}
+
+// (openStateServices and openCentralServices are defined in the Place Browser section above)
+
+
+// ── Smooth scroll to a section by id ──────────────────────────────
+function scrollToSection(sectionId) {
+  // Make sure we are on the home view first
+  if (appState.currentView !== 'home') {
+    showView('home');
+    setTimeout(() => {
+      const el = document.getElementById(sectionId);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 350);
+  } else {
+    const el = document.getElementById(sectionId);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
 function showAuthModal() {
   const m = document.getElementById('authModal');
-  if (m) m.style.display = 'flex';
+  if (m) {
+    m.style.display = 'flex';
+    m.onclick = (e) => {
+      if (e.target === m) hideAuthModal();
+    };
+  }
 }
 
 function hideAuthModal() {
@@ -3547,11 +3876,14 @@ function hideAuthModal() {
 
 function onAuthSuccess(animate = true) {
   hideAuthModal();
+  // Switch header to logged-in state
+  updateHeaderAuthState(true);
+
   // Update header profile chip and profile page with logged-in user's details
   if (authState.user) {
     const fullName = authState.user.full_name || authState.user.username;
     const email   = authState.user.email || '';
-    const initials = fullName.split(' ').filter(Boolean).map(w => w[0]).join('').substring(0, 2).toUpperCase();
+    const initials = fullName.split(' ').filter(Boolean).map(w => w[0]).join('').substring(0, 2).toUpperCase() || 'C';
 
     // ── Header chip ──────────────────────────────────────────────
     const nameEl = document.getElementById('userNameLabel');
@@ -3577,6 +3909,26 @@ function onAuthSuccess(animate = true) {
     // Also update appState so forms pre-fill correctly
     appState.formData.fullName = fullName;
     if (email) appState.formData.email = email;
+  }
+
+  // Handle post-login navigation according to required user flow (Section 1):
+  // Visitor opens website -> PUBLIC CIVICAGENT HOME / INTRO PAGE -> "Get Started" / "Start a Service" / "Login" -> EXISTING LOGIN PAGE -> Successful Login -> EXISTING AUTHENTICATED CIVICAGENT APPLICATION
+  if (animate) {
+    if (window.pendingPostLoginService) {
+      const s = window.pendingPostLoginService;
+      window.pendingPostLoginService = null;
+      if (typeof startSpecificService === 'function') {
+        startSpecificService(s);
+      } else {
+        showView('wizard');
+      }
+    } else if (window.pendingPostLoginView) {
+      const v = window.pendingPostLoginView;
+      window.pendingPostLoginView = null;
+      showView(v);
+    } else if (appState.currentView === 'home') {
+      showView('applications');
+    }
   }
 }
 
@@ -3870,9 +4222,11 @@ async function doLogout() {
   } catch(e) { /* ignore */ }
   authState.token = null;
   authState.user  = null;
+  window.pendingPostLoginService = null;
+  window.pendingPostLoginView = null;
   localStorage.removeItem('civic_auth_token');
   localStorage.removeItem('civic_auth_user');
-  // Reset header
+  // Reset header back to guest state
   const nameEl = document.getElementById('userNameLabel');
   const avatarEl = document.getElementById('headerAvatarCircle');
   if (nameEl) nameEl.textContent = 'Guest';
@@ -3880,9 +4234,12 @@ async function doLogout() {
   const dropdownName = document.getElementById('dropdownUserName');
   if (dropdownName) dropdownName.textContent = 'Guest';
   closeProfileDropdown();
-  // Show login modal
-  switchAuthTab('login');
-  showAuthModal();
+  // Switch header to guest/public mode
+  updateHeaderAuthState(false);
+  // Return to the public landing page (not the login modal)
+  showView('home');
+  // Scroll back to top of landing page
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ── Profile dropdown ────────────────────────────────────────────────
@@ -4115,6 +4472,15 @@ const AI_DOCS_KNOWLEDGE = {
 
 // ── Open / Close AI Agent Modal ──────────────────────────────────────────────
 function toggleAiDocAgent(forceState) {
+  // AI assistant is only available to authenticated users
+  if (!authState.token || !authState.user) {
+    // Guest → prompt login, then AI will be available after sign-in
+    window.pendingPostLoginView = null;
+    switchAuthTab('login');
+    showAuthModal();
+    return;
+  }
+
   const modal = document.getElementById('aiDocAgentModal');
   const btn = document.getElementById('aiFloatingAgentBtn');
   if (!modal) return;
